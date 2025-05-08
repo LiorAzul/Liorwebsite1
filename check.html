@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקת קבצים</title>
+    <style>
+        body { font-family: Arial; direction: rtl; padding: 20px; }
+        .image-check { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        img { max-width: 100px; height: auto; display: block; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>בדיקת טעינת קבצים</h1>
+    <p>דף זה בודק אם הקבצים הדרושים לאתר נגישים.</p>
+    
+    <div class="image-check">
+        <h3>קבצי CSS ו-JS:</h3>
+        <div id="style-check"></div>
+        <div id="script-check"></div>
+    </div>
+    
+    <div class="image-check">
+        <h3>תמונת פרופיל:</h3>
+        <img src="liorprofile.jpg" alt="תמונת פרופיל" onerror="this.parentNode.innerHTML += '<p class=\'error\'>שגיאה בטעינת התמונה</p>'">
+    </div>
+    
+    <div class="image-check">
+        <h3>תמונות נוספות:</h3>
+        <img src="lior1.jpg" alt="תמונה 1" onerror="this.parentNode.innerHTML += '<p class=\'error\'>שגיאה בטעינת התמונה 1</p>'">
+        <img src="lior3.jpg" alt="תמונה 3" onerror="this.parentNode.innerHTML += '<p class=\'error\'>שגיאה בטעינת התמונה 3</p>'">
+        <img src="lior4.webp" alt="תמונה 4" onerror="this.parentNode.innerHTML += '<p class=\'error\'>שגיאה בטעינת התמונה 4</p>'">
+    </div>
+    
+    <script>
+        // בדיקת קובץ CSS
+        fetch('styles.css')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('style-check').innerHTML = 
+                        '<p class="success">קובץ CSS נטען בהצלחה</p>';
+                } else {
+                    document.getElementById('style-check').innerHTML = 
+                        '<p class="error">שגיאה בטעינת קובץ CSS</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('style-check').innerHTML = 
+                    '<p class="error">שגיאה בטעינת קובץ CSS: ' + error + '</p>';
+            });
+            
+        // בדיקת קובץ JavaScript
+        fetch('script.js')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('script-check').innerHTML = 
+                        '<p class="success">קובץ JavaScript נטען בהצלחה</p>';
+                } else {
+                    document.getElementById('script-check').innerHTML = 
+                        '<p class="error">שגיאה בטעינת קובץ JavaScript</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('script-check').innerHTML = 
+                    '<p class="error">שגיאה בטעינת קובץ JavaScript: ' + error + '</p>';
+            });
+    </script>
+</body>
+</html> 
