@@ -1,9 +1,9 @@
 /* ========== גלובלי ========== */
 :root {
-    --primary-color-1: #C7DFF4;
-    --primary-color-2: #6EA1D6;
-    --gradient-color-1: #426FB6;
-    --gradient-color-2: #74A7D9;
+    --primary-color-1: #87CEEB;
+    --primary-color-2: #4682B4;
+    --gradient-color-1: #00BFFF;
+    --gradient-color-2: #87CEEB;
     --white: #ffffff;
     --black: #000000;
     --red: #e74c3c;
@@ -323,6 +323,37 @@ a {
     background: var(--white);
 }
 
+/* ========== סקציות iframe ========== */
+.iframe-section {
+    padding: 5rem 0;
+    background-color: var(--white);
+    min-height: 400px;
+}
+
+.iframe-section:nth-of-type(even) {
+    background-color: #f8f9fa;
+}
+
+.iframe-wrapper {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--white);
+}
+
+.iframe-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+
+.iframe-wrapper iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    display: block;
+}
+
 /* ========== פוטר ========== */
 footer {
     padding: 3rem 0;
@@ -406,6 +437,10 @@ footer {
     .gallery {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
+    
+    .iframe-wrapper iframe {
+        height: 400px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -437,5 +472,9 @@ footer {
     .social-links {
         flex-direction: column;
         align-items: center;
+    }
+    
+    .iframe-wrapper iframe {
+        height: 300px;
     }
 } 
