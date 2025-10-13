@@ -1406,6 +1406,225 @@ footer::before {
 }
 
 
+/* ========== Scroll Progress Bar ========== */
+.scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(90deg,
+            var(--galaxy-cyan),
+            var(--galaxy-purple),
+            var(--galaxy-pink));
+    z-index: 9999;
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 20px var(--galaxy-cyan),
+        0 0 40px var(--galaxy-purple);
+}
+
+/* ========== Loading Screen ========== */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--galaxy-dark) 0%, var(--galaxy-deep) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-logo {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 2rem;
+}
+
+.planet {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--galaxy-cyan), var(--galaxy-purple));
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px var(--galaxy-cyan),
+        0 0 60px var(--galaxy-purple),
+        inset -10px -10px 30px rgba(0, 0, 0, 0.3);
+    animation: planetPulse 2s ease-in-out infinite;
+}
+
+.orbit {
+    width: 150px;
+    height: 150px;
+    border: 2px solid rgba(13, 206, 218, 0.3);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbitRotate 3s linear infinite;
+}
+
+.orbit::before {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: var(--galaxy-pink);
+    border-radius: 50%;
+    top: -7.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 20px var(--galaxy-pink);
+}
+
+@keyframes planetPulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes orbitRotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.loading-text {
+    color: var(--star-white);
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(13, 206, 218, 0.5);
+    animation: textPulse 2s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.loading-bar {
+    width: 250px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg,
+            var(--galaxy-cyan),
+            var(--galaxy-purple),
+            var(--galaxy-pink));
+    border-radius: 2px;
+    animation: loadingProgress 2s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--galaxy-cyan);
+}
+
+@keyframes loadingProgress {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+/* ========== כפתור חזרה למעלה ========== */
+.back-to-top {
+    position: fixed;
+    bottom: 90px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--galaxy-cyan), var(--galaxy-purple));
+    border: none;
+    border-radius: 50%;
+    color: var(--star-white);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    box-shadow: 0 8px 25px rgba(13, 206, 218, 0.4),
+        0 0 30px rgba(107, 63, 160, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--galaxy-cyan), var(--galaxy-purple));
+    filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+}
+
+.back-to-top:hover::before {
+    opacity: 0.8;
+}
+
+.back-to-top:hover {
+    transform: translateY(-10px) scale(1.1);
+    box-shadow: 0 15px 40px rgba(13, 206, 218, 0.6),
+        0 0 50px rgba(107, 63, 160, 0.5);
+}
+
+.back-to-top svg {
+    width: 24px;
+    height: 24px;
+}
+
+.back-to-top:active {
+    transform: translateY(-8px) scale(1.05);
+}
+
 /* ========== שיפורי נגישות ואופטימיזציה ==========*/
 
 /* Focus states מותאמים */

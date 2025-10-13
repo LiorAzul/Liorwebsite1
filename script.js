@@ -454,5 +454,217 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    console.log('🌌 Galaxy theme loaded successfully!');
+    // ========== Loading Screen ==========
+    const loadingScreen = document.querySelector('.loading-screen');
+
+    window.addEventListener('load', function () {
+        setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }, 2000); // 2 שניות של טעינה
+    });
+
+    // ========== Scroll Progress Bar ==========
+    const progressBar = document.querySelector('.scroll-progress-bar');
+
+    function updateProgressBar() {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrolled = window.pageYOffset;
+        const progress = (scrolled / documentHeight) * 100;
+
+        progressBar.style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgressBar);
+
+    // ========== כפתור חזרה למעלה ==========
+    const backToTopBtn = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', function () {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+
+    backToTopBtn.addEventListener('click', function () {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // ========== חלקיקים אינטראקטיביים שעוקבים אחרי העכבר ==========
+    if (window.innerWidth > 768) {
+        const interactiveParticles = [];
+        const maxParticles = 10;
+
+        class InteractiveParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.targetX = x;
+                this.targetY = y;
+                this.size = Math.random() * 4 + 2;
+                this.life = 1;
+                this.decay = 0.02;
+                this.color = ['rgba(13, 206, 218, ', 'rgba(107, 63, 160, ', 'rgba(233, 30, 99, '][Math.floor(Math.random() * 3)];
+            }
+
+            update(mouseX, mouseY) {
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance > 5) {
+                    this.x += dx * 0.1;
+                    this.y += dy * 0.1;
+                }
+
+                this.life -= this.decay;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 3
+                );
+                gradient.addColorStop(0, this.color + '0.8)');
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', function (e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (interactiveParticles.length < maxParticles) {
+                interactiveParticles.push(new InteractiveParticle(mouseX, mouseY));
+            }
+        });
+
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9998';
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function animateInteractiveParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = interactiveParticles.length - 1; i >= 0; i--) {
+                interactiveParticles[i].update(mouseX, mouseY);
+                interactiveParticles[i].draw(ctx);
+
+                if (interactiveParticles[i].life <= 0) {
+                    interactiveParticles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animateInteractiveParticles);
+        }
+
+        animateInteractiveParticles();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    }
+
+    // ========== Parallax משופר לכרטיסים ==========
+    if (window.innerWidth > 768) {
+        const parallaxElements = document.querySelectorAll('.gallery-item, .video-wrapper, .iframe-wrapper');
+
+        window.addEventListener('scroll', function () {
+            const scrolled = window.pageYOffset;
+
+            parallaxElements.forEach((element, index) => {
+                const rect = element.getBoundingClientRect();
+                const elementTop = rect.top + scrolled;
+                const elementHeight = rect.height;
+                const windowHeight = window.innerHeight;
+
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    const scrollProgress = (scrolled + windowHeight - elementTop) / (windowHeight + elementHeight);
+                    const translateY = (scrollProgress - 0.5) * 50;
+
+                    element.style.transform = `translateY(${translateY}px)`;
+                }
+            });
+        });
+    }
+
+    // ========== הצללות דינמיות על כרטיסים ==========
+    if (window.innerWidth > 768) {
+        const cards = document.querySelectorAll('.gallery-item, .video-wrapper');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', function (e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const angleX = (y - centerY) / 20;
+                const angleY = (centerX - x) / 20;
+
+                const shadowX = (x - centerX) / 10;
+                const shadowY = (y - centerY) / 10;
+
+                this.style.transform = `
+                    perspective(1000px) 
+                    rotateX(${angleX}deg) 
+                    rotateY(${angleY}deg) 
+                    translateY(-15px) 
+                    scale(1.05)
+                `;
+
+                this.style.boxShadow = `
+                    ${shadowX}px ${shadowY}px 40px rgba(0, 0, 0, 0.6),
+                    0 0 60px rgba(13, 206, 218, 0.5),
+                    0 0 90px rgba(107, 63, 160, 0.3)
+                `;
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+        });
+    }
+
+    console.log('🌌 Galaxy theme loaded successfully with all enhancements!');
 }); 
