@@ -22,6 +22,9 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Spline Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.11.4/build/spline-viewer.js"></script>
 
     <style>
         body {
@@ -46,23 +49,24 @@
     <!-- Main Container -->
     <div class="min-h-screen">
         <!-- Header Section -->
-        <header class="relative z-10 py-12 px-6 md:px-12">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row items-start md:items-start justify-start gap-8 md:gap-12">
-                    <!-- Profile Image -->
-                    <div class="flex-shrink-0 order-1">
-                        <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 to-purple-500 p-1 shadow-lg">
-                            <img src="ליאורפרופיל2.jpeg" alt="ליאור אזולאי" 
-                                class="w-full h-full object-cover rounded-full"
-                                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'><rect width=\'200\' height=\'200\' fill=\'%23f0f0f0\'/><text x=\'50%\' y=\'50%\' font-size=\'18\' text-anchor=\'middle\' fill=\'%23999\'>תמונת פרופיל</text></svg>'">
-                        </div>
-                    </div>
-
+        <header class="relative z-10 py-12 px-6 md:px-12 overflow-hidden min-h-[500px] md:min-h-[600px]">
+            <!-- Spline Animation Layer 1 (Background) -->
+            <div class="absolute inset-0 z-0 w-full h-full">
+                <spline-viewer 
+                    url="https://prod.spline.design/ZGGJHvK-uswwaFNE/scene.splinecode"
+                    class="spline-viewer-responsive"
+                    loading="lazy">
+                </spline-viewer>
+            </div>
+            
+            <!-- Content Layer 2 (Title, Description) -->
+            <div class="relative z-20 max-w-7xl mx-auto py-8">
+                <div class="flex flex-col items-start justify-start gap-8 md:gap-12">
                     <!-- Title and Description -->
-                    <div class="flex-1 text-right order-2">
-                        <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-4 text-gray-900 dark:text-white leading-tight">ליאור ישראל אזולאי</h1>
-                        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mr-0">
-                            גרפיקאי, עורך וידיאו ויזם אפליקציות באמצעות בינה מלאוכתית. מאייר בנשמה.
+                    <div class="flex-1 text-left w-full">
+                        <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-4 text-gray-900 dark:text-white leading-tight drop-shadow-lg text-left">Lior Israel Azulay</h1>
+                        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl text-left drop-shadow-md">
+                            Full stack Web, Brand and Motion Designer, entrepreneur and vibe-coder
                         </p>
                     </div>
                 </div>
@@ -150,6 +154,29 @@
 
             <!-- Apps Page -->
             <div id="apps-page" class="page-content hidden">
+                <!-- Imagine -->
+                <section class="py-12 px-6 md:px-12 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
+                    <div class="galaxy-background absolute inset-0"></div>
+                    <canvas id="imagine-stars-canvas" class="absolute inset-0"></canvas>
+                    <div class="max-w-7xl mx-auto relative z-10">
+                        <div class="text-center mb-8">
+                            <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-2 border-white/30 p-2">
+                                <img src="imagine icon web.png" alt="Imagine Logo" class="w-full h-full object-contain rounded-full">
+                            </div>
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Imagine</h2>
+                            <p class="text-white/90 max-w-2xl mx-auto">
+                                אימג׳ן הוא הפרויקט הכי שאפתני שלי עד כה ובו משתמשים יכולים לייצר עולמות תלת מיימידים בעזרתו של בינה מלאוכתית בכל דפדפן כולל VR
+                            </p>
+                        </div>
+                        <div class="max-w-sm mx-auto rounded-2xl overflow-hidden backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-2 border-white/30 shadow-2xl">
+                            <iframe width="100%" height="560" src="https://www.youtube.com/embed/n0VWd9wE4mY" 
+                                title="Imagine YouTube video" frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- DreamSpace -->
                 <section class="py-12 px-6 md:px-12">
                     <div class="max-w-7xl mx-auto">
@@ -195,29 +222,6 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Imagine -->
-                <section class="py-12 px-6 md:px-12 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
-                    <div class="galaxy-background absolute inset-0"></div>
-                    <canvas id="imagine-stars-canvas" class="absolute inset-0"></canvas>
-                    <div class="max-w-7xl mx-auto relative z-10">
-                        <div class="text-center mb-8">
-                            <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-2 border-white/30 p-2">
-                                <img src="imagine icon web.png" alt="Imagine Logo" class="w-full h-full object-contain rounded-full">
-                            </div>
-                            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Imagine</h2>
-                            <p class="text-white/90 max-w-2xl mx-auto">
-                                אימג׳ן הוא הפרויקט הכי שאפתני שלי עד כה ובו משתמשים יכולים לייצר עולמות תלת מיימידים בעזרתו של בינה מלאוכתית בכל דפדפן כולל VR
-                            </p>
-                        </div>
-                        <div class="max-w-sm mx-auto rounded-2xl overflow-hidden backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-2 border-white/30 shadow-2xl">
-                            <iframe width="100%" height="560" src="https://www.youtube.com/embed/n0VWd9wE4mY" 
-                                title="Imagine YouTube video" frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                </section>
             </div>
 
             <!-- Contact Page -->
@@ -234,16 +238,24 @@
         </main>
 
         <!-- Contact Menu (Floating) - Above Main Nav -->
-        <div id="contactMenu" class="fixed inset-0 z-[60] hidden items-end justify-center pb-24 pointer-events-none">
-            <div class="contact-menu-content relative z-10 pointer-events-auto backdrop-blur-3xl bg-white/85 dark:bg-gray-900/85 rounded-2xl p-6 shadow-2xl border border-white/20 dark:border-white/10 max-w-sm w-full mx-4 mb-2 transform transition-all duration-500 ease-in-out opacity-0 translate-y-4"
-                 style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
+        <div id="contactMenu" class="fixed inset-0 z-[60] hidden items-end justify-center pb-32 pointer-events-none">
+            <div class="contact-menu-content relative z-10 pointer-events-auto backdrop-blur-3xl bg-white/85 dark:bg-gray-900/85 rounded-3xl p-5 shadow-2xl border border-white/20 dark:border-white/10 max-w-xs w-full mx-4 mb-2 opacity-0 translate-y-8 scale-95"
+                 style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2); transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                <!-- Profile Image - Top Center -->
+                <div class="flex justify-center mb-4">
+                    <div class="w-24 h-24 rounded-full overflow-hidden p-2 shadow-lg profile-image-border">
+                        <img src="ליאורפרופיל2.jpeg" alt="ליאור אזולאי" 
+                            class="w-full h-full object-cover rounded-full contact-profile-image"
+                            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'><rect width=\'200\' height=\'200\' fill=\'%23f0f0f0\'/><text x=\'50%\' y=\'50%\' font-size=\'18\' text-anchor=\'middle\' fill=\'%23999\'>תמונת פרופיל</text></svg>'">
+                    </div>
+                </div>
                 <div class="flex justify-between items-center mb-5">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white transition-all duration-300 ease-in-out">יצירת קשר</h3>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white transition-all duration-300 ease-in-out">contact me</h3>
                     <button id="closeContactMenu" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 ease-in-out transform hover:scale-110">
                         <i class="fas fa-times text-xl transition-transform duration-300 ease-in-out"></i>
                     </button>
                 </div>
-                <div class="space-y-3">
+                <div class="space-y-3 contact-menu-items">
                     <a href="https://www.linkedin.com/in/azulay-lior-42b43122a/" target="_blank" 
                         class="flex items-center gap-3 p-3 rounded-full backdrop-blur-md bg-blue-50/80 dark:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/30 hover:bg-blue-100/90 dark:hover:bg-blue-900/50 transition-all duration-300 ease-in-out shadow-sm transform hover:scale-105 hover:shadow-md">
                         <i class="fab fa-linkedin-in text-xl text-blue-600 dark:text-blue-400 transition-transform duration-300 ease-in-out"></i>
@@ -268,49 +280,49 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation (Unified Floating Menu) -->
-        <nav class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl pointer-events-none">
-            <div class="relative rounded-full p-2 pointer-events-auto transition-all duration-500 ease-in-out"
-                 style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.1);">
-                <div class="flex items-center justify-around">
-                    <button data-page="graphics" class="nav-item active flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-full transition-all duration-300 ease-in-out min-w-[70px]">
-                        <div class="w-7 h-7 flex items-center justify-center transition-transform duration-300 ease-in-out">
-                            <i class="fas fa-palette text-xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
-                        </div>
-                        <span class="text-xs font-medium transition-all duration-300 ease-in-out">גרפיקה</span>
-                    </button>
-                    <button data-page="video" class="nav-item flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-full transition-all duration-300 ease-in-out min-w-[70px]">
-                        <div class="w-7 h-7 flex items-center justify-center transition-transform duration-300 ease-in-out">
-                            <i class="fas fa-video text-xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
-                        </div>
-                        <span class="text-xs font-medium transition-all duration-300 ease-in-out">וידיאו</span>
-                    </button>
-                    <button data-page="apps" class="nav-item flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-full transition-all duration-300 ease-in-out min-w-[70px]">
-                        <div class="w-7 h-7 flex items-center justify-center transition-transform duration-300 ease-in-out">
-                            <i class="fas fa-mobile-alt text-xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
-                        </div>
-                        <span class="text-xs font-medium transition-all duration-300 ease-in-out">אפליקציות</span>
-                    </button>
-                    <button data-page="contact" class="nav-item flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-full transition-all duration-300 ease-in-out min-w-[70px]">
-                        <div class="w-7 h-7 flex items-center justify-center transition-transform duration-300 ease-in-out">
-                            <i class="fas fa-envelope text-xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
-                        </div>
-                        <span class="text-xs font-medium transition-all duration-300 ease-in-out">יצירת קשר</span>
-                    </button>
-                    <a href="‎⁨קוחH⁩.pdf" download class="nav-item flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-full transition-all duration-300 ease-in-out min-w-[70px]">
-                        <div class="w-7 h-7 flex items-center justify-center transition-transform duration-300 ease-in-out">
-                            <i class="fas fa-download text-xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
-                        </div>
-                        <span class="text-xs font-medium transition-all duration-300 ease-in-out">קורות חיים</span>
-                    </a>
+        <!-- Bottom Navigation (Split Menu) -->
+        <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 md:gap-4 pointer-events-none max-w-[calc(100%-2rem)]">
+            <!-- Main Navigation Menu -->
+            <nav class="pointer-events-auto">
+                <div class="relative rounded-full p-2 transition-all duration-500 ease-in-out"
+                     style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.1);">
+                    <div class="flex items-center justify-around gap-2 md:gap-3">
+                        <button data-page="graphics" class="nav-item active flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
+                            <i class="fas fa-palette text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                        </button>
+                        <button data-page="video" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
+                            <i class="fas fa-video text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                        </button>
+                        <button data-page="apps" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
+                            <i class="fas fa-mobile-alt text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                        </button>
+                        <button data-page="contact" id="contactNavButton" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
+                            <i class="fas fa-envelope text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+
+            <!-- CV Download Button (Circular) - 20% smaller than before -->
+            <a href="‎⁨קוחH⁩.pdf" download 
+               class="cv-download-btn pointer-events-auto rounded-full flex items-center justify-center transition-all duration-300 ease-in-out"
+               style="width: 62.72px; height: 62.72px; backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.1);">
+                <i class="fas fa-download text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+            </a>
+            <style>
+                @media (min-width: 768px) {
+                    .cv-download-btn {
+                        width: 71.68px !important;
+                        height: 71.68px !important;
+                    }
+                }
+            </style>
+        </div>
 
         <!-- Enhanced Liquid Glass Styles -->
         <style>
             /* Light Mode Navigation */
-            nav.fixed.bottom-4 > div {
+            nav > div {
                 background: rgba(255, 255, 255, 0.75) !important;
                 border: 1px solid rgba(255, 255, 255, 0.2) !important;
                 box-shadow: 
@@ -323,7 +335,29 @@
 
             /* Dark Mode Navigation */
             @media (prefers-color-scheme: dark) {
-                nav.fixed.bottom-4 > div {
+                nav > div {
+                    background: rgba(28, 28, 30, 0.75) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    box-shadow: 
+                        0 20px 60px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                        0 1px 2px rgba(0, 0, 0, 0.2),
+                        0 0 40px rgba(255, 255, 255, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                }
+            }
+
+            /* CV Download Button Styles */
+            .cv-download-btn:hover {
+                transform: scale(1.1);
+            }
+
+            .cv-download-btn:hover i {
+                transform: scale(1.15) rotate(5deg);
+            }
+
+            @media (prefers-color-scheme: dark) {
+                .cv-download-btn {
                     background: rgba(28, 28, 30, 0.75) !important;
                     border: 1px solid rgba(255, 255, 255, 0.1) !important;
                     box-shadow: 
@@ -383,13 +417,30 @@
         // Navigation
         const navButtons = document.querySelectorAll('.nav-item[data-page]');
         const pages = document.querySelectorAll('.page-content');
+        const contactMenu = document.getElementById('contactMenu');
+        const contactNavButton = document.getElementById('contactNavButton');
 
         navButtons.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 if (this.getAttribute('data-page') === 'contact') {
                     e.preventDefault();
-                    showContactMenu();
+                    const isHidden = contactMenu.classList.contains('hidden');
+                    if (isHidden) {
+                        showContactMenu();
+                        this.classList.add('active');
+                    } else {
+                        hideContactMenu();
+                        this.classList.remove('active');
+                    }
                     return;
+                }
+                
+                // Close contact menu if open
+                if (!contactMenu.classList.contains('hidden')) {
+                    hideContactMenu();
+                    if (contactNavButton) {
+                        contactNavButton.classList.remove('active');
+                    }
                 }
                 
                 const targetPage = this.getAttribute('data-page');
@@ -420,46 +471,107 @@
         });
 
         // Contact menu
-        const contactMenu = document.getElementById('contactMenu');
         const closeContactMenu = document.getElementById('closeContactMenu');
 
         function hideContactMenu() {
             const menuContent = contactMenu.querySelector('.contact-menu-content');
-            menuContent.classList.add('opacity-0', 'translate-y-4');
-            // Reset menu items animation
-            const menuItems = menuContent.querySelectorAll('a, button');
-            menuItems.forEach((item) => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(10px)';
+            const profileImage = menuContent.querySelector('.contact-profile-image');
+            const menuItems = menuContent.querySelectorAll('.contact-menu-items > *');
+            
+            // Animate menu items out first
+            menuItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(8px)';
+                }, index * 30);
             });
+            
+            // Animate profile image
+            if (profileImage) {
+                setTimeout(() => {
+                    profileImage.parentElement.parentElement.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    profileImage.parentElement.parentElement.style.opacity = '0';
+                    profileImage.parentElement.parentElement.style.transform = 'scale(0.9)';
+                }, 50);
+            }
+            
+            // Animate menu container
+            setTimeout(() => {
+                menuContent.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                menuContent.style.opacity = '0';
+                menuContent.style.transform = 'translateY(8px) scale(0.95)';
+            }, 150);
+            
             setTimeout(() => {
                 contactMenu.classList.add('hidden');
                 contactMenu.classList.remove('flex');
-            }, 500);
+                // Reset all styles
+                menuContent.style.opacity = '';
+                menuContent.style.transform = '';
+                menuItems.forEach((item) => {
+                    item.style.opacity = '';
+                    item.style.transform = '';
+                });
+                if (profileImage) {
+                    profileImage.parentElement.parentElement.style.opacity = '';
+                    profileImage.parentElement.parentElement.style.transform = '';
+                }
+            }, 450);
         }
 
-        closeContactMenu.addEventListener('click', hideContactMenu);
+        closeContactMenu.addEventListener('click', function() {
+            hideContactMenu();
+            if (contactNavButton) {
+                contactNavButton.classList.remove('active');
+            }
+        });
 
         // Show contact menu with animation
         function showContactMenu() {
             contactMenu.classList.remove('hidden');
             contactMenu.classList.add('flex');
+            
+            const menuContent = contactMenu.querySelector('.contact-menu-content');
+            const profileImage = menuContent.querySelector('.contact-profile-image');
+            const menuItems = menuContent.querySelectorAll('.contact-menu-items > *');
+            
+            // Reset initial states
+            menuContent.style.opacity = '0';
+            menuContent.style.transform = 'translateY(8px) scale(0.95)';
+            menuItems.forEach((item) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(8px)';
+            });
+            if (profileImage) {
+                profileImage.parentElement.parentElement.style.opacity = '0';
+                profileImage.parentElement.parentElement.style.transform = 'scale(0.9)';
+            }
+            
+            // Animate menu container in
             setTimeout(() => {
-                const menuContent = contactMenu.querySelector('.contact-menu-content');
-                menuContent.classList.remove('opacity-0', 'translate-y-4');
-                menuContent.classList.add('opacity-100', 'translate-y-0');
-                // Add stagger animation to menu items
-                const menuItems = menuContent.querySelectorAll('a, button');
-                menuItems.forEach((item, index) => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateY(10px)';
-                    setTimeout(() => {
-                        item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                        item.style.opacity = '1';
-                        item.style.transform = 'translateY(0)';
-                    }, 100 + (index * 50));
-                });
+                menuContent.style.transition = 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                menuContent.style.opacity = '1';
+                menuContent.style.transform = 'translateY(0) scale(1)';
             }, 10);
+            
+            // Animate profile image in
+            if (profileImage) {
+                setTimeout(() => {
+                    profileImage.parentElement.parentElement.style.transition = 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                    profileImage.parentElement.parentElement.style.opacity = '1';
+                    profileImage.parentElement.parentElement.style.transform = 'scale(1)';
+                }, 100);
+            }
+            
+            // Animate menu items in with stagger
+            menuItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 200 + (index * 40));
+            });
         }
 
         // Copy email

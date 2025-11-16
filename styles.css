@@ -58,6 +58,68 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Spline Viewer Responsive */
+spline-viewer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 500px;
+}
+
+.spline-viewer-responsive {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    min-height: 500px !important;
+}
+
+@media (max-width: 768px) {
+    spline-viewer,
+    .spline-viewer-responsive {
+        min-height: 400px !important;
+    }
+}
+
+/* Header Text Alignment - Fixed Left */
+header h1,
+header p {
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+header .flex {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+}
+
+/* Profile Image Border - Blue Pink Yellow Gradient */
+.profile-image-border {
+    background: linear-gradient(135deg, #3b82f6 0%, #ec4899 50%, #eab308 100%);
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.profile-image-border img {
+    border-radius: 50%;
+}
+
+/* Contact Menu Animations */
+.contact-menu-content {
+    will-change: opacity, transform;
+}
+
+.contact-profile-image {
+    will-change: opacity, transform;
+}
+
+.contact-menu-items > * {
+    will-change: opacity, transform;
+}
+
 /* ========== Liquid Glass iOS 26 Effect ========== */
 .glass-effect {
     background: rgba(255, 255, 255, 0.7);
@@ -91,28 +153,29 @@ body {
 }
 
 .nav-item.active {
-    background: rgba(59, 130, 246, 0.12);
-    color: rgb(59, 130, 246);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 
-        0 4px 12px rgba(59, 130, 246, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: scale(1.05);
+    color: var(--text-primary);
 }
 
 .nav-item.active i {
-    color: rgb(59, 130, 246) !important;
+    color: var(--text-primary) !important;
     transform: scale(1.15);
 }
 
 @media (prefers-color-scheme: dark) {
     .nav-item.active {
-        background: rgba(59, 130, 246, 0.2);
-        color: rgb(96, 165, 250);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         box-shadow: 
-            0 4px 12px rgba(59, 130, 246, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            0 4px 12px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     
     .nav-item.active i {
