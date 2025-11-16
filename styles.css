@@ -11,6 +11,9 @@
     --glass-border: rgba(255, 255, 255, 0.18);
     --shadow-color: rgba(0, 0, 0, 0.1);
     --shadow-color-strong: rgba(0, 0, 0, 0.15);
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.12);
     
     /* Social Media Colors */
     --linkedin: #0077b5;
@@ -35,6 +38,9 @@
         --glass-border: rgba(255, 255, 255, 0.1);
         --shadow-color: rgba(0, 0, 0, 0.3);
         --shadow-color-strong: rgba(0, 0, 0, 0.5);
+        --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2);
+        --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.25);
+        --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 }
 
@@ -186,10 +192,11 @@ body {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px var(--shadow-color);
+    box-shadow: var(--shadow-medium), 0 8px 32px var(--shadow-color);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .profile-image-container::before {
@@ -209,7 +216,8 @@ body {
 
 .profile-image-container:hover {
     transform: scale(1.05);
-    box-shadow: 0 12px 40px var(--shadow-color-strong);
+    box-shadow: var(--shadow-strong), 0 12px 40px var(--shadow-color-strong);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .profile-image {
@@ -226,6 +234,7 @@ body {
     color: var(--text-primary);
     transition: color 0.3s ease;
     letter-spacing: -0.02em;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .sub-title {
@@ -234,6 +243,7 @@ body {
     font-weight: 400;
     color: var(--text-secondary);
     transition: color 0.3s ease;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 /* ========== Personal Info ========== */
@@ -259,7 +269,8 @@ body {
     position: relative;
     overflow: hidden;
     color: var(--text-primary);
-    box-shadow: 0 4px 16px var(--shadow-color);
+    box-shadow: var(--shadow-soft);
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .info-item::before {
@@ -279,8 +290,9 @@ body {
 
 .info-item:hover {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 24px var(--shadow-color-strong);
+    box-shadow: var(--shadow-medium), 0 8px 24px var(--shadow-color-strong);
     border-color: var(--accent-cyan);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .info-item:active {
@@ -317,6 +329,7 @@ body {
     transition: color 0.3s ease;
     position: relative;
     padding-bottom: 1rem;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .section-title::after {
@@ -340,6 +353,7 @@ body {
     margin-right: auto;
     color: var(--text-secondary);
     transition: color 0.3s ease;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 /* ========== Sections ========== */
@@ -370,11 +384,12 @@ body {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px var(--shadow-color);
+    box-shadow: var(--shadow-medium), 0 8px 32px var(--shadow-color);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     transform: translateY(30px);
     animation: slideUp 0.6s ease forwards;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 @keyframes slideUp {
@@ -394,8 +409,9 @@ body {
 
 .video-wrapper:hover {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 16px 48px var(--shadow-color-strong);
+    box-shadow: var(--shadow-strong), 0 16px 48px var(--shadow-color-strong);
     border-color: var(--accent-cyan);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .video-wrapper iframe {
@@ -419,12 +435,13 @@ body {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px var(--shadow-color);
+    box-shadow: var(--shadow-medium), 0 8px 32px var(--shadow-color);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     opacity: 0;
     transform: translateY(30px);
     cursor: pointer;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .gallery-item.in-view {
@@ -447,12 +464,14 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .gallery-item:hover {
     transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 16px 48px var(--shadow-color-strong);
+    box-shadow: var(--shadow-strong), 0 16px 48px var(--shadow-color-strong);
     border-color: var(--accent-cyan);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .gallery-item:hover img,
@@ -468,18 +487,20 @@ body {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px var(--shadow-color);
+    box-shadow: var(--shadow-medium), 0 8px 32px var(--shadow-color);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     opacity: 0;
     transform: translateY(30px);
     animation: slideUp 0.6s ease forwards;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .iframe-wrapper:hover {
     transform: translateY(-10px) scale(1.01);
-    box-shadow: 0 16px 48px var(--shadow-color-strong);
+    box-shadow: var(--shadow-strong), 0 16px 48px var(--shadow-color-strong);
     border-color: var(--accent-cyan);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .iframe-wrapper iframe {
@@ -499,6 +520,8 @@ footer {
     position: relative;
     border-top: 1px solid var(--glass-border);
     margin-top: 4rem;
+    box-shadow: 0 -4px 16px var(--shadow-color);
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .social-links {
@@ -517,12 +540,13 @@ footer {
     color: white;
     font-weight: 500;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px var(--shadow-color);
+    box-shadow: var(--shadow-soft), 0 4px 16px var(--shadow-color);
     position: relative;
     overflow: hidden;
     border: 1px solid transparent;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .social-button::before {
@@ -580,7 +604,8 @@ footer {
 
 .social-button:hover {
     transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 8px 24px var(--shadow-color-strong);
+    box-shadow: var(--shadow-medium), 0 8px 24px var(--shadow-color-strong);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .copyright {
@@ -607,10 +632,11 @@ footer {
     visibility: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 999;
-    box-shadow: 0 4px 16px var(--shadow-color);
+    box-shadow: var(--shadow-soft), 0 4px 16px var(--shadow-color);
     display: flex;
     align-items: center;
     justify-content: center;
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .back-to-top.visible {
@@ -620,8 +646,9 @@ footer {
 
 .back-to-top:hover {
     transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 8px 24px var(--shadow-color-strong);
+    box-shadow: var(--shadow-medium), 0 8px 24px var(--shadow-color-strong);
     border-color: var(--accent-cyan);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .back-to-top svg {
@@ -643,12 +670,13 @@ footer {
     color: white;
     border-radius: 30px;
     padding: 12px 24px;
-    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+    box-shadow: var(--shadow-soft), 0 8px 24px rgba(37, 211, 102, 0.4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    filter: drop-shadow(var(--shadow-soft));
 }
 
 .whatsapp-button::before {
@@ -671,7 +699,8 @@ footer {
 
 .whatsapp-button:hover {
     transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
+    box-shadow: var(--shadow-medium), 0 12px 32px rgba(37, 211, 102, 0.6);
+    filter: drop-shadow(var(--shadow-medium));
 }
 
 .whatsapp-button i {
