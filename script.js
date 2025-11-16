@@ -1,273 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // ========== יצירת רקע כוכבים מונפש ==========
-    function createStarfield() {
-        const canvas = document.createElement('canvas');
-        canvas.id = 'stars-canvas';
-        document.body.prepend(canvas);
-
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        const stars = [];
-        const starCount = window.innerWidth < 768 ? 100 : 200; // פחות כוכבים במובייל
-
-        class Star {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.opacity = Math.random() * 0.5 + 0.3;
-                this.twinkleSpeed = Math.random() * 0.02 + 0.01;
-                this.twinkleDirection = Math.random() > 0.5 ? 1 : -1;
-
-                // צבעי כוכבים שונים
-                const colors = [
-                    'rgba(255, 255, 255,',
-                    'rgba(184, 212, 255,',
-                    'rgba(212, 165, 255,',
-                    'rgba(13, 206, 218,'
-                ];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            update() {
-                // תנועה איטית
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                // מצמוץ
-                this.opacity += this.twinkleSpeed * this.twinkleDirection;
-                if (this.opacity >= 1 || this.opacity <= 0.3) {
-                    this.twinkleDirection *= -1;
-                }
-
-                // חזרה למסך אם יצא
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color + this.opacity + ')';
-                ctx.fill();
-
-                // הוספת זוהר קל לכוכבים גדולים יותר
-                if (this.size > 1.5) {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color + (this.opacity * 0.2) + ')';
-                    ctx.fill();
-                }
-            }
-        }
-
-        // יצירת כוכבים
-        for (let i = 0; i < starCount; i++) {
-            stars.push(new Star());
-        }
-
-        // אנימציה
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-
-            stars.forEach(star => {
-                star.update();
-                star.draw();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // עדכון גודל canvas בשינוי גודל חלון
-        window.addEventListener('resize', function () {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-    }
-
-    // הפעלת רקע הכוכבים
-    createStarfield();
-
-    // ========== יצירת כוכבים נופלים ==========
-    function createShootingStars() {
-        const container = document.getElementById('shooting-stars');
-
-        function createShootingStar() {
-            const star = document.createElement('div');
-            star.className = 'shooting-star';
-
-            // מיקום אקראי בחלק התחתון של המסך - מתחיל מצד ימין תחתון
-            star.style.left = (window.innerWidth * 0.7 + Math.random() * window.innerWidth * 0.4) + 'px';
-            star.style.top = (window.innerHeight * 0.5 + Math.random() * window.innerHeight * 0.5) + 'px';
-
-            // כיוון וזווית אקראיים - כוכבים עולים מימין לשמאל ומלמטה למעלה
-            const angle = 45 + Math.random() * 15; // 45-60 מעלות
-            star.style.transform = `rotate(${angle}deg) scaleX(-1)`;
-
-            // מהירות אקראית
-            const duration = 2 + Math.random() * 2; // 2-4 שניות
-            star.style.animationDuration = duration + 's';
-
-            container.appendChild(star);
-
-            // הסרה אחרי האנימציה
-            setTimeout(() => {
-                star.remove();
-            }, duration * 1000);
-        }
-
-        // יצירת כוכב נופל כל כמה שניות
-        setInterval(() => {
-            if (Math.random() > 0.7) { // 30% סיכוי
-                createShootingStar();
-            }
-        }, 3000);
-
-        // כוכבים ראשוניים
-        setTimeout(() => createShootingStar(), 1000);
-        setTimeout(() => createShootingStar(), 4000);
-    }
-
-    createShootingStars();
-
-    // ========== חלקיקי אנרגיה מרחפים ==========
-    function createEnergyParticles() {
-        const colors = [
-            'rgba(13, 206, 218, 0.8)',
-            'rgba(107, 63, 160, 0.8)',
-            'rgba(233, 30, 99, 0.8)',
-            'rgba(255, 215, 0, 0.8)'
-        ];
-
-        const canvas = document.createElement('canvas');
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '1';
-        document.body.prepend(canvas);
-
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const particles = [];
-        const particleCount = window.innerWidth < 768 ? 20 : 40;
-
-        class EnergyParticle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.life = 1;
-                this.decay = Math.random() * 0.01 + 0.005;
-                this.pulseSpeed = Math.random() * 0.05 + 0.02;
-                this.pulsePhase = Math.random() * Math.PI * 2;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life -= this.decay;
-
-                // Pulse effect
-                this.pulsePhase += this.pulseSpeed;
-
-                // Reset if dead
-                if (this.life <= 0) {
-                    this.life = 1;
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                }
-
-                // Wrap around edges
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
-            }
-
-            draw() {
-                const pulseFactor = 0.5 + Math.sin(this.pulsePhase) * 0.5;
-                const currentSize = this.size * (0.5 + pulseFactor * 0.5);
-
-                ctx.save();
-                ctx.globalAlpha = this.life * pulseFactor;
-
-                // Glow effect
-                const gradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, currentSize * 10
-                );
-                gradient.addColorStop(0, this.color);
-                gradient.addColorStop(0.1, this.color.replace('0.8', '0.4'));
-                gradient.addColorStop(1, 'transparent');
-
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, currentSize * 10, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Core
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, currentSize, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.restore();
-            }
-        }
-
-        // Create particles
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new EnergyParticle());
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    }
-
-    // הפעלת חלקיקי אנרגיה
-    if (window.innerWidth > 768) { // רק בדסקטופ לביצועים טובים יותר
-        createEnergyParticles();
-    }
 
     // ========== אנימציות scroll מתקדמות ==========
     const animateOnScroll = function () {
-        const elements = document.querySelectorAll('.gallery-item, .video-wrapper, .section-title, .section-description, .iframe-wrapper');
+        const elements = document.querySelectorAll('.gallery-item, .video-wrapper, .section-title, .section-description, .iframe-wrapper, .info-item');
 
         elements.forEach(element => {
             const elementPosition = element.getBoundingClientRect().top;
@@ -278,8 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (element.classList.contains('gallery-item')) {
                     element.classList.add('in-view');
                 }
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0) scale(1)';
             }
         });
     };
@@ -293,11 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
-                // השהייה קלה לאפקט מדורג
                 setTimeout(() => {
                     entry.target.classList.add('in-view');
                     entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0) scale(1)';
+                    entry.target.style.transform = 'translateY(0)';
                 }, index * 50);
             }
         });
@@ -307,12 +39,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const elementsToAnimate = document.querySelectorAll('.gallery-item, .video-wrapper, .iframe-wrapper');
     elementsToAnimate.forEach(el => observer.observe(el));
 
-    // ========== מיקרו-אנימציות לכרטיסים ==========
-    const addMicroAnimations = function () {
-        const galleryItems = document.querySelectorAll('.gallery-item');
+    // ========== אנימציות hover מתקדמות ==========
+    const addHoverAnimations = function () {
+        const interactiveElements = document.querySelectorAll('.gallery-item, .video-wrapper, .iframe-wrapper, .info-item, .social-button');
 
-        galleryItems.forEach(item => {
-            // אפקט 3D tilt על hover (רק בדסקטופ)
+        interactiveElements.forEach(item => {
             if (window.innerWidth > 768) {
                 item.addEventListener('mousemove', function (e) {
                     const rect = this.getBoundingClientRect();
@@ -322,54 +53,37 @@ document.addEventListener('DOMContentLoaded', function () {
                     const centerX = rect.width / 2;
                     const centerY = rect.height / 2;
 
-                    const rotateX = (y - centerY) / 20;
-                    const rotateY = (centerX - x) / 20;
+                    const rotateX = (y - centerY) / 30;
+                    const rotateY = (centerX - x) / 30;
 
-                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-15px) scale(1.03)`;
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
                 });
 
                 item.addEventListener('mouseleave', function () {
-                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+                    this.style.transform = '';
                 });
             }
         });
     };
 
-    // ========== אפקטים נוספים ==========
+    addHoverAnimations();
 
-    // טיפול בתמונות
+    // ========== טיפול בתמונות ==========
     const ensureImagesLoaded = function () {
         const allImages = document.querySelectorAll('img');
         allImages.forEach(img => {
             img.addEventListener('error', function () {
-                this.style.border = '2px dashed rgba(13, 206, 218, 0.3)';
+                this.style.border = '2px dashed rgba(0, 212, 255, 0.3)';
                 this.style.minHeight = '100px';
-                console.log('שגיאה בטעינת התמונה:', this.src);
             });
         });
     };
 
-    // הפעלת כל האפקטים
     ensureImagesLoaded();
-    addMicroAnimations();
 
     // scroll אנימציות
     window.addEventListener('scroll', animateOnScroll);
     window.addEventListener('load', animateOnScroll);
-
-    // ========== אנימציות נוספות ==========
-
-    // אנימציה לתמונת פרופיל
-    const profileImage = document.querySelector('.profile-image-container');
-    if (profileImage && window.innerWidth > 768) {
-        profileImage.addEventListener('mouseenter', function () {
-            this.style.transform = 'scale(1.08) rotate(5deg)';
-        });
-
-        profileImage.addEventListener('mouseleave', function () {
-            this.style.transform = 'scale(1) rotate(0)';
-        });
-    }
 
     // ========== הפעלת וידאו אוטומטית ==========
     const videos = document.querySelectorAll('video');
@@ -394,20 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ========== Parallax קל לסקציות ==========
-    if (window.innerWidth > 768) {
-        window.addEventListener('scroll', function () {
-            const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.section-title');
-
-            parallaxElements.forEach((element, index) => {
-                const speed = 0.3;
-                const yPos = -(scrolled * speed);
-                element.style.transform = `translateY(${yPos}px)`;
-            });
-        });
-    }
-
     // ========== אפקטים למובייל - Touch ==========
     if ('ontouchstart' in window) {
         const touchElements = document.querySelectorAll('.gallery-item, .video-wrapper, .iframe-wrapper');
@@ -421,23 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.style.transform = 'scale(1)';
             });
         });
-    }
-
-    // ========== Performance optimization ==========
-    // דחיית טעינת iframe עד שהם בתצוגה
-    const iframes = document.querySelectorAll('iframe[data-src]');
-    if ('IntersectionObserver' in window && iframes.length > 0) {
-        const iframeObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const iframe = entry.target;
-                    iframe.src = iframe.dataset.src;
-                    iframeObserver.unobserve(iframe);
-                }
-            });
-        });
-
-        iframes.forEach(iframe => iframeObserver.observe(iframe));
     }
 
     // ========== גלילה חלקה לקישורים פנימיים ==========
@@ -459,17 +142,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('load', function () {
         setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
-        }, 2000); // 2 שניות של טעינה
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }, 1500); // 1.5 שניות של טעינה
     });
 
     // ========== Scroll Progress Bar ==========
     const progressBar = document.querySelector('.scroll-progress-bar');
 
     function updateProgressBar() {
+        if (!progressBar) return;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight - windowHeight;
         const scrolled = window.pageYOffset;
@@ -483,188 +169,65 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========== כפתור חזרה למעלה ==========
     const backToTopBtn = document.getElementById('backToTop');
 
-    window.addEventListener('scroll', function () {
-        if (window.pageYOffset > 300) {
-            backToTopBtn.classList.add('visible');
-        } else {
-            backToTopBtn.classList.remove('visible');
-        }
-    });
-
-    backToTopBtn.addEventListener('click', function () {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-
-    // ========== חלקיקים אינטראקטיביים שעוקבים אחרי העכבר ==========
-    if (window.innerWidth > 768) {
-        const interactiveParticles = [];
-        const maxParticles = 10;
-
-        class InteractiveParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.targetX = x;
-                this.targetY = y;
-                this.size = Math.random() * 4 + 2;
-                this.life = 1;
-                this.decay = 0.02;
-                this.color = ['rgba(13, 206, 218, ', 'rgba(107, 63, 160, ', 'rgba(233, 30, 99, '][Math.floor(Math.random() * 3)];
-            }
-
-            update(mouseX, mouseY) {
-                const dx = mouseX - this.x;
-                const dy = mouseY - this.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance > 5) {
-                    this.x += dx * 0.1;
-                    this.y += dy * 0.1;
-                }
-
-                this.life -= this.decay;
-            }
-
-            draw(ctx) {
-                ctx.save();
-                ctx.globalAlpha = this.life;
-
-                const gradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, this.size * 3
-                );
-                gradient.addColorStop(0, this.color + '0.8)');
-                gradient.addColorStop(1, 'transparent');
-
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.restore();
-            }
-        }
-
-        let mouseX = 0;
-        let mouseY = 0;
-
-        document.addEventListener('mousemove', function (e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            if (interactiveParticles.length < maxParticles) {
-                interactiveParticles.push(new InteractiveParticle(mouseX, mouseY));
-            }
-        });
-
-        const canvas = document.createElement('canvas');
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '9998';
-        document.body.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function animateInteractiveParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = interactiveParticles.length - 1; i >= 0; i--) {
-                interactiveParticles[i].update(mouseX, mouseY);
-                interactiveParticles[i].draw(ctx);
-
-                if (interactiveParticles[i].life <= 0) {
-                    interactiveParticles.splice(i, 1);
-                }
-            }
-
-            requestAnimationFrame(animateInteractiveParticles);
-        }
-
-        animateInteractiveParticles();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    }
-
-    // ========== Parallax משופר לכרטיסים ==========
-    if (window.innerWidth > 768) {
-        const parallaxElements = document.querySelectorAll('.gallery-item, .video-wrapper, .iframe-wrapper');
-
+    if (backToTopBtn) {
         window.addEventListener('scroll', function () {
-            const scrolled = window.pageYOffset;
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
 
-            parallaxElements.forEach((element, index) => {
-                const rect = element.getBoundingClientRect();
-                const elementTop = rect.top + scrolled;
-                const elementHeight = rect.height;
-                const windowHeight = window.innerHeight;
+        backToTopBtn.addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 
-                if (rect.top < windowHeight && rect.bottom > 0) {
-                    const scrollProgress = (scrolled + windowHeight - elementTop) / (windowHeight + elementHeight);
-                    const translateY = (scrollProgress - 0.5) * 50;
+    // ========== אנימציות header על scroll ==========
+    let lastScroll = 0;
+    const header = document.querySelector('.main-header');
 
-                    element.style.transform = `translateY(${translateY}px)`;
+    if (header) {
+        window.addEventListener('scroll', function () {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                // גלילה למטה - header נעלם
+                header.style.transform = 'translateY(-100px)';
+                header.style.opacity = '0';
+            } else {
+                // גלילה למעלה - header מופיע
+                header.style.transform = 'translateY(0)';
+                header.style.opacity = '1';
+            }
+
+            lastScroll = currentScroll;
+        });
+    }
+
+    // ========== אנימציות smooth לסקציות ==========
+    const sections = document.querySelectorAll('section');
+
+    if ('IntersectionObserver' in window) {
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            sectionObserver.observe(section);
         });
     }
 
-    // ========== הצללות דינמיות על כרטיסים ==========
-    if (window.innerWidth > 768) {
-        const cards = document.querySelectorAll('.gallery-item, .video-wrapper');
-
-        cards.forEach(card => {
-            card.addEventListener('mousemove', function (e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-
-                const angleX = (y - centerY) / 20;
-                const angleY = (centerX - x) / 20;
-
-                const shadowX = (x - centerX) / 10;
-                const shadowY = (y - centerY) / 10;
-
-                this.style.transform = `
-                    perspective(1000px) 
-                    rotateX(${angleX}deg) 
-                    rotateY(${angleY}deg) 
-                    translateY(-15px) 
-                    scale(1.05)
-                `;
-
-                this.style.boxShadow = `
-                    ${shadowX}px ${shadowY}px 40px rgba(0, 0, 0, 0.6),
-                    0 0 60px rgba(13, 206, 218, 0.5),
-                    0 0 90px rgba(107, 63, 160, 0.3)
-                `;
-            });
-
-            card.addEventListener('mouseleave', function () {
-                this.style.transform = '';
-                this.style.boxShadow = '';
-            });
-        });
-    }
-
-    console.log('🌌 Galaxy theme loaded successfully with all enhancements!');
-}); 
+    console.log('✨ Liquid Glass theme loaded successfully!');
+});

@@ -7,8 +7,9 @@
     <meta name="description"
         content="תיק עבודות דיגיטלי של ליאור אזולאי - גרפיקאי, עורך וידאו ויזם אפליקציות. צפו בעבודות FutureOS, אלדיו ועוד.">
     <meta name="keywords" content="גרפיקה, עיצוב, וידאו, אפליקציות, FutureOS, ליאור אזולאי">
-    <meta name="theme-color" content="#0a0e27">
-    <title>ליאור ישראל אזולאי - תיק עבודות גלקטי 🌌</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <title>ליאור ישראל אזולאי - תיק עבודות</title>
 
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +18,10 @@
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Loading optimization -->
     <style>
@@ -44,26 +48,11 @@
     <!-- Loading Screen -->
     <div class="loading-screen">
         <div class="loading-content">
-            <div class="loading-logo">
-                <div class="planet"></div>
-                <div class="orbit"></div>
-            </div>
-            <h2 class="loading-text"> נעים מאוד ...</h2>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
-            </div>
+            <h2 class="loading-text">נעים מאוד...</h2>
+            <div class="loading-spinner"></div>
         </div>
     </div>
 
-    <!-- רקע חללי נוסף -->
-    <div class="milky-way"></div>
-    <div id="shooting-stars"></div>
-    <div class="space-dust"></div>
-    <div class="aurora-borealis">
-        <div class="aurora-layer aurora-1"></div>
-        <div class="aurora-layer aurora-2"></div>
-        <div class="aurora-layer aurora-3"></div>
-    </div>
 
     <!-- כפתור חזרה למעלה -->
     <button class="back-to-top" id="backToTop" aria-label="חזרה למעלה">
@@ -82,8 +71,8 @@
         </a>
     </div>
 
-    <!-- חלק עליון עם גרדיאנט -->
-    <header class="gradient-header">
+    <!-- חלק עליון -->
+    <header class="main-header">
         <div class="container">
             <div class="profile-section preload-fix">
                 <div class="profile-image-container">
@@ -127,7 +116,7 @@
                                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                             </svg>
                         </div>
-                        <span>האמהות 4 רחובות</span>
+                        <span>רחובות</span>
                     </div>
                 </div>
             </div>
@@ -145,18 +134,22 @@
                 </p>
                 <div class="videos-container">
                     <div class="video-wrapper preload-fix">
-                        <iframe width="560" height="315"
-                            src="https://www.youtube.com/embed/XtUpUCwhHJE?si=CbJgZdIgXqljT7pc"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe width="560" height="315" 
+                            src="https://www.youtube.com/embed/XtUpUCwhHJE?si=ryX3BhyVZMscV1Co" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen></iframe>
                     </div>
                     <div class="video-wrapper preload-fix">
-                        <iframe width="560" height="315"
-                            src="https://www.youtube.com/embed/wJMh2dYj7KE?si=NBgwTAZN8JhtyadW"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe width="560" height="315" 
+                            src="https://www.youtube.com/embed/wJMh2dYj7KE?si=lfwi224VoWOwOTCA" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -167,10 +160,6 @@
             <div class="container">
                 <h2 class="section-title preload-fix">גרפיקה</h2>
                 <div class="gallery">
-                    <div class="gallery-item preload-fix">
-                        <img src="lior1.jpg" alt="גרפיקה 1" loading="lazy"
-                            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\'><rect width=\'300\' height=\'225\' fill=\'%23f0f0f0\'/><text x=\'50%\' y=\'50%\' font-size=\'18\' text-anchor=\'middle\' fill=\'%23999\'>תמונה 1</text></svg>'">
-                    </div>
                     <div class="gallery-item video-item preload-fix">
                         <video src="lior2.mp4" autoplay muted loop playsinline></video>
                     </div>
