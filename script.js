@@ -229,5 +229,127 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ========== כוכבים זזים לסקציית Imagine ==========
+    function createImagineStars() {
+        const canvas = document.getElementById('imagine-stars-canvas');
+        const imagineSection = document.querySelector('.imagine-section');
+        if (!canvas || !imagineSection) return;
+
+        const ctx = canvas.getContext('2d');
+        const sectionRect = imagineSection.getBoundingClientRect();
+        let width = canvas.width = sectionRect.width;
+        let height = canvas.height = sectionRect.height;
+
+        const stars = [];
+        const starCount = window.innerWidth < 768 ? 150 : 300; // הרבה כוכבים
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.8 + 0.2;
+                this.twinkleSpeed = Math.random() * 0.01 + 0.005;
+                this.twinkleDirection = Math.random() > 0.5 ? 1 : -1;
+                
+                // צבעים: סגול או טורקיז
+                const colors = [
+                    { r: 138, g: 43, b: 226 }, // סגול
+                    { r: 64, g: 224, b: 208 }  // טורקיז
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                // תנועה עדינה
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // מצמוץ עדין
+                this.opacity += this.twinkleSpeed * this.twinkleDirection;
+                if (this.opacity >= 1 || this.opacity <= 0.2) {
+                    this.twinkleDirection *= -1;
+                }
+
+                // חזרה למסך אם יצא
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            draw() {
+                const color = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.opacity})`;
+                
+                // כוכב עם זוהר
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+
+                // זוהר קל
+                if (this.size > 1) {
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.size * 4
+                    );
+                    gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.opacity * 0.6})`);
+                    gradient.addColorStop(0.3, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.opacity * 0.3})`);
+                    gradient.addColorStop(1, 'transparent');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // יצירת כוכבים
+        for (let i = 0; i < starCount; i++) {
+            stars.push(new Star());
+        }
+
+        // אנימציה
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // עדכון גודל canvas בשינוי גודל חלון
+        function updateCanvasSize() {
+            const sectionRect = imagineSection.getBoundingClientRect();
+            width = canvas.width = sectionRect.width;
+            height = canvas.height = sectionRect.height;
+        }
+
+        window.addEventListener('resize', updateCanvasSize);
+        
+        // עדכון גם ב-scroll
+        window.addEventListener('scroll', function() {
+            const sectionRect = imagineSection.getBoundingClientRect();
+            if (sectionRect.top < window.innerHeight && sectionRect.bottom > 0) {
+                updateCanvasSize();
+            }
+        });
+    }
+
+    // הפעלת כוכבים לסקציית Imagine
+    createImagineStars();
+
     console.log('✨ Liquid Glass theme loaded successfully!');
 });
