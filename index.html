@@ -556,16 +556,16 @@
                      style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);">
                     <div class="flex items-center justify-around gap-2 md:gap-3 relative z-20">
                         <button data-page="graphics" class="nav-item active flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-palette text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                            <i class="fas fa-palette text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
                         </button>
                         <button data-page="video" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-video text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                            <i class="fas fa-video text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
                         </button>
                         <button data-page="apps" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-mobile-alt text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                            <i class="fas fa-mobile-alt text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
                         </button>
                         <button data-page="contact" id="contactNavButton" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-envelope text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+                            <i class="fas fa-envelope text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
                         </button>
                     </div>
                 </div>
@@ -575,7 +575,7 @@
             <a href="‎⁨קוחH⁩.pdf" download 
                class="cv-download-btn liquid-glass-nav pointer-events-auto rounded-full flex items-center justify-center transition-all duration-300 ease-in-out overflow-hidden relative"
                style="width: 72px; height: 72px; backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);">
-                <i class="fas fa-download text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out relative z-20"></i>
+                <i class="fas fa-download text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out relative z-20"></i>
             </a>
         </div>
 
@@ -757,10 +757,17 @@
                 if (targetPageEl) {
                     targetPageEl.classList.remove('hidden');
                     targetPageEl.classList.add('active');
+                    
+                    // Scroll to the start of the section (after header)
+                    setTimeout(() => {
+                        const header = document.querySelector('header');
+                        const headerHeight = header ? header.offsetHeight : 0;
+                        window.scrollTo({ 
+                            top: headerHeight, 
+                            behavior: 'smooth' 
+                        });
+                    }, 50);
                 }
-
-                // Scroll to top
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
 
