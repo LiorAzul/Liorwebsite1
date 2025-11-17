@@ -119,6 +119,72 @@
             padding-top: 1rem;
             padding-bottom: 0;
         }
+
+        /* Image Carousel Styles */
+        #imageCarousel {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 1.25rem;
+        }
+
+        #carouselTrack {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 1rem;
+            display: block;
+        }
+
+        /* Mobile: Better image display - show full image without excessive cropping */
+        @media (max-width: 768px) {
+            .carousel-slide {
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.08) 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .carousel-slide img {
+                object-fit: contain;
+                object-position: center center;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+
+        .carousel-dot.active {
+            background-color: rgba(255, 255, 255, 1) !important;
+            width: 0.75rem !important;
+            height: 0.75rem !important;
+        }
+
+        /* Carousel navigation buttons hover effect */
+        #carouselPrev:hover,
+        #carouselNext:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
     </style>
 </head>
 
@@ -171,6 +237,53 @@
                                 </p>
                                 <!-- Elfsight Audio Player -->
                                 <div class="elfsight-app-525f6cb1-a655-4aaa-bcdb-c7fd5fbcf0b8" data-elfsight-app-lazy></div>
+                            </div>
+                            
+                            <!-- Image Carousel Section -->
+                            <div class="mb-12">
+                                <div class="relative w-full">
+                                    <!-- Carousel Container -->
+                                    <div id="imageCarousel" class="relative">
+                                        <div id="carouselTrack" class="transition-transform duration-500 ease-in-out h-full" style="transform: translateX(0);">
+                                            <div class="carousel-slide">
+                                                <img src="ליאורקרוסלה0.jpg" alt="Carousel Image 0" class="w-full h-full object-cover rounded-2xl">
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="ליאורקרוסלה1.JPG" alt="Carousel Image 1" class="w-full h-full object-cover rounded-2xl">
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="ליאורקרוסלה2.jpg" alt="Carousel Image 2" class="w-full h-full object-cover rounded-2xl">
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="ליאורקרוסלה3.jpg" alt="Carousel Image 3" class="w-full h-full object-cover rounded-2xl">
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="ליאורקרוסלה4.jpg" alt="Carousel Image 4" class="w-full h-full object-cover rounded-2xl">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Navigation Arrows -->
+                                        <button id="carouselPrev" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full backdrop-blur-md bg-white/20 dark:bg-gray-900/20 border border-white/30 dark:border-white/10 hover:bg-white/30 dark:hover:bg-gray-900/30 transition-all duration-300 flex items-center justify-center text-white drop-shadow-lg">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                            </svg>
+                                        </button>
+                                        <button id="carouselNext" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full backdrop-blur-md bg-white/20 dark:bg-gray-900/20 border border-white/30 dark:border-white/10 hover:bg-white/30 dark:hover:bg-gray-900/30 transition-all duration-300 flex items-center justify-center text-white drop-shadow-lg">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </button>
+                                        
+                                        <!-- Dots Indicator -->
+                                        <div id="carouselDots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                            <button class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active" data-index="0"></button>
+                                            <button class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-index="1"></button>
+                                            <button class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-index="2"></button>
+                                            <button class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-index="3"></button>
+                                            <button class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-index="4"></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <!-- Placeholder for additional content in the future -->
@@ -738,6 +851,9 @@
         const headerSection = document.querySelector('header');
         let isExpanded = false;
 
+        // Carousel auto-play variables
+        let carouselInterval;
+
         function toggleExpanded() {
             isExpanded = !isExpanded;
             
@@ -771,7 +887,13 @@
                     collapseArrow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                     collapseArrow.style.transform = 'rotate(180deg)';
                 }
+
+                // Start carousel auto-play
+                startCarouselAutoPlay();
             } else {
+                // Stop carousel auto-play
+                stopCarouselAutoPlay();
+
                 // Collapse the content
                 expandedContent.classList.remove('expanded');
                 
@@ -814,6 +936,78 @@
                 e.preventDefault();
                 toggleExpanded();
             });
+        }
+
+        // Image Carousel Functionality
+        const carouselTrack = document.getElementById('carouselTrack');
+        const carouselPrev = document.getElementById('carouselPrev');
+        const carouselNext = document.getElementById('carouselNext');
+        const carouselDots = document.querySelectorAll('.carousel-dot');
+        let currentSlide = 0;
+        const totalSlides = 5;
+
+        function updateCarousel() {
+            if (carouselTrack) {
+                const translateX = -currentSlide * 100;
+                carouselTrack.style.transform = `translateX(${translateX}%)`;
+            }
+            
+            // Update dots
+            carouselDots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                    dot.classList.remove('bg-white/50');
+                    dot.classList.add('bg-white');
+                    dot.classList.add('w-3');
+                    dot.classList.add('h-3');
+                } else {
+                    dot.classList.remove('active');
+                    dot.classList.add('bg-white/50');
+                    dot.classList.remove('bg-white');
+                    dot.classList.remove('w-3');
+                    dot.classList.remove('h-3');
+                }
+            });
+        }
+
+        if (carouselNext) {
+            carouselNext.addEventListener('click', function() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            });
+        }
+
+        if (carouselPrev) {
+            carouselPrev.addEventListener('click', function() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            });
+        }
+
+        // Dot navigation
+        carouselDots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+
+        // Auto-play carousel functions
+        function startCarouselAutoPlay() {
+            stopCarouselAutoPlay(); // Clear any existing interval
+            carouselInterval = setInterval(() => {
+                if (isExpanded) {
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    updateCarousel();
+                }
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        function stopCarouselAutoPlay() {
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+                carouselInterval = null;
+            }
         }
     </script>
 </body>
