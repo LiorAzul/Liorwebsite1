@@ -26,6 +26,30 @@
     <!-- Spline Viewer -->
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.11.4/build/spline-viewer.js"></script>
 
+    <!-- SVG Filter for Liquid Glass Distortion Effect -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+        <defs>
+            <filter id="frosted" primitiveUnits="objectBoundingBox">
+                <feTurbulence
+                    type="turbulence"
+                    baseFrequency="0.02"
+                    numOctaves="3"
+                    seed="2"
+                    result="map"
+                />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur"/>
+                <feDisplacementMap
+                    id="disp"
+                    in="blur"
+                    in2="map"
+                    scale="1"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                />
+            </filter>
+        </defs>
+    </svg>
+
     <style>
         body {
             opacity: 0;
@@ -33,6 +57,67 @@
         }
         body.loaded {
             opacity: 1;
+        }
+
+        /* Liquid Glass Background Animation */
+        @keyframes liquidFloat {
+            0%, 100% {
+                background-position: center center;
+            }
+            25% {
+                background-position: 30% 70%;
+            }
+            50% {
+                background-position: 70% 30%;
+            }
+            75% {
+                background-position: 40% 60%;
+            }
+        }
+
+        @keyframes liquidWave {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+        /* Subtle bounce animation for arrow */
+        @keyframes bounce-subtle {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        .animate-bounce-subtle {
+            animation: bounce-subtle 2s ease-in-out infinite;
+        }
+
+        /* Smooth expand/collapse animation */
+        #expandedContent {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        padding 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        #expandedContent.expanded {
+            max-height: 2000px;
+            opacity: 1;
+            transform: translateY(0);
+            padding-top: 1rem;
+            padding-bottom: 0;
         }
     </style>
 </head>
@@ -65,9 +150,39 @@
                     <!-- Title and Description -->
                     <div class="flex-1 text-left w-full">
                         <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-4 text-gray-900 dark:text-white leading-tight drop-shadow-lg text-left">Lior Israel Azulay</h1>
-                        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl text-left drop-shadow-md">
+                        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl text-left drop-shadow-md mb-6">
                             Full stack Web, Brand and Motion Designer, entrepreneur and vibe-coder
                         </p>
+                        
+                        <!-- Show More Button -->
+                        <button id="showMoreBtn" class="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 group mb-8">
+                            <span id="showMoreText" class="text-sm md:text-base font-medium drop-shadow-sm">show more</span>
+                            <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Expanded Content (Hidden by default) -->
+                        <div id="expandedContent" class="hidden w-full max-w-2xl overflow-hidden">
+                            <!-- Music Widget Section -->
+                            <div class="mt-4 mb-12">
+                                <p class="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-3 text-left drop-shadow-sm">
+                                    I'm currently listening to...
+                                </p>
+                                <!-- Elfsight Audio Player -->
+                                <div class="elfsight-app-525f6cb1-a655-4aaa-bcdb-c7fd5fbcf0b8" data-elfsight-app-lazy></div>
+                            </div>
+                            
+                            <!-- Placeholder for additional content in the future -->
+                            <div class="additional-content-space mb-8"></div>
+                            
+                            <!-- Large Arrow Icon at Bottom -->
+                            <button id="collapseBtn" class="w-full flex justify-center items-center py-4 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-300 group cursor-pointer">
+                                <svg class="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 group-hover:scale-110 animate-bounce-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,15 +354,15 @@
 
         <!-- Contact Menu (Floating) - Above Main Nav -->
         <div id="contactMenu" class="fixed inset-0 z-[60] hidden items-end justify-center pb-32 pointer-events-none">
-            <div class="contact-menu-content relative z-10 pointer-events-auto backdrop-blur-3xl bg-white/85 dark:bg-gray-900/85 rounded-3xl p-5 shadow-2xl border border-white/20 dark:border-white/10 max-w-xs w-full mx-4 mb-2 opacity-0 translate-y-8 scale-95"
-                 style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2); transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <div class="contact-menu-content liquid-glass-contact relative z-10 pointer-events-auto rounded-3xl p-5 shadow-2xl max-w-xs w-full mx-4 mb-2 opacity-0 translate-y-8 scale-95 overflow-hidden"
+                 style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
                 <!-- Close Button - Top Right -->
-                <button id="closeContactMenu" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 ease-in-out transform hover:scale-110 z-20">
+                <button id="closeContactMenu" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 ease-in-out transform hover:scale-110 z-30">
                     <i class="fas fa-times text-xl transition-transform duration-300 ease-in-out"></i>
                 </button>
                 
                 <!-- Profile Image - Top Center -->
-                <div class="flex justify-center mb-4 mt-2">
+                <div class="flex justify-center mb-4 mt-2 relative z-20">
                     <div class="w-24 h-24 rounded-full overflow-hidden shadow-lg">
                         <img src="ליאורפרופיל2.jpeg" alt="Lior Azulay" 
                             class="w-full h-full object-cover rounded-full contact-profile-image"
@@ -256,10 +371,10 @@
                 </div>
                 
                 <!-- Title - Centered -->
-                <div class="flex justify-center items-center mb-5">
+                <div class="flex justify-center items-center mb-5 relative z-20">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white transition-all duration-300 ease-in-out">contact me</h3>
                 </div>
-                <div class="space-y-3 contact-menu-items">
+                <div class="space-y-3 contact-menu-items relative z-20">
                     <a href="https://www.linkedin.com/in/azulay-lior-42b43122a/" target="_blank" 
                         class="flex items-center gap-3 p-3 rounded-full backdrop-blur-md bg-blue-50/80 dark:bg-blue-900/30 border border-blue-200/50 dark:border-blue-700/30 hover:bg-blue-100/90 dark:hover:bg-blue-900/50 transition-all duration-300 ease-in-out shadow-sm transform hover:scale-105 hover:shadow-md">
                         <i class="fab fa-linkedin-in text-xl text-blue-600 dark:text-blue-400 transition-transform duration-300 ease-in-out"></i>
@@ -288,9 +403,9 @@
         <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 md:gap-4 pointer-events-none max-w-[calc(100%-2rem)]">
             <!-- Main Navigation Menu -->
             <nav class="pointer-events-auto">
-                <div class="relative rounded-full p-2 transition-all duration-500 ease-in-out"
-                     style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.1);">
-                    <div class="flex items-center justify-around gap-2 md:gap-3">
+                <div class="liquid-glass-nav relative rounded-full p-2 transition-all duration-500 ease-in-out overflow-hidden"
+                     style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);">
+                    <div class="flex items-center justify-around gap-2 md:gap-3 relative z-20">
                         <button data-page="graphics" class="nav-item active flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
                             <i class="fas fa-palette text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
                         </button>
@@ -307,70 +422,72 @@
                 </div>
             </nav>
 
-            <!-- CV Download Button (Circular) - 20% smaller than before -->
+            <!-- CV Download Button (Circular) - Same size as main nav -->
             <a href="‎⁨קוחH⁩.pdf" download 
-               class="cv-download-btn pointer-events-auto rounded-full flex items-center justify-center transition-all duration-300 ease-in-out"
-               style="width: 62.72px; height: 62.72px; backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px); background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.1);">
-                <i class="fas fa-download text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out"></i>
+               class="cv-download-btn liquid-glass-nav pointer-events-auto rounded-full flex items-center justify-center transition-all duration-300 ease-in-out overflow-hidden relative"
+               style="width: 72px; height: 72px; backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);">
+                <i class="fas fa-download text-2xl md:text-3xl text-gray-700 dark:text-white transition-all duration-300 ease-in-out relative z-20"></i>
             </a>
-            <style>
-                @media (min-width: 768px) {
-                    .cv-download-btn {
-                        width: 71.68px !important;
-                        height: 71.68px !important;
-                    }
-                }
-            </style>
         </div>
 
         <!-- Enhanced Liquid Glass Styles -->
         <style>
-            /* Light Mode Navigation */
-            nav > div {
-                background: rgba(255, 255, 255, 0.75) !important;
-                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            /* Light Mode Navigation - Liquid Glass */
+            .liquid-glass-nav {
+                background: rgba(255, 255, 255, 0.08) !important;
+                border: 2px solid transparent !important;
                 box-shadow: 
-                    0 20px 60px rgba(0, 0, 0, 0.15),
-                    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-                    0 1px 2px rgba(0, 0, 0, 0.1),
-                    0 0 40px rgba(255, 255, 255, 0.1),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+                    0 0 0 2px rgba(255, 255, 255, 0.6),
+                    0 16px 32px rgba(0, 0, 0, 0.12) !important;
+                isolation: isolate;
             }
 
-            /* Dark Mode Navigation */
+            .liquid-glass-nav::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+                overflow: hidden;
+                border-radius: 9999px;
+                pointer-events: none;
+            }
+
+            .liquid-glass-nav::after {
+                content: '';
+                position: absolute;
+                z-index: -1;
+                inset: 0;
+                border-radius: 9999px;
+                overflow: hidden;
+                isolation: isolate;
+            }
+
+            /* Dark Mode Navigation - Liquid Glass */
             @media (prefers-color-scheme: dark) {
-                nav > div {
-                    background: rgba(28, 28, 30, 0.75) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                .liquid-glass-nav {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                    border: 2px solid transparent !important;
                     box-shadow: 
-                        0 20px 60px rgba(0, 0, 0, 0.4),
-                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-                        0 1px 2px rgba(0, 0, 0, 0.2),
-                        0 0 40px rgba(255, 255, 255, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                        0 0 0 2px rgba(255, 255, 255, 0.3),
+                        0 16px 32px rgba(0, 0, 0, 0.4) !important;
+                }
+
+                .liquid-glass-nav::before {
+                    pointer-events: none;
                 }
             }
 
-            /* CV Download Button Styles */
+            /* CV Download Button Styles - Uses same liquid glass effect as nav */
+            .cv-download-btn {
+                position: relative;
+            }
+
             .cv-download-btn:hover {
                 transform: scale(1.1);
             }
 
             .cv-download-btn:hover i {
                 transform: scale(1.15) rotate(5deg);
-            }
-
-            @media (prefers-color-scheme: dark) {
-                .cv-download-btn {
-                    background: rgba(28, 28, 30, 0.75) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                    box-shadow: 
-                        0 20px 60px rgba(0, 0, 0, 0.4),
-                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-                        0 1px 2px rgba(0, 0, 0, 0.2),
-                        0 0 40px rgba(255, 255, 255, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-                }
             }
 
             /* Nav item icons - white in dark mode */
@@ -380,20 +497,43 @@
                 }
             }
 
-            /* Contact Menu Enhanced Glass - No backdrop blur on background */
-            .contact-menu-content {
-                backdrop-filter: saturate(180%) blur(40px) !important;
-                -webkit-backdrop-filter: saturate(180%) blur(40px) !important;
+            /* Contact Menu Enhanced Liquid Glass */
+            .liquid-glass-contact {
+                background: rgba(255, 255, 255, 0.08) !important;
+                border: 2px solid transparent !important;
+                box-shadow: 
+                    0 0 0 2px rgba(255, 255, 255, 0.6),
+                    0 16px 32px rgba(0, 0, 0, 0.12) !important;
+                isolation: isolate;
+            }
+
+            .liquid-glass-contact::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+                overflow: hidden;
+                border-radius: 24px;
+                pointer-events: none;
+            }
+
+            .liquid-glass-contact::after {
+                content: '';
+                position: absolute;
+                z-index: -1;
+                inset: 0;
+                border-radius: 24px;
+                overflow: hidden;
+                isolation: isolate;
             }
 
             @media (prefers-color-scheme: dark) {
-                .contact-menu-content {
+                .liquid-glass-contact {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                    border: 2px solid transparent !important;
                     box-shadow: 
-                        0 20px 60px rgba(0, 0, 0, 0.4),
-                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-                        0 1px 2px rgba(0, 0, 0, 0.2),
-                        0 0 40px rgba(255, 255, 255, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                        0 0 0 2px rgba(255, 255, 255, 0.3),
+                        0 16px 32px rgba(0, 0, 0, 0.4) !important;
                 }
             }
         </style>
@@ -402,8 +542,9 @@
         <div class="h-24"></div>
     </div>
 
-    <!-- Elfsight Script -->
+    <!-- Elfsight Scripts -->
     <script src="https://static.elfsight.com/platform/platform.js" async></script>
+    <script src="https://elfsightcdn.com/platform.js" async></script>
 
     <script src="script.js"></script>
     <script>
@@ -588,6 +729,92 @@
                 }, 2000);
             });
         });
+
+        // Show More / Expand Header Section
+        const showMoreBtn = document.getElementById('showMoreBtn');
+        const showMoreText = document.getElementById('showMoreText');
+        const expandedContent = document.getElementById('expandedContent');
+        const collapseBtn = document.getElementById('collapseBtn');
+        const headerSection = document.querySelector('header');
+        let isExpanded = false;
+
+        function toggleExpanded() {
+            isExpanded = !isExpanded;
+            
+            if (isExpanded) {
+                // Expand the content
+                expandedContent.classList.remove('hidden');
+                
+                // Trigger animation
+                setTimeout(() => {
+                    expandedContent.classList.add('expanded');
+                    headerSection.style.minHeight = 'auto';
+                    headerSection.style.paddingBottom = '4rem';
+                    headerSection.style.transition = 'padding-bottom 0.6s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 10);
+                
+                // Change button text
+                if (showMoreText) {
+                    showMoreText.textContent = 'show less';
+                }
+                
+                // Rotate arrow icon in button
+                const arrow = showMoreBtn.querySelector('svg');
+                if (arrow) {
+                    arrow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+                
+                // Rotate arrow icon in collapse button
+                const collapseArrow = collapseBtn?.querySelector('svg');
+                if (collapseArrow) {
+                    collapseArrow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    collapseArrow.style.transform = 'rotate(180deg)';
+                }
+            } else {
+                // Collapse the content
+                expandedContent.classList.remove('expanded');
+                
+                setTimeout(() => {
+                    expandedContent.classList.add('hidden');
+                    headerSection.style.minHeight = '';
+                    headerSection.style.paddingBottom = '';
+                }, 600);
+                
+                // Change button text back
+                if (showMoreText) {
+                    showMoreText.textContent = 'show more';
+                }
+                
+                // Rotate arrow icon back in button
+                const arrow = showMoreBtn.querySelector('svg');
+                if (arrow) {
+                    arrow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+                
+                // Rotate arrow icon back in collapse button
+                const collapseArrow = collapseBtn?.querySelector('svg');
+                if (collapseArrow) {
+                    collapseArrow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    collapseArrow.style.transform = 'rotate(0deg)';
+                }
+            }
+        }
+
+        if (showMoreBtn && expandedContent && headerSection) {
+            showMoreBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleExpanded();
+            });
+        }
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleExpanded();
+            });
+        }
     </script>
 </body>
 
