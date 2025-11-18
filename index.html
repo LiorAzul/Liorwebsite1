@@ -131,6 +131,14 @@
             border-radius: 1.25rem;
         }
 
+        /* Desktop: Carousel adjustments for side-by-side layout */
+        @media (min-width: 768px) {
+            #imageCarousel {
+                margin: 0;
+                max-width: 100%;
+            }
+        }
+
         #carouselTrack {
             display: flex;
             height: 100%;
@@ -238,7 +246,7 @@
             <!-- Background Animation Layer (Spline Iframe) -->
             <div class="absolute inset-0 z-0 w-full h-full">
                 <iframe 
-                    src="https://my.spline.design/datatransfer-f6e54a2415b66c3b37093b55eb637ba1/" 
+                    src="https://my.spline.design/holoblobs-OYIzwCoSwORlC8hxL6hPcBpZ/" 
                     title="Background animation"
                     frameborder="0" 
                     width="100%" 
@@ -261,18 +269,20 @@
                             </p>
                         
                         <!-- Expanded Content (Hidden by default) -->
-                        <div id="expandedContent" class="hidden w-full max-w-lg overflow-hidden">
-                            <!-- Music Widget Section -->
-                            <div class="mt-4 mb-12">
-                                <p class="text-sm md:text-base text-white/80 mb-3 text-left drop-shadow-sm">
-                                    I'm currently listening to...
-                                </p>
-                                <!-- Elfsight Audio Player -->
-                                <div class="elfsight-app-525f6cb1-a655-4aaa-bcdb-c7fd5fbcf0b8" data-elfsight-app-lazy></div>
-                            </div>
-                            
-                            <!-- Image Carousel Section -->
-                            <div class="mb-12">
+                        <div id="expandedContent" class="hidden w-full max-w-lg md:max-w-4xl overflow-hidden">
+                            <!-- Desktop: Side by side, Mobile: Stacked -->
+                            <div class="flex flex-col md:flex-row md:gap-8 md:items-start">
+                                <!-- Music Widget Section -->
+                                <div class="mt-4 mb-12 md:mb-0 md:flex-1">
+                                    <p class="text-sm md:text-base text-white/80 mb-3 text-left drop-shadow-sm">
+                                        I'm currently listening to...
+                                    </p>
+                                    <!-- Elfsight Audio Player -->
+                                    <div class="elfsight-app-525f6cb1-a655-4aaa-bcdb-c7fd5fbcf0b8" data-elfsight-app-lazy></div>
+                                </div>
+                                
+                                <!-- Image Carousel Section -->
+                                <div class="mb-12 md:mb-0 md:flex-1">
                                 <div class="relative w-full">
                                     <!-- Carousel Container -->
                                     <div id="imageCarousel" class="relative">
@@ -316,6 +326,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                             
                             <!-- Placeholder for additional content in the future -->
@@ -324,7 +335,7 @@
                         </div>
 
                         <!-- Show More Button (Bottom of section) -->
-                        <div class="w-full flex justify-center mt-8">
+                        <div class="w-full flex justify-center mt-16">
                             <button id="showMoreBtn" class="flex items-center gap-3 text-white/90 hover:text-white transition-colors duration-300 group">
                                 <span id="showMoreText" class="text-base font-medium tracking-wide uppercase drop-shadow-md">show more</span>
                                 <svg class="w-6 h-6 transition-transform duration-300 group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
