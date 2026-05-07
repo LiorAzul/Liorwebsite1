@@ -525,104 +525,64 @@ header .flex {
         0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-.app-launch-card {
-    position: relative;
+.apps-home-section {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(98, 232, 255, 0.08), transparent 34%),
+        #02030a !important;
+}
+
+.apps-home-grid {
+    width: min(100%, 620px);
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2.25rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem);
+    justify-items: center;
+    padding: 1rem 0 7rem;
+}
+
+.app-home-button {
+    width: min(100%, 220px);
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 1.25rem;
-    overflow: hidden;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
-        rgba(255, 255, 255, 0.04);
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.16),
-        0 22px 70px rgba(0, 0, 0, 0.34);
-    backdrop-filter: blur(24px) saturate(160%);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-}
-
-.app-launch-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 12% 0%, rgba(98, 232, 255, 0.16), transparent 32%),
-        radial-gradient(circle at 100% 100%, rgba(167, 139, 250, 0.18), transparent 30%);
-    pointer-events: none;
-}
-
-.app-launch-icon,
-.app-launch-copy,
-.app-launch-button {
-    position: relative;
-    z-index: 1;
-}
-
-.app-launch-icon {
-    display: inline-flex;
-    width: 64px;
-    height: 64px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
+    gap: 0.85rem;
     color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-.app-launch-icon i {
-    font-size: 1.55rem;
-}
-
-.app-launch-copy {
-    text-align: left;
-}
-
-.app-launch-copy h3 {
-    margin-bottom: 0.25rem;
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: #fff;
-}
-
-.app-launch-copy p {
-    margin: 0;
-    color: rgba(248, 250, 252, 0.58);
-}
-
-.app-launch-button {
-    display: inline-flex;
-    min-height: 46px;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.75rem 1.1rem;
-    border-radius: 999px;
-    color: #fff;
-    white-space: nowrap;
+    text-align: center;
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.18),
-        0 12px 30px rgba(0, 0, 0, 0.22);
-    transition: transform 260ms ease, background 260ms ease, box-shadow 260ms ease;
+    transition: transform 260ms ease, filter 260ms ease;
 }
 
-.app-launch-button:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.18);
+.app-home-button:hover {
+    transform: translateY(-4px) scale(1.035);
+    filter: brightness(1.08);
+}
+
+.app-home-button:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.app-home-icon {
+    width: clamp(128px, 24vw, 190px);
+    aspect-ratio: 1;
+    display: block;
+    object-fit: cover;
+    border-radius: 25%;
     box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.22),
-        0 18px 40px rgba(0, 0, 0, 0.3),
-        0 0 28px rgba(167, 139, 250, 0.18);
+        0 22px 42px rgba(0, 0, 0, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.app-home-button span {
+    max-width: 100%;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: clamp(1rem, 2.3vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
 }
 
 /* ========== Vertical Image Stack ========== */
@@ -1000,14 +960,10 @@ header .flex {
         font-size: 1.2rem;
     }
 
-    .app-launch-card {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        text-align: center;
-    }
-
-    .app-launch-copy {
-        text-align: center;
+    .apps-home-grid {
+        width: min(100%, 440px);
+        gap: 2rem 1.25rem;
+        padding-bottom: 6.5rem;
     }
 }
 
