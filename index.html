@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -7,8 +7,7 @@
     <meta name="description"
         content="Digital portfolio of Lior Azulay - Graphic designer, video editor and app developer. View works from FutureOS, Eldio and more.">
     <meta name="keywords" content="graphics, design, video, applications, FutureOS, Lior Azulay">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#02030a">
     <title>Lior Israel Azulay - Portfolio</title>
 
     <!-- Preload critical resources -->
@@ -18,37 +17,15 @@
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Spline Viewer -->
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.11.4/build/spline-viewer.js"></script>
-
-    <!-- SVG Filter for Liquid Glass Distortion Effect -->
-    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
-        <defs>
-            <filter id="frosted" primitiveUnits="objectBoundingBox">
-                <feTurbulence
-                    type="turbulence"
-                    baseFrequency="0.02"
-                    numOctaves="3"
-                    seed="2"
-                    result="map"
-                />
-                <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur"/>
-                <feDisplacementMap
-                    id="disp"
-                    in="blur"
-                    in2="map"
-                    scale="1"
-                    xChannelSelector="R"
-                    yChannelSelector="G"
-                />
-            </filter>
-        </defs>
-    </svg>
 
     <style>
         body {
@@ -230,51 +207,108 @@
     </style>
 </head>
 
-<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="bg-[#02030a] text-zinc-100 transition-colors duration-300">
+    <!-- SVG Filters for Gradient Goo and Liquid Glass Distortion -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true" focusable="false">
+        <defs>
+            <filter id="frosted" primitiveUnits="objectBoundingBox">
+                <feTurbulence
+                    type="turbulence"
+                    baseFrequency="0.02"
+                    numOctaves="3"
+                    seed="2"
+                    result="map"
+                />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur"/>
+                <feDisplacementMap
+                    id="disp"
+                    in="blur"
+                    in2="map"
+                    scale="1"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                />
+            </filter>
+            <filter id="blurMe">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix
+                    in="blur"
+                    mode="matrix"
+                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
+                    result="goo"
+                />
+                <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+            <filter
+                id="glass-distortion"
+                x="0%"
+                y="0%"
+                width="100%"
+                height="100%"
+                filterUnits="objectBoundingBox"
+            >
+                <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.001 0.005"
+                    numOctaves="1"
+                    seed="17"
+                    result="turbulence"
+                />
+                <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
+                <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="softMap"
+                    scale="120"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                />
+            </filter>
+        </defs>
+    </svg>
+
     <!-- Loading Screen -->
-            <div id="loadingScreen" class="fixed inset-0 bg-white dark:bg-black z-50 flex items-center justify-center transition-opacity duration-500">
+            <div id="loadingScreen" class="fixed inset-0 bg-[#02030a] z-50 flex items-center justify-center transition-opacity duration-500">
                 <div class="text-center">
                     <h2 class="text-2xl font-bold mb-4">Nice to meet you...</h2>
-                    <div class="w-12 h-12 border-4 border-gray-200 dark:border-gray-800 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
+                    <div class="w-12 h-12 border-4 border-white/10 border-t-violet-400 rounded-full animate-spin mx-auto"></div>
                 </div>
             </div>
 
     <!-- Main Container -->
     <div class="min-h-screen">
         <!-- Header Section -->
-        <header class="relative z-10 py-12 px-6 md:px-12 overflow-hidden min-h-[500px] md:min-h-[600px]">
-            <!-- Background Animation Layer (Spline Iframe) -->
-            <div class="absolute inset-0 z-0 w-full h-full">
-                <iframe 
-                    src="https://my.spline.design/holoblobs-OYIzwCoSwORlC8hxL6hPcBpZ/" 
-                    title="Background animation"
-                    frameborder="0" 
-                    width="100%" 
-                    height="100%"
-                    class="w-full h-full"
-                    loading="lazy"
-                    allow="fullscreen">
-                </iframe>
+        <header class="portfolio-hero relative z-10 px-6 md:px-12 overflow-hidden min-h-screen flex items-center justify-center text-center">
+            <!-- Background Gradient Animation Layer -->
+            <div id="heroGradient" class="background-gradient-animation absolute inset-0 z-0">
+                <div class="gradient-vignette"></div>
+                <div class="gradients-container">
+                    <div class="gradient-orb gradient-orb-first"></div>
+                    <div class="gradient-orb gradient-orb-second"></div>
+                    <div class="gradient-orb gradient-orb-third"></div>
+                    <div class="gradient-orb gradient-orb-fourth"></div>
+                    <div class="gradient-orb gradient-orb-fifth"></div>
+                    <div id="heroPointerOrb" class="gradient-orb gradient-pointer-orb"></div>
+                </div>
             </div>
             
             <!-- Content Layer 2 (Title, Description) -->
-            <div class="relative z-20 max-w-7xl mx-auto py-8">
-                <div class="flex flex-col items-start justify-start gap-8 md:gap-12">
+            <div class="relative z-20 w-full max-w-7xl mx-auto py-20">
+                <div class="hero-content flex flex-col items-center justify-center gap-8 md:gap-12">
                     <!-- Title and Description -->
-                    <div class="flex-1 text-left w-full flex flex-col min-h-[420px]">
-                        <div class="flex-1 flex flex-col">
-                            <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-4 text-white leading-tight drop-shadow-lg text-left">Lior Israel Azulay</h1>
-                            <p class="text-lg md:text-xl text-white/90 max-w-2xl text-left drop-shadow-md mb-6">
+                    <div class="flex-1 text-center w-full flex flex-col items-center justify-center min-h-[520px]">
+                        <div class="flex-1 flex flex-col items-center justify-center w-full">
+                            <h1 class="hero-title text-6xl md:text-8xl lg:text-9xl font-black mb-5 text-white leading-tight drop-shadow-lg text-center">Lior Israel Azulay</h1>
+                            <p class="hero-subtitle text-lg md:text-xl text-white/80 max-w-2xl text-center drop-shadow-md mb-10">
                                 Full stack Web, Brand and Motion Designer, entrepreneur and vibe-coder
                             </p>
                         
                         <!-- Expanded Content (Hidden by default) -->
-                        <div id="expandedContent" class="hidden w-full max-w-lg md:max-w-4xl overflow-hidden">
+                        <div id="expandedContent" class="hidden w-full max-w-lg md:max-w-5xl overflow-hidden mx-auto">
                             <!-- Desktop: Side by side, Mobile: Stacked -->
-                            <div class="flex flex-col md:flex-row md:gap-8 md:items-start">
+                            <div class="flex flex-col md:flex-row md:gap-8 md:items-stretch items-center justify-center">
                                 <!-- Music Widget Section -->
-                                <div class="mt-4 mb-12 md:mb-0 md:flex-1">
-                                    <p class="text-sm md:text-base text-white/80 mb-3 text-left drop-shadow-sm">
+                                <div class="hero-expanded-panel mt-4 mb-12 md:mb-0 md:flex-1">
+                                    <p class="text-sm md:text-base text-white/70 mb-3 text-center drop-shadow-sm">
                                         I'm currently listening to...
                                     </p>
                                     <!-- Elfsight Audio Player -->
@@ -282,7 +316,7 @@
                                 </div>
                                 
                                 <!-- Image Carousel Section -->
-                                <div class="mb-12 md:mb-0 md:flex-1">
+                                <div class="hero-expanded-panel mb-12 md:mb-0 md:flex-1">
                                 <div class="relative w-full">
                                     <!-- Carousel Container -->
                                     <div id="imageCarousel" class="relative">
@@ -336,8 +370,8 @@
 
                         <!-- Show More Button (Bottom of section) -->
                         <div class="w-full flex justify-center mt-16">
-                            <button id="showMoreBtn" class="flex items-center gap-3 text-white/90 hover:text-white transition-colors duration-300 group">
-                                <span id="showMoreText" class="text-base font-medium tracking-wide uppercase drop-shadow-md">show more</span>
+                            <button id="showMoreBtn" class="liquid-action-button flex items-center justify-center gap-4 text-white transition-all duration-500 group">
+                                <span id="showMoreText" class="text-2xl md:text-4xl font-black uppercase drop-shadow-md">show more</span>
                                 <svg class="w-6 h-6 transition-transform duration-300 group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
@@ -353,36 +387,61 @@
         <main class="relative z-10">
             <!-- Graphics Page -->
             <div id="graphics-page" class="page-content active">
-                <section class="py-12 px-6 md:px-12">
-                    <div class="max-w-7xl mx-auto">
-                        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center">Graphics</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <video src="lior2.mp4" autoplay muted loop playsinline class="w-full h-auto"></video>
+                <section class="graphics-stack-section py-16 px-6 md:px-12">
+                    <div class="max-w-7xl mx-auto text-center">
+                        <h2 class="section-title text-4xl md:text-6xl font-black mb-4 text-center">Graphics</h2>
+                        <p class="section-subtitle text-white/55 mb-8 max-w-xl mx-auto">
+                            Selected visual work, framed as a dark studio stack.
+                        </p>
+                        <div id="graphicsStack" class="vertical-stack-shell mx-auto" aria-label="Graphics image gallery">
+                            <div class="stack-counter" aria-hidden="true">
+                                <span id="stackCurrent">01</span>
+                                <span class="stack-divider"></span>
+                                <span id="stackTotal">09</span>
                             </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior3.jpg" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
+                            <div class="stack-stage">
+                                <button class="stack-card" data-index="0" aria-label="Show graphics image 1">
+                                    <img src="lior1.jpg" alt="Graphics work 1" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="1" aria-label="Show graphics image 2">
+                                    <img src="lior3.jpg" alt="Graphics work 2" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="2" aria-label="Show graphics image 3">
+                                    <img src="lior4.webp" alt="Graphics work 3" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="3" aria-label="Show graphics image 4">
+                                    <img src="lior5.webp" alt="Graphics work 4" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="4" aria-label="Show graphics image 5">
+                                    <img src="lior6.webp" alt="Graphics work 5" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="5" aria-label="Show graphics image 6">
+                                    <img src="lior7.webp" alt="Graphics work 6" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="6" aria-label="Show graphics image 7">
+                                    <img src="lior8.webp" alt="Graphics work 7" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="7" aria-label="Show graphics image 8">
+                                    <img src="lior9.webp" alt="Graphics work 8" loading="lazy" draggable="false">
+                                </button>
+                                <button class="stack-card" data-index="8" aria-label="Show graphics image 9">
+                                    <img src="lior10.webp" alt="Graphics work 9" loading="lazy" draggable="false">
+                                </button>
                             </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior4.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
+                            <div class="stack-dots" aria-label="Graphics gallery navigation">
+                                <button class="stack-dot active" data-index="0" aria-label="Go to image 1"></button>
+                                <button class="stack-dot" data-index="1" aria-label="Go to image 2"></button>
+                                <button class="stack-dot" data-index="2" aria-label="Go to image 3"></button>
+                                <button class="stack-dot" data-index="3" aria-label="Go to image 4"></button>
+                                <button class="stack-dot" data-index="4" aria-label="Go to image 5"></button>
+                                <button class="stack-dot" data-index="5" aria-label="Go to image 6"></button>
+                                <button class="stack-dot" data-index="6" aria-label="Go to image 7"></button>
+                                <button class="stack-dot" data-index="7" aria-label="Go to image 8"></button>
+                                <button class="stack-dot" data-index="8" aria-label="Go to image 9"></button>
                             </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior5.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
-                            </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior6.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
-                            </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior7.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
-                            </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior8.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
-                            </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior9.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
-                            </div>
-                            <div class="gallery-item rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all">
-                                <img src="lior10.webp" alt="Graphics" loading="lazy" class="w-full h-auto object-cover">
+                            <div class="stack-arrows" aria-hidden="true">
+                                <i class="fas fa-arrow-up"></i>
+                                <i class="fas fa-arrow-down"></i>
                             </div>
                         </div>
                     </div>
@@ -443,10 +502,10 @@
                                 Imagine is my most ambitious project to date, where users can generate 3D worlds using artificial intelligence in any browser, including VR.
                             </p>
                         </div>
-                        <div class="max-w-sm mx-auto rounded-2xl overflow-hidden backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-2 border-white/30 shadow-2xl">
-                            <iframe width="100%" height="560" src="https://www.youtube.com/embed/n0VWd9wE4mY" 
-                                title="Imagine YouTube video" frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        <div class="instagram-reel-frame max-w-sm mx-auto rounded-2xl overflow-hidden backdrop-blur-xl bg-black/35 border border-white/20 shadow-2xl">
+                            <iframe width="100%" height="620" src="https://www.instagram.com/reel/DXoOhy_DVzi/embed/"
+                                title="Imagine Instagram reel" frameborder="0"
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
                     </div>
@@ -559,104 +618,34 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation (Split Menu) -->
-        <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 md:gap-4 pointer-events-none max-w-[calc(100%-2rem)]">
-            <!-- Main Navigation Menu -->
-            <nav class="pointer-events-auto">
-                <div class="liquid-glass-nav relative rounded-full p-2 transition-all duration-500 ease-in-out overflow-hidden"
-                     style="backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);">
-                    <div class="flex items-center justify-around gap-2 md:gap-3 relative z-20">
-                        <button data-page="graphics" class="nav-item active flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-palette text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
-                        </button>
-                        <button data-page="video" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-video text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
-                        </button>
-                        <button data-page="apps" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-mobile-alt text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
-                        </button>
-                        <button data-page="contact" id="contactNavButton" class="nav-item flex items-center justify-center rounded-full transition-all duration-300 ease-in-out" style="width: 56px; height: 56px;">
-                            <i class="fas fa-envelope text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out"></i>
-                        </button>
-                    </div>
+        <!-- Bottom Navigation Dock -->
+        <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none max-w-[calc(100%-2rem)]">
+            <nav class="glass-dock pointer-events-auto" aria-label="Main navigation">
+                <div class="glass-dock-distortion"></div>
+                <div class="glass-dock-tint"></div>
+                <div class="glass-dock-highlight"></div>
+                <div class="dock-icons">
+                    <button data-page="graphics" class="nav-item dock-icon active" aria-label="Graphics">
+                        <i class="fas fa-palette"></i>
+                    </button>
+                    <button data-page="video" class="nav-item dock-icon" aria-label="Video">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button data-page="apps" class="nav-item dock-icon" aria-label="Apps">
+                        <i class="fas fa-mobile-alt"></i>
+                    </button>
+                    <button data-page="contact" id="contactNavButton" class="nav-item dock-icon" aria-label="Contact">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <a href="‎⁨קוחH⁩.pdf" download class="cv-download-btn dock-icon" aria-label="Download CV">
+                        <i class="fas fa-download"></i>
+                    </a>
                 </div>
             </nav>
-
-            <!-- CV Download Button (Circular) - Same size as main nav -->
-            <a href="‎⁨קוחH⁩.pdf" download 
-               class="cv-download-btn liquid-glass-nav pointer-events-auto rounded-full flex items-center justify-center transition-all duration-300 ease-in-out overflow-hidden relative"
-               style="width: 72px; height: 72px; backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);">
-                <i class="fas fa-download text-2xl md:text-3xl text-white transition-all duration-300 ease-in-out relative z-20"></i>
-            </a>
         </div>
 
         <!-- Enhanced Liquid Glass Styles -->
         <style>
-            /* Light Mode Navigation - Liquid Glass */
-            .liquid-glass-nav {
-                background: rgba(255, 255, 255, 0.08) !important;
-                border: 2px solid transparent !important;
-                box-shadow: 
-                    0 0 0 2px rgba(255, 255, 255, 0.6),
-                    0 16px 32px rgba(0, 0, 0, 0.12) !important;
-                isolation: isolate;
-            }
-
-            .liquid-glass-nav::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                z-index: 0;
-                overflow: hidden;
-                border-radius: 9999px;
-                pointer-events: none;
-            }
-
-            .liquid-glass-nav::after {
-                content: '';
-                position: absolute;
-                z-index: -1;
-                inset: 0;
-                border-radius: 9999px;
-                overflow: hidden;
-                isolation: isolate;
-            }
-
-            /* Dark Mode Navigation - Liquid Glass */
-            @media (prefers-color-scheme: dark) {
-                .liquid-glass-nav {
-                    background: rgba(255, 255, 255, 0.05) !important;
-                    border: 2px solid transparent !important;
-                    box-shadow: 
-                        0 0 0 2px rgba(255, 255, 255, 0.3),
-                        0 16px 32px rgba(0, 0, 0, 0.4) !important;
-                }
-
-                .liquid-glass-nav::before {
-                    pointer-events: none;
-                }
-            }
-
-            /* CV Download Button Styles - Uses same liquid glass effect as nav */
-            .cv-download-btn {
-                position: relative;
-            }
-
-            .cv-download-btn:hover {
-                transform: scale(1.1);
-            }
-
-            .cv-download-btn:hover i {
-                transform: scale(1.15) rotate(5deg);
-            }
-
-            /* Nav item icons - white in dark mode */
-            @media (prefers-color-scheme: dark) {
-                .nav-item:not(.active) i {
-                    color: white !important;
-                }
-            }
-
             /* Contact Menu Enhanced Liquid Glass */
             .liquid-glass-contact {
                 background: rgba(255, 255, 255, 0.08) !important;

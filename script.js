@@ -100,6 +100,179 @@ document.addEventListener('DOMContentLoaded', function () {
     // הפעלת כוכבים לסקציית Imagine
     createImagineStars();
 
+    // ========== רקע Gradient אינטראקטיבי ==========
+    function initHeroGradientPointer() {
+        const hero = document.querySelector('.portfolio-hero');
+        const pointerOrb = document.getElementById('heroPointerOrb');
+        if (!hero || !pointerOrb) return;
+
+        let curX = window.innerWidth / 2;
+        let curY = window.innerHeight / 2;
+        let targetX = curX;
+        let targetY = curY;
+        let rafId = null;
+
+        function animatePointer() {
+            curX += (targetX - curX) / 20;
+            curY += (targetY - curY) / 20;
+            pointerOrb.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
+            rafId = requestAnimationFrame(animatePointer);
+        }
+
+        hero.addEventListener('mousemove', function (event) {
+            const rect = hero.getBoundingClientRect();
+            targetX = event.clientX - rect.left;
+            targetY = event.clientY - rect.top;
+            if (!rafId) {
+                rafId = requestAnimationFrame(animatePointer);
+            }
+        });
+
+        hero.addEventListener('mouseleave', function () {
+            targetX = hero.offsetWidth / 2;
+            targetY = hero.offsetHeight / 2;
+        });
+    }
+
+    initHeroGradientPointer();
+
+    // ========== גלריית תמונות אנכית ==========
+    function initVerticalImageStack() {
+        const stack = document.getElementById('graphicsStack');
+        if (!stack) return;
+
+        const cards = Array.from(stack.querySelectorAll('.stack-card'));
+        const dots = Array.from(stack.querySelectorAll('.stack-dot'));
+        const currentLabel = document.getElementById('stackCurrent');
+        const totalLabel = document.getElementById('stackTotal');
+        const total = cards.length;
+        let currentIndex = 0;
+        let startY = 0;
+        let isPointerDown = false;
+        let lastNavigationTime = 0;
+        const navigationCooldown = 400;
+
+        if (totalLabel) {
+            totalLabel.textContent = String(total).padStart(2, '0');
+        }
+
+        function getCircularDiff(index) {
+            let diff = index - currentIndex;
+            if (diff > total / 2) diff -= total;
+            if (diff < -total / 2) diff += total;
+            return diff;
+        }
+
+        function getCardState(diff) {
+            if (diff === 0) {
+                return { y: 0, scale: 1, opacity: 1, zIndex: 5, rotateX: 0 };
+            }
+            if (diff === -1) {
+                return { y: -160, scale: 0.82, opacity: 0.6, zIndex: 4, rotateX: 8 };
+            }
+            if (diff === -2) {
+                return { y: -280, scale: 0.7, opacity: 0.3, zIndex: 3, rotateX: 15 };
+            }
+            if (diff === 1) {
+                return { y: 160, scale: 0.82, opacity: 0.6, zIndex: 4, rotateX: -8 };
+            }
+            if (diff === 2) {
+                return { y: 280, scale: 0.7, opacity: 0.3, zIndex: 3, rotateX: -15 };
+            }
+            return {
+                y: diff > 0 ? 420 : -420,
+                scale: 0.6,
+                opacity: 0,
+                zIndex: 0,
+                rotateX: diff > 0 ? -20 : 20
+            };
+        }
+
+        function renderStack() {
+            cards.forEach((card, index) => {
+                const diff = getCircularDiff(index);
+                const state = getCardState(diff);
+                const isVisible = Math.abs(diff) <= 2;
+                const isCurrent = index === currentIndex;
+
+                card.style.transform = `translateY(${state.y}px) scale(${state.scale}) rotateX(${state.rotateX}deg)`;
+                card.style.opacity = String(state.opacity);
+                card.style.zIndex = String(state.zIndex);
+                card.style.pointerEvents = isVisible ? 'auto' : 'none';
+                card.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+                card.classList.toggle('is-current', isCurrent);
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+
+            if (currentLabel) {
+                currentLabel.textContent = String(currentIndex + 1).padStart(2, '0');
+            }
+        }
+
+        function navigate(direction) {
+            const now = Date.now();
+            if (now - lastNavigationTime < navigationCooldown) return;
+            lastNavigationTime = now;
+
+            if (direction > 0) {
+                currentIndex = currentIndex === total - 1 ? 0 : currentIndex + 1;
+            } else {
+                currentIndex = currentIndex === 0 ? total - 1 : currentIndex - 1;
+            }
+            renderStack();
+        }
+
+        stack.addEventListener('wheel', function (event) {
+            if (Math.abs(event.deltaY) <= 30) return;
+            event.preventDefault();
+            navigate(event.deltaY > 0 ? 1 : -1);
+        }, { passive: false });
+
+        cards.forEach((card, index) => {
+            card.addEventListener('click', function () {
+                if (index === currentIndex) return;
+                currentIndex = index;
+                renderStack();
+            });
+
+            card.addEventListener('pointerdown', function (event) {
+                if (index !== currentIndex) return;
+                isPointerDown = true;
+                startY = event.clientY;
+                card.setPointerCapture(event.pointerId);
+            });
+
+            card.addEventListener('pointerup', function (event) {
+                if (!isPointerDown || index !== currentIndex) return;
+                isPointerDown = false;
+                const offsetY = event.clientY - startY;
+                if (offsetY < -50) {
+                    navigate(1);
+                } else if (offsetY > 50) {
+                    navigate(-1);
+                }
+            });
+
+            card.addEventListener('pointercancel', function () {
+                isPointerDown = false;
+            });
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', function () {
+                currentIndex = index;
+                renderStack();
+            });
+        });
+
+        renderStack();
+    }
+
+    initVerticalImageStack();
+
     // ========== אנימציות scroll ==========
     const observerOptions = {
         threshold: 0.1,
