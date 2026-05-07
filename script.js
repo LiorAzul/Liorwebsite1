@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const canvas = document.getElementById('imagine-stars-canvas');
         const imagineSection = document.querySelector('#apps-page .galaxy-background')?.closest('section');
         if (!canvas || !imagineSection) return;
+        if (imagineSection.hidden || imagineSection.classList.contains('hidden')) return;
 
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
