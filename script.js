@@ -151,10 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'lior7.webp',
             'lior8.webp',
             'lior9.webp',
-            'lior10.webp',
-            'ליאורקרוסלה0.jpg',
-            'ליאורקרוסלה1.JPG',
-            'ליאורקרוסלה2.jpg'
+            'lior10.webp'
         ];
 
         function createTile(src, index) {
@@ -169,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
             image.className = 'scroll-tilted-image';
             image.style.backgroundImage = `url("${src}")`;
             image.setAttribute('role', 'img');
-            image.setAttribute('aria-label', `Graphics work ${index + 1}`);
+            image.setAttribute('aria-label', `עבודת גרפיקה ${index + 1}`);
 
             card.appendChild(image);
             figure.appendChild(card);
@@ -296,5 +293,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    console.log('✨ Website loaded successfully!');
+    console.log('✨ האתר נטען בהצלחה!');
 });
