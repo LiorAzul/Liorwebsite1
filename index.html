@@ -143,7 +143,10 @@
     <div class="min-h-screen">
         <!-- Header Section -->
         <header class="portfolio-hero relative z-10 px-6 md:px-12 overflow-hidden min-h-screen flex items-center justify-center text-center">
-            <!-- Background Gradient Animation Layer -->
+            <div class="hero-background-photo" aria-hidden="true"></div>
+            <div class="hero-background-shade" aria-hidden="true"></div>
+
+            <!-- Background Atmosphere Layer -->
             <div id="heroGradient" class="background-gradient-animation absolute inset-0 z-0">
                 <div class="gradient-vignette"></div>
                 <div class="gradients-container">
@@ -163,7 +166,7 @@
                     <div class="flex-1 text-center w-full flex flex-col items-center justify-center min-h-[520px]">
                         <div class="flex-1 flex flex-col items-center justify-center w-full">
                             <div class="hero-profile-portrait" aria-label="Lior Israel Azulay profile image">
-                                <img src="lior%20imagine%20profile2.1.png" alt="Lior Israel Azulay" width="4032" height="4032" fetchpriority="high">
+                                <img src="9A2F07A3-9321-4513-90BE-3E97E075E333_1_105_c.jpeg" alt="Lior Israel Azulay" width="1024" height="1024" fetchpriority="high">
                             </div>
                             <h1 class="hero-title text-6xl md:text-8xl lg:text-9xl font-black mb-5 text-white leading-tight drop-shadow-lg text-center">Lior Israel Azulay</h1>
                             <p class="hero-subtitle text-lg md:text-xl text-white/80 max-w-2xl text-center drop-shadow-md mb-10">
@@ -187,64 +190,14 @@
         <main class="relative z-10">
             <!-- Graphics Page -->
             <div id="graphics-page" class="page-content active">
-                <section class="graphics-stack-section py-16 px-6 md:px-12">
-                    <div class="max-w-7xl mx-auto text-center">
+                <section class="scroll-tilted-section graphics-stack-section py-16 px-6 md:px-12">
+                    <div class="graphics-section-head max-w-7xl mx-auto text-center">
                         <h2 class="section-title text-4xl md:text-6xl font-black mb-4 text-center">Graphics</h2>
                         <p class="section-subtitle text-white/55 mb-8 max-w-xl mx-auto">
-                            Selected visual work, framed as a dark studio stack.
+                            Selected visual work, tuned to the rhythm of the page scroll.
                         </p>
-                        <div id="graphicsStack" class="vertical-stack-shell mx-auto" aria-label="Graphics image gallery">
-                            <div class="stack-counter" aria-hidden="true">
-                                <span id="stackCurrent">01</span>
-                                <span class="stack-divider"></span>
-                                <span id="stackTotal">09</span>
-                            </div>
-                            <div class="stack-stage">
-                                <button class="stack-card" data-index="0" aria-label="Show graphics image 1">
-                                    <img src="lior1.jpg" alt="Graphics work 1" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="1" aria-label="Show graphics image 2">
-                                    <img src="lior3.jpg" alt="Graphics work 2" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="2" aria-label="Show graphics image 3">
-                                    <img src="lior4.webp" alt="Graphics work 3" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="3" aria-label="Show graphics image 4">
-                                    <img src="lior5.webp" alt="Graphics work 4" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="4" aria-label="Show graphics image 5">
-                                    <img src="lior6.webp" alt="Graphics work 5" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="5" aria-label="Show graphics image 6">
-                                    <img src="lior7.webp" alt="Graphics work 6" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="6" aria-label="Show graphics image 7">
-                                    <img src="lior8.webp" alt="Graphics work 7" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="7" aria-label="Show graphics image 8">
-                                    <img src="lior9.webp" alt="Graphics work 8" loading="lazy" draggable="false">
-                                </button>
-                                <button class="stack-card" data-index="8" aria-label="Show graphics image 9">
-                                    <img src="lior10.webp" alt="Graphics work 9" loading="lazy" draggable="false">
-                                </button>
-                            </div>
-                            <div class="stack-dots" aria-label="Graphics gallery navigation">
-                                <button class="stack-dot active" data-index="0" aria-label="Go to image 1"></button>
-                                <button class="stack-dot" data-index="1" aria-label="Go to image 2"></button>
-                                <button class="stack-dot" data-index="2" aria-label="Go to image 3"></button>
-                                <button class="stack-dot" data-index="3" aria-label="Go to image 4"></button>
-                                <button class="stack-dot" data-index="4" aria-label="Go to image 5"></button>
-                                <button class="stack-dot" data-index="5" aria-label="Go to image 6"></button>
-                                <button class="stack-dot" data-index="6" aria-label="Go to image 7"></button>
-                                <button class="stack-dot" data-index="7" aria-label="Go to image 8"></button>
-                                <button class="stack-dot" data-index="8" aria-label="Go to image 9"></button>
-                            </div>
-                            <div class="stack-arrows" aria-hidden="true">
-                                <i class="fas fa-arrow-up"></i>
-                                <i class="fas fa-arrow-down"></i>
-                            </div>
-                        </div>
                     </div>
+                    <div id="graphicsStack" class="scroll-tilted-grid" aria-label="Graphics image gallery"></div>
                 </section>
             </div>
 
@@ -476,14 +429,23 @@
     <script src="script.js"></script>
     <script>
         // Loading screen
-        window.addEventListener('load', function () {
+        let siteRevealStarted = false;
+        function revealSite() {
+            if (siteRevealStarted) return;
+            siteRevealStarted = true;
             setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (!loadingScreen) return;
+                loadingScreen.style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
+                    loadingScreen.style.display = 'none';
                 }, 500);
                 document.body.classList.add('loaded');
             }, 1000);
+        }
+        window.addEventListener('load', revealSite);
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(revealSite, 1400);
         });
 
         // Navigation

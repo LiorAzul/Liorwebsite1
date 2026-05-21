@@ -137,142 +137,119 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initHeroGradientPointer();
 
-    // ========== גלריית תמונות אנכית ==========
-    function initVerticalImageStack() {
-        const stack = document.getElementById('graphicsStack');
-        if (!stack) return;
+    // ========== גלריית תמונות עם הטיה לפי גלילת הדף ==========
+    function initScrollTiltedGrid() {
+        const grid = document.getElementById('graphicsStack');
+        if (!grid) return;
 
-        const cards = Array.from(stack.querySelectorAll('.stack-card'));
-        const dots = Array.from(stack.querySelectorAll('.stack-dot'));
-        const currentLabel = document.getElementById('stackCurrent');
-        const totalLabel = document.getElementById('stackTotal');
-        const total = cards.length;
-        let currentIndex = 0;
-        let startY = 0;
-        let isPointerDown = false;
-        let lastNavigationTime = 0;
-        const navigationCooldown = 400;
+        const images = [
+            'lior1.jpg',
+            'lior3.jpg',
+            'lior4.webp',
+            'lior5.webp',
+            'lior6.webp',
+            'lior7.webp',
+            'lior8.webp',
+            'lior9.webp',
+            'lior10.webp',
+            'ליאורקרוסלה0.jpg',
+            'ליאורקרוסלה1.JPG',
+            'ליאורקרוסלה2.jpg'
+        ];
 
-        if (totalLabel) {
-            totalLabel.textContent = String(total).padStart(2, '0');
+        function createTile(src, index) {
+            const figure = document.createElement('figure');
+            figure.className = 'scroll-tilted-tile';
+            figure.dataset.side = index % 2 === 0 ? 'L' : 'R';
+
+            const card = document.createElement('div');
+            card.className = 'scroll-tilted-card';
+
+            const image = document.createElement('div');
+            image.className = 'scroll-tilted-image';
+            image.style.backgroundImage = `url("${src}")`;
+            image.setAttribute('role', 'img');
+            image.setAttribute('aria-label', `Graphics work ${index + 1}`);
+
+            card.appendChild(image);
+            figure.appendChild(card);
+            return figure;
         }
 
-        function getCircularDiff(index) {
-            let diff = index - currentIndex;
-            if (diff > total / 2) diff -= total;
-            if (diff < -total / 2) diff += total;
-            return diff;
+        grid.innerHTML = '';
+        images.forEach((src, index) => grid.appendChild(createTile(src, index)));
+
+        const tiles = Array.from(grid.querySelectorAll('.scroll-tilted-tile'));
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let ticking = false;
+
+        function clamp(value, min, max) {
+            return Math.min(Math.max(value, min), max);
         }
 
-        function getCardState(diff) {
-            if (diff === 0) {
-                return { y: 0, scale: 1, opacity: 1, zIndex: 5, rotateX: 0 };
+        function interpolate(progress, start, middle, end) {
+            if (progress <= 0.5) {
+                return start + (middle - start) * (progress / 0.5);
             }
-            if (diff === -1) {
-                return { y: -160, scale: 0.82, opacity: 0.6, zIndex: 4, rotateX: 8 };
-            }
-            if (diff === -2) {
-                return { y: -280, scale: 0.7, opacity: 0.3, zIndex: 3, rotateX: 15 };
-            }
-            if (diff === 1) {
-                return { y: 160, scale: 0.82, opacity: 0.6, zIndex: 4, rotateX: -8 };
-            }
-            if (diff === 2) {
-                return { y: 280, scale: 0.7, opacity: 0.3, zIndex: 3, rotateX: -15 };
-            }
-            return {
-                y: diff > 0 ? 420 : -420,
-                scale: 0.6,
-                opacity: 0,
-                zIndex: 0,
-                rotateX: diff > 0 ? -20 : 20
-            };
+            return middle + (end - middle) * ((progress - 0.5) / 0.5);
         }
 
-        function renderStack() {
-            cards.forEach((card, index) => {
-                const diff = getCircularDiff(index);
-                const state = getCardState(diff);
-                const isVisible = Math.abs(diff) <= 2;
-                const isCurrent = index === currentIndex;
-
-                card.style.transform = `translateY(${state.y}px) scale(${state.scale}) rotateX(${state.rotateX}deg)`;
-                card.style.opacity = String(state.opacity);
-                card.style.zIndex = String(state.zIndex);
-                card.style.pointerEvents = isVisible ? 'auto' : 'none';
-                card.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
-                card.classList.toggle('is-current', isCurrent);
-            });
-
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-
-            if (currentLabel) {
-                currentLabel.textContent = String(currentIndex + 1).padStart(2, '0');
-            }
+        function easeOutCubic(value) {
+            return 1 - Math.pow(1 - value, 3);
         }
 
-        function navigate(direction) {
-            const now = Date.now();
-            if (now - lastNavigationTime < navigationCooldown) return;
-            lastNavigationTime = now;
+        function updateTiles() {
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
 
-            if (direction > 0) {
-                currentIndex = currentIndex === total - 1 ? 0 : currentIndex + 1;
-            } else {
-                currentIndex = currentIndex === 0 ? total - 1 : currentIndex - 1;
-            }
-            renderStack();
-        }
+            tiles.forEach((tile) => {
+                const rect = tile.getBoundingClientRect();
+                const rawProgress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+                const progress = clamp(rawProgress, 0, 1);
+                const focus = 1 - Math.abs(progress - 0.5) * 2;
+                const easedFocus = easeOutCubic(clamp(focus, 0, 1));
+                const sideSign = tile.dataset.side === 'L' ? -1 : 1;
+                const card = tile.querySelector('.scroll-tilted-card');
+                const image = tile.querySelector('.scroll-tilted-image');
+                if (!card || !image) return;
 
-        stack.addEventListener('wheel', function (event) {
-            if (Math.abs(event.deltaY) <= 30) return;
-            event.preventDefault();
-            navigate(event.deltaY > 0 ? 1 : -1);
-        }, { passive: false });
-
-        cards.forEach((card, index) => {
-            card.addEventListener('click', function () {
-                if (index === currentIndex) return;
-                currentIndex = index;
-                renderStack();
-            });
-
-            card.addEventListener('pointerdown', function (event) {
-                if (index !== currentIndex) return;
-                isPointerDown = true;
-                startY = event.clientY;
-                card.setPointerCapture(event.pointerId);
-            });
-
-            card.addEventListener('pointerup', function (event) {
-                if (!isPointerDown || index !== currentIndex) return;
-                isPointerDown = false;
-                const offsetY = event.clientY - startY;
-                if (offsetY < -50) {
-                    navigate(1);
-                } else if (offsetY > 50) {
-                    navigate(-1);
+                if (reduceMotion) {
+                    card.style.transform = '';
+                    card.style.filter = '';
+                    image.style.transform = '';
+                    return;
                 }
+
+                const translateY = interpolate(progress, 92, 0, -92);
+                const translateX = interpolate(progress, sideSign * 34, 0, sideSign * 34);
+                const translateZ = interpolate(progress, 260, 0, 260);
+                const rotateX = interpolate(progress, 64, 0, -64);
+                const rotate = interpolate(progress, -sideSign * 5, 0, sideSign * 5);
+                const skew = interpolate(progress, sideSign * 16, 0, -sideSign * 16);
+                const blur = interpolate(progress, 7, 0, 7);
+                const brightness = 0.16 + easedFocus * 0.84;
+                const contrast = 3.2 - easedFocus * 2.2;
+                const scaleY = 1.68 - easedFocus * 0.68;
+
+                card.style.transform = `translate3d(${translateX}%, ${translateY}%, ${translateZ}px) rotate(${rotate}deg) rotateX(${rotateX}deg) skewX(${skew}deg)`;
+                card.style.filter = `blur(${blur}px) brightness(${brightness}) contrast(${contrast})`;
+                image.style.transform = `scaleY(${scaleY})`;
             });
 
-            card.addEventListener('pointercancel', function () {
-                isPointerDown = false;
-            });
-        });
+            ticking = false;
+        }
 
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', function () {
-                currentIndex = index;
-                renderStack();
-            });
-        });
+        function requestUpdate() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(updateTiles);
+        }
 
-        renderStack();
+        window.addEventListener('scroll', requestUpdate, { passive: true });
+        window.addEventListener('resize', requestUpdate);
+        requestUpdate();
     }
 
-    initVerticalImageStack();
+    initScrollTiltedGrid();
 
     // ========== אנימציות scroll ==========
     const observerOptions = {
