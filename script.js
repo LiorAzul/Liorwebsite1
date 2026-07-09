@@ -137,8 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initHeroGradientPointer();
 
-    // ========== גלריית תמונות עם הטיה לפי גלילת הדף ==========
-    function initScrollTiltedGrid() {
+    // ========== גלריית תמונות - רשת ריבועים פשוטה ==========
+    function initGraphicsGrid() {
         const grid = document.getElementById('graphicsStack');
         if (!grid) return;
 
@@ -156,99 +156,23 @@ document.addEventListener('DOMContentLoaded', function () {
             'lior10.webp'
         ];
 
-        function createTile(src, index) {
+        grid.innerHTML = '';
+        images.forEach((src, index) => {
             const figure = document.createElement('figure');
             figure.className = 'scroll-tilted-tile';
-            figure.dataset.side = index % 2 === 0 ? 'L' : 'R';
 
-            const card = document.createElement('div');
-            card.className = 'scroll-tilted-card';
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `עבודת גרפיקה ${index + 1}`;
+            img.loading = 'lazy';
+            img.decoding = 'async';
 
-            const image = document.createElement('div');
-            image.className = 'scroll-tilted-image';
-            image.style.backgroundImage = `url("${src}")`;
-            image.setAttribute('role', 'img');
-            image.setAttribute('aria-label', `עבודת גרפיקה ${index + 1}`);
-
-            card.appendChild(image);
-            figure.appendChild(card);
-            return figure;
-        }
-
-        grid.innerHTML = '';
-        images.forEach((src, index) => grid.appendChild(createTile(src, index)));
-
-        const tiles = Array.from(grid.querySelectorAll('.scroll-tilted-tile'));
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let ticking = false;
-
-        function clamp(value, min, max) {
-            return Math.min(Math.max(value, min), max);
-        }
-
-        function interpolate(progress, start, middle, end) {
-            if (progress <= 0.5) {
-                return start + (middle - start) * (progress / 0.5);
-            }
-            return middle + (end - middle) * ((progress - 0.5) / 0.5);
-        }
-
-        function easeOutCubic(value) {
-            return 1 - Math.pow(1 - value, 3);
-        }
-
-        function updateTiles() {
-            const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
-
-            tiles.forEach((tile) => {
-                const rect = tile.getBoundingClientRect();
-                const rawProgress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
-                const progress = clamp(rawProgress, 0, 1);
-                const focus = 1 - Math.abs(progress - 0.5) * 2;
-                const easedFocus = easeOutCubic(clamp(focus, 0, 1));
-                const sideSign = tile.dataset.side === 'L' ? -1 : 1;
-                const card = tile.querySelector('.scroll-tilted-card');
-                const image = tile.querySelector('.scroll-tilted-image');
-                if (!card || !image) return;
-
-                if (reduceMotion) {
-                    card.style.transform = '';
-                    card.style.filter = '';
-                    image.style.transform = '';
-                    return;
-                }
-
-                const translateY = interpolate(progress, 92, 0, -92);
-                const translateX = interpolate(progress, sideSign * 34, 0, sideSign * 34);
-                const translateZ = interpolate(progress, 260, 0, 260);
-                const rotateX = interpolate(progress, 64, 0, -64);
-                const rotate = interpolate(progress, -sideSign * 5, 0, sideSign * 5);
-                const skew = interpolate(progress, sideSign * 16, 0, -sideSign * 16);
-                const blur = interpolate(progress, 7, 0, 7);
-                const brightness = 0.16 + easedFocus * 0.84;
-                const contrast = 3.2 - easedFocus * 2.2;
-                const scaleY = 1.68 - easedFocus * 0.68;
-
-                card.style.transform = `translate3d(${translateX}%, ${translateY}%, ${translateZ}px) rotate(${rotate}deg) rotateX(${rotateX}deg) skewX(${skew}deg)`;
-                card.style.filter = `blur(${blur}px) brightness(${brightness}) contrast(${contrast})`;
-                image.style.transform = `scaleY(${scaleY})`;
-            });
-
-            ticking = false;
-        }
-
-        function requestUpdate() {
-            if (ticking) return;
-            ticking = true;
-            requestAnimationFrame(updateTiles);
-        }
-
-        window.addEventListener('scroll', requestUpdate, { passive: true });
-        window.addEventListener('resize', requestUpdate);
-        requestUpdate();
+            figure.appendChild(img);
+            grid.appendChild(figure);
+        });
     }
 
-    initScrollTiltedGrid();
+    initGraphicsGrid();
 
     // ========== אנימציות scroll ==========
     const observerOptions = {
