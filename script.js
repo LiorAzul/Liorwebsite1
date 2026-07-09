@@ -143,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!grid) return;
 
         const images = [
+            'Artboard 5@2x.png',
+            'המרכז ללימודי תעודה.png',
             'lior1.jpg',
             'lior3.jpg',
             'lior4.webp',
