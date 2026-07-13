@@ -4,22 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description"
-        content="פורטפוליו דיגיטלי של ליאור אזולאי - מפתח בוויבים, מעצב גרפי ותלת מימד, יוצר וידיאו ואפליקציות.">
-    <meta name="keywords" content="פורטפוליו, גרפיקה, עיצוב, וידיאו, אפליקציות, ליאור אזולאי, FutureOS, Eldio">
+    <meta name="description" id="metaDescription"
+        content="ליאור אזולאי — בניית אתרים, פיתוח אפליקציות iOS, עיצוב גרפי, וידיאו ותלת מימד. ברמה של סטודיו, במהירות של פרילנסר.">
+    <meta name="keywords" content="בניית אתרים, פיתוח אפליקציות, עיצוב גרפי, מיתוג, תלת מימד, דף נחיתה, ליאור אזולאי">
     <meta name="theme-color" content="#02030a">
-    <title>ליאור ישראל אזולאי - פורטפוליו</title>
+    <title>ליאור אזולאי — בניית אתרים, אפליקציות iOS, עיצוב ותלת מימד</title>
 
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
     <link rel="icon" href="imagine icon web.png" type="image/png">
-    
+
     <!-- Tailwind CSS CDN -->
     <script>
         window.tailwind = window.tailwind || {};
@@ -37,274 +37,375 @@
         body.loaded {
             opacity: 1;
         }
-
-        /* Liquid Glass Background Animation */
-        @keyframes liquidFloat {
-            0%, 100% {
-                background-position: center center;
-            }
-            25% {
-                background-position: 30% 70%;
-            }
-            50% {
-                background-position: 70% 30%;
-            }
-            75% {
-                background-position: 40% 60%;
-            }
-        }
-
-        @keyframes liquidWave {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-                opacity: 0.4;
-            }
-            50% {
-                transform: translateY(-10px) scale(1.05);
-                opacity: 0.6;
-            }
-        }
-
-        /* Subtle bounce animation for arrow */
-        @keyframes bounce-subtle {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(5px);
-            }
-        }
-
-        .animate-bounce-subtle {
-            animation: bounce-subtle 2s ease-in-out infinite;
-        }
-
     </style>
 </head>
 
-<body class="bg-[#02030a] text-zinc-100 transition-colors duration-300">
-    <!-- SVG Filters for Gradient Goo and Liquid Glass Distortion -->
+<body>
+    <!-- GradFlow animated background (vanilla WebGL port, MIT) -->
+    <canvas id="gradflow-canvas" aria-hidden="true"></canvas>
+    <div class="bg-scrim" aria-hidden="true"></div>
+
+    <!-- SVG Filters for Liquid Glass Distortion -->
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true" focusable="false">
         <defs>
             <filter id="frosted" primitiveUnits="objectBoundingBox">
-                <feTurbulence
-                    type="turbulence"
-                    baseFrequency="0.02"
-                    numOctaves="3"
-                    seed="2"
-                    result="map"
-                />
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" seed="2" result="map" />
                 <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur"/>
-                <feDisplacementMap
-                    id="disp"
-                    in="blur"
-                    in2="map"
-                    scale="1"
-                    xChannelSelector="R"
-                    yChannelSelector="G"
-                />
+                <feDisplacementMap id="disp" in="blur" in2="map" scale="1" xChannelSelector="R" yChannelSelector="G" />
             </filter>
-            <filter
-                id="glass-distortion"
-                x="0%"
-                y="0%"
-                width="100%"
-                height="100%"
-                filterUnits="objectBoundingBox"
-            >
-                <feTurbulence
-                    type="fractalNoise"
-                    baseFrequency="0.001 0.005"
-                    numOctaves="1"
-                    seed="17"
-                    result="turbulence"
-                />
+            <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+                <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="turbulence" />
                 <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-                <feDisplacementMap
-                    in="SourceGraphic"
-                    in2="softMap"
-                    scale="120"
-                    xChannelSelector="R"
-                    yChannelSelector="G"
-                />
+                <feDisplacementMap in="SourceGraphic" in2="softMap" scale="120" xChannelSelector="R" yChannelSelector="G" />
             </filter>
         </defs>
     </svg>
 
     <!-- Loading Screen -->
-            <div id="loadingScreen" class="fixed inset-0 bg-[#02030a] z-50 flex items-center justify-center transition-opacity duration-500">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold mb-4">נעים להכיר...</h2>
-                    <div class="w-12 h-12 border-4 border-white/10 border-t-violet-400 rounded-full animate-spin mx-auto"></div>
-                </div>
-            </div>
+    <div id="loadingScreen" class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500">
+        <div class="text-center">
+            <h2 class="text-2xl font-bold mb-4" data-i18n="loading">נעים להכיר...</h2>
+            <div class="w-12 h-12 border-4 border-white/10 border-t-violet-400 rounded-full animate-spin mx-auto"></div>
+        </div>
+    </div>
+
+    <!-- Top corner toggles: language + theme -->
+    <div class="top-toggles" role="group" aria-label="הגדרות תצוגה">
+        <button id="langToggle" class="glass-button glass-button-icon top-toggle-btn" aria-label="Switch to English">
+            <span class="glass-button-text top-toggle-text">EN</span>
+        </button>
+        <button id="themeToggle" class="glass-button glass-button-icon top-toggle-btn" aria-label="מעבר למצב בהיר">
+            <span class="glass-button-text glass-button-text-icon">
+                <i class="fas fa-sun"></i>
+            </span>
+        </button>
+    </div>
 
     <!-- Main Container -->
     <div class="min-h-screen">
-        <!-- Header Section -->
-        <header class="portfolio-hero relative z-10 px-6 md:px-12 overflow-hidden min-h-screen flex items-center justify-center text-center">
-            <div class="hero-background-photo" aria-hidden="true"></div>
-            <div class="hero-background-shade" aria-hidden="true"></div>
 
-            <!-- Background Atmosphere Layer -->
-            <div id="heroGradient" class="background-gradient-animation absolute inset-0 z-0">
-                <div class="gradient-vignette"></div>
-                <div class="gradients-container">
-                    <div class="gradient-orb gradient-orb-first"></div>
-                    <div class="gradient-orb gradient-orb-second"></div>
-                    <div class="gradient-orb gradient-orb-third"></div>
-                    <div class="gradient-orb gradient-orb-fourth"></div>
-                    <div class="gradient-orb gradient-orb-fifth"></div>
-                    <div id="heroPointerOrb" class="gradient-orb gradient-pointer-orb"></div>
-                </div>
-            </div>
-            
-            <!-- Content Layer 2 (Title, Description) -->
-            <div class="relative z-20 w-full max-w-7xl mx-auto py-20">
-                <div class="hero-content flex flex-col items-center justify-center gap-8 md:gap-12">
-                    <!-- Title and Description -->
-                    <div class="flex-1 text-center w-full flex flex-col items-center justify-center min-h-[520px]">
-                        <div class="flex-1 flex flex-col items-center justify-center w-full">
-                            <div class="hero-profile-portrait" aria-label="תמונת פרופיל של ליאור ישראל אזולאי">
-                                <img src="liorpsy.jpg" alt="ליאור ישראל אזולאי" width="1024" height="1024" fetchpriority="high">
-                            </div>
-                            <h1 class="hero-title text-6xl md:text-8xl lg:text-9xl font-black mb-5 text-white leading-tight drop-shadow-lg text-center" dir="rtl">ליאור ישראל אזולאי</h1>
-                            <p class="hero-subtitle text-lg md:text-xl text-white/80 max-w-2xl text-center drop-shadow-md mb-10" dir="rtl">
-                                מפתח בוויבים ומעצב גרפי ותלת מימד
-                            </p>
-                            <div class="hero-listening-panel">
-                                <p class="text-sm md:text-base text-white/70 mb-3 text-center drop-shadow-sm" dir="rtl">
-                                    אני מאזין עכשיו ל...
-                                </p>
-                                <!-- Elfsight Audio Player -->
-                                <div class="elfsight-app-525f6cb1-a655-4aaa-bcdb-c7fd5fbcf0b8" data-elfsight-app-lazy></div>
-                            </div>
-                        </div>
+        <!-- ============ HERO ============ -->
+        <header id="top" class="portfolio-hero relative z-10 px-6 md:px-12 min-h-screen flex items-center justify-center text-center">
+            <div class="relative z-20 w-full max-w-5xl mx-auto py-24">
+                <div class="hero-content flex flex-col items-center justify-center gap-6">
+                    <div class="hero-profile-portrait" aria-label="תמונת פרופיל של ליאור אזולאי">
+                        <img src="liorpsy.jpg" alt="ליאור אזולאי" width="1024" height="1024" fetchpriority="high">
+                    </div>
+                    <h1 class="hero-title text-5xl md:text-7xl font-black leading-tight" data-i18n="heroName">ליאור אזולאי</h1>
+                    <h2 class="hero-headline text-2xl md:text-4xl font-black leading-snug max-w-3xl" data-i18n="heroHeadline">
+                        אתר, אפליקציה או מיתוג — ברמה של סטודיו, במהירות של פרילנסר
+                    </h2>
+                    <p class="hero-subtitle text-base md:text-lg max-w-2xl" data-i18n="heroSub">
+                        אני מפתח ומעצב שעובד איתכם אחד־על־אחד: בלי מנהלי פרויקטים באמצע, בלי חודשים של המתנה ובלי מחירים של בית תוכנה. אתם מדברים ישירות עם מי שבונה לכם את המוצר — מהשיחה הראשונה ועד העלייה לאוויר.
+                    </p>
+                    <div class="hero-cta-row">
+                        <a class="liquid-btn liquid-btn-lg liquid-btn-whatsapp" data-wa="waGeneral"
+                           href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%D7%9A%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98"
+                           target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-whatsapp"></i>
+                            <span data-i18n="heroCtaMain">בואו נדבר בוואטסאפ</span>
+                        </a>
+                        <a class="liquid-btn liquid-btn-lg" href="#portfolio">
+                            <i class="fas fa-layer-group"></i>
+                            <span data-i18n="heroCtaWorks">לצפייה בעבודות</span>
+                        </a>
                     </div>
                 </div>
             </div>
         </header>
 
-
-        <!-- Page Content -->
         <main class="relative z-10">
-            <!-- Graphics Page -->
-            <div id="graphics-page" class="page-content active">
-                <section class="scroll-tilted-section graphics-stack-section py-16 px-6 md:px-12">
-                    <div class="graphics-section-head max-w-7xl mx-auto text-center">
-                        <h2 class="section-title page-section-title text-center" dir="rtl">גרפיקה</h2>
-                    </div>
-                    <div id="graphicsStack" class="scroll-tilted-grid" aria-label="גלריית עבודות גרפיקה"></div>
-                </section>
-            </div>
 
-            <!-- Video Page -->
-            <div id="video-page" class="page-content hidden">
-                <!-- FutureOS Section -->
-                <section class="py-12 px-6 md:px-12">
-                    <div class="max-w-7xl mx-auto">
-                        <h2 class="section-title page-section-title text-center" dir="rtl">עבודות וידיאו</h2>
-                        <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+            <!-- ============ TRUST STRIP ============ -->
+            <section id="trust" class="py-10 px-6 md:px-12">
+                <div class="trust-strip max-w-6xl mx-auto">
+                    <div class="trust-item glass-card">
+                        <span class="trust-big" data-i18n="trust1b">5 אפליקציות</span>
+                        <span class="trust-small" data-i18n="trust1s">כבר בחנות של אפל</span>
+                    </div>
+                    <div class="trust-item glass-card">
+                        <span class="trust-big" data-i18n="trust2b">מענה תוך 24 שעות</span>
+                        <span class="trust-small" data-i18n="trust2s">בוואטסאפ, בלי מרכזיות</span>
+                    </div>
+                    <div class="trust-item glass-card">
+                        <span class="trust-big" data-i18n="trust3b">הכול במקום אחד</span>
+                        <span class="trust-small" data-i18n="trust3s">פיתוח, עיצוב, וידיאו ותלת מימד</span>
+                    </div>
+                    <div class="trust-item glass-card">
+                        <span class="trust-big" data-i18n="trust4b">עבודה ישירה 1:1</span>
+                        <span class="trust-small" data-i18n="trust4s">בלי מנהלי פרויקטים באמצע</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ WHY ME ============ -->
+            <section id="why" class="py-16 px-6 md:px-12">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="landing-section-title" data-i18n="whyTitle">למה לעבוד איתי ולא עם בית תוכנה?</h2>
+                    <p class="section-lead" data-i18n="whyIntro">
+                        כי פרויקט טוב לא צריך שלושה מנהלי פרויקטים, שבועיים לכל תיקון וחשבונית שמכסה משרדים בתל אביב.
+                    </p>
+                    <div class="why-grid">
+                        <div class="glass-card why-card">
+                            <i class="fas fa-user-check why-icon"></i>
+                            <h3 data-i18n="why1t">יחס אישי, בלי מתווכים</h3>
+                            <p data-i18n="why1d">אתם עובדים ישירות איתי מהשיחה הראשונה ועד העלייה לאוויר. אין "נעביר את זה לצוות", אין טלפון שבור — יש אדם אחד שמכיר את הפרויקט שלכם לעומק ועונה לכם בוואטסאפ.</p>
+                        </div>
+                        <div class="glass-card why-card">
+                            <i class="fas fa-bolt why-icon"></i>
+                            <h3 data-i18n="why2t">מהירות אמיתית</h3>
+                            <p data-i18n="why2d">החלטות מתקבלות בשיחה אחת, לא בישיבת סטטוס שבועית. תוצרים ראשונים אצלכם תוך ימים — לא תוך חודשים.</p>
+                        </div>
+                        <div class="glass-card why-card">
+                            <i class="fas fa-cubes why-icon"></i>
+                            <h3 data-i18n="why3t">הכול תחת קורת גג אחת</h3>
+                            <p data-i18n="why3d">פיתוח, עיצוב, מיתוג, וידיאו ותלת מימד. לא צריך לתאם בין ארבעה ספקים — מקבלים מוצר שלם בשפה עיצובית אחידה, ממקום אחד.</p>
+                        </div>
+                        <div class="glass-card why-card">
+                            <i class="fas fa-hand-holding-dollar why-icon"></i>
+                            <h3 data-i18n="why4t">משלמים על עבודה, לא על מנגנון</h3>
+                            <p data-i18n="why4d">בלי עלויות תקורה של משרד, צוות מכירות ושכבות ניהול. התקציב שלכם הולך למוצר עצמו.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ SERVICES / PACKAGES ============ -->
+            <section id="services" class="py-16 px-6 md:px-12">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="landing-section-title" data-i18n="svcTitle">מה אני בונה בשבילכם</h2>
+                    <p class="section-lead" data-i18n="svcLead">
+                        ארבע חבילות שירות — וכולן מתחילות באותה שיחה. מספרים לי מה צריך, ומקבלים הצעת מחיר מסודרת בלי התחייבות.
+                    </p>
+                    <div class="services-grid">
+
+                        <div class="glass-card package-card">
+                            <i class="fas fa-globe package-icon"></i>
+                            <h3 data-i18n="svcWebTitle">אתרי תדמית ודפי נחיתה</h3>
+                            <p data-i18n="svcWebDesc">אתר מהיר, מעוצב וממוקד מטרה שגורם ללקוחות להבין תוך שניות למה כדאי לעבוד איתכם. בדיוק כמו העמוד הזה — עוצב ונבנה על ידי, מקצה לקצה.</p>
+                            <ul class="package-bullets">
+                                <li data-i18n="svcWebB1">עיצוב ייחודי שלא נראה כמו תבנית</li>
+                                <li data-i18n="svcWebB2">מותאם מושלם למובייל</li>
+                                <li data-i18n="svcWebB3">טעינה מהירה</li>
+                                <li data-i18n="svcWebB4">מוכן לקידום בגוגל</li>
+                            </ul>
+                            <a class="liquid-btn liquid-btn-lg liquid-btn-whatsapp liquid-btn-block" data-wa="waWeb"
+                               href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%2F%D7%AA%20%D7%91%D7%90%D7%AA%D7%A8%20%D7%AA%D7%93%D7%9E%D7%99%D7%AA%20%D7%90%D7%95%20%D7%93%D7%A3%20%D7%A0%D7%97%D7%99%D7%AA%D7%94%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8"
+                               target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-whatsapp"></i>
+                                <span data-i18n="svcWebCta">קבלו הצעת מחיר לאתר</span>
+                            </a>
+                        </div>
+
+                        <div class="glass-card package-card">
+                            <i class="fas fa-mobile-alt package-icon"></i>
+                            <h3 data-i18n="svcAppTitle">אפליקציות iOS</h3>
+                            <p data-i18n="svcAppDesc">מהרעיון ועד ה-App Store — כבר עשיתי את הדרך הזאת חמש פעמים. אני מפתח, מעצב, ומעביר את האפליקציה את כל תהליך האישורים של אפל, כך שאתם מקבלים מוצר חי בחנות.</p>
+                            <ul class="package-bullets">
+                                <li data-i18n="svcAppB1">5 אפליקציות שלי כבר בחנות</li>
+                                <li data-i18n="svcAppB2">עיצוב וחוויית משתמש כלולים</li>
+                                <li data-i18n="svcAppB3">ליווי מלא מול אפל</li>
+                                <li data-i18n="svcAppB4">עדכונים גם אחרי ההשקה</li>
+                            </ul>
+                            <a class="liquid-btn liquid-btn-lg liquid-btn-whatsapp liquid-btn-block" data-wa="waApp"
+                               href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A8%D7%A2%D7%99%D7%95%D7%9F%20%D7%9C%D7%90%D7%A4%D7%9C%D7%99%D7%A7%D7%A6%D7%99%D7%94%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8"
+                               target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-whatsapp"></i>
+                                <span data-i18n="svcAppCta">קבלו הצעת מחיר לאפליקציה</span>
+                            </a>
+                        </div>
+
+                        <div class="glass-card package-card">
+                            <i class="fas fa-pen-nib package-icon"></i>
+                            <h3 data-i18n="svcDesignTitle">עיצוב גרפי ומיתוג</h3>
+                            <p data-i18n="svcDesignDesc">לוגו, שפה מותגית, גרפיקות לסושיאל וחומרים שיווקיים — עיצוב שנותן לעסק שלכם פנים מקצועיות וזכירות, בשפה אחידה מהלוגו ועד הסטורי.</p>
+                            <ul class="package-bullets">
+                                <li data-i18n="svcDesignB1">לוגו וזהות מותגית</li>
+                                <li data-i18n="svcDesignB2">גרפיקות לסושיאל ולדפוס</li>
+                                <li data-i18n="svcDesignB3">מצגות וחומרי מכירה</li>
+                                <li data-i18n="svcDesignB4">שפה אחידה לכל הערוצים</li>
+                            </ul>
+                            <a class="liquid-btn liquid-btn-lg liquid-btn-whatsapp liquid-btn-block" data-wa="waDesign"
+                               href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%2F%D7%AA%20%D7%91%D7%A2%D7%99%D7%A6%D7%95%D7%91%20%D7%92%D7%A8%D7%A4%D7%99%20%D7%90%D7%95%20%D7%9E%D7%99%D7%AA%D7%95%D7%92%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8"
+                               target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-whatsapp"></i>
+                                <span data-i18n="svcDesignCta">קבלו הצעת מחיר לעיצוב</span>
+                            </a>
+                        </div>
+
+                        <div class="glass-card package-card">
+                            <i class="fas fa-film package-icon"></i>
+                            <h3 data-i18n="svcVideoTitle">וידיאו ותלת מימד</h3>
+                            <p data-i18n="svcVideoDesc">סרטוני תדמית, אנימציה ותלת מימד שעוצרים את הגלילה. אני עובד ב-After Effects וב-Blender ומביא לעסק שלכם ויז'ואל ברמה שרואים בדרך כלל רק אצל מותגים גדולים.</p>
+                            <ul class="package-bullets">
+                                <li data-i18n="svcVideoB1">סרטוני תדמית ומוצר</li>
+                                <li data-i18n="svcVideoB2">אנימציית תלת מימד</li>
+                                <li data-i18n="svcVideoB3">תוכן לסושיאל</li>
+                                <li data-i18n="svcVideoB4">מהקונספט ועד הרינדור הסופי</li>
+                            </ul>
+                            <a class="liquid-btn liquid-btn-lg liquid-btn-whatsapp liquid-btn-block" data-wa="waVideo"
+                               href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%2F%D7%AA%20%D7%91%D7%A1%D7%A8%D7%98%D7%95%D7%9F%20%D7%90%D7%95%20%D7%A2%D7%91%D7%95%D7%93%D7%AA%20%D7%AA%D7%9C%D7%AA%20%D7%9E%D7%99%D7%9E%D7%93%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8"
+                               target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-whatsapp"></i>
+                                <span data-i18n="svcVideoCta">קבלו הצעת מחיר לוידיאו</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ PROCESS ============ -->
+            <section id="process" class="py-16 px-6 md:px-12">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="landing-section-title" data-i18n="prcTitle">איך עובדים איתי</h2>
+                    <p class="section-lead" data-i18n="prcIntro">פשוט, שקוף ובלי הפתעות:</p>
+                    <div class="process-steps">
+                        <div class="glass-card process-step">
+                            <span class="process-num">1</span>
+                            <h3 data-i18n="prc1t">שיחת היכרות</h3>
+                            <p data-i18n="prc1d">מספרים לי מה אתם צריכים — בוואטסאפ או בטלפון. בלי עלות ובלי התחייבות.</p>
+                        </div>
+                        <div class="glass-card process-step">
+                            <span class="process-num">2</span>
+                            <h3 data-i18n="prc2t">הצעה מסודרת</h3>
+                            <p data-i18n="prc2d">תוך יום-יומיים אתם מקבלים הצעת מחיר ברורה: מה בדיוק נבנה, באיזה שלבים ובאיזה לוח זמנים.</p>
+                        </div>
+                        <div class="glass-card process-step">
+                            <span class="process-num">3</span>
+                            <h3 data-i18n="prc3t">עבודה בשקיפות מלאה</h3>
+                            <p data-i18n="prc3d">אתם רואים התקדמות אמיתית לאורך הדרך ומעירים בזמן אמת — ישירות מולי, בלי טלפון שבור.</p>
+                        </div>
+                        <div class="glass-card process-step">
+                            <span class="process-num">4</span>
+                            <h3 data-i18n="prc4t">עלייה לאוויר וליווי</h3>
+                            <p data-i18n="prc4d">משיקים, מוודאים שהכול עובד מושלם, ואני נשאר זמין גם אחרי המסירה.</p>
+                        </div>
+                    </div>
+                    <div class="text-center mt-10">
+                        <a class="liquid-btn liquid-btn-lg liquid-btn-whatsapp" data-wa="waGeneral"
+                           href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%D7%9A%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98"
+                           target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-whatsapp"></i>
+                            <span data-i18n="prcCta">מתחילים בשיחה</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ PORTFOLIO ============ -->
+            <section id="portfolio" class="py-16 px-6 md:px-12">
+                <div class="max-w-7xl mx-auto">
+                    <h2 class="landing-section-title" data-i18n="pfTitle">עבודות נבחרות</h2>
+                    <p class="section-lead" data-i18n="pfLead">לא מאמינים למילים? הנה מה שכבר בניתי.</p>
+
+                    <!-- Apps -->
+                    <div id="apps" class="portfolio-block">
+                        <h3 class="portfolio-block-title" data-i18n="pfAppsTitle">אפליקציות</h3>
+                        <p class="portfolio-block-sub" data-i18n="pfAppsSub">חמש מהאפליקציות האלה זמינות להורדה ב-App Store עכשיו.</p>
+                        <div class="apps-home-grid" aria-label="אפליקציות">
+                            <a class="app-home-button" href="https://www.imagine3d.io/demo.html" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Imagine">
+                                <img src="imagineicon.jpg" alt="Imagine" class="app-home-icon" loading="lazy">
+                                <span>Imagine</span>
+                            </a>
+                            <a class="app-home-button" href="https://apps.apple.com/il/app/dreamspace/id6747836503" target="_blank" rel="noopener noreferrer" aria-label="פתיחת dreamspace ב-App Store">
+                                <img src="apps/dreamspace%20icon-macOS-Default-1024x1024@1x.png" alt="dreamspace" class="app-home-icon" loading="lazy">
+                                <span>dreamspace</span>
+                            </a>
+                            <a class="app-home-button" href="https://apps.apple.com/il/app/%D7%91%D7%A8%D7%90%D7%A9%D7%99%D7%AA/id6749923278" target="_blank" rel="noopener noreferrer" aria-label="פתיחת בראשית ב-App Store">
+                                <img src="apps/בראשית%20אייקון%20לבן.png" alt="בראשית" class="app-home-icon" loading="lazy">
+                                <span>בראשית</span>
+                            </a>
+                            <a class="app-home-button" href="https://apps.apple.com/il/app/tictac-boom/id6757354286" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Tic Tac Boom ב-App Store">
+                                <img src="apps/xo%20icon%201.png" alt="Tic Tac Boom!" class="app-home-icon" loading="lazy">
+                                <span>Tic Tac Boom!</span>
+                            </a>
+                            <a class="app-home-button" href="https://apps.apple.com/il/app/videtor-pro/id6760938192" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Videtor Pro ב-App Store">
+                                <img src="apps/videtor%20light13.png" alt="Videtor Pro" class="app-home-icon" loading="lazy">
+                                <span>Videtor Pro</span>
+                            </a>
+                            <a class="app-home-button" href="https://apps.apple.com/il/app/point/id6749490557" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Point ב-App Store">
+                                <img src="apps/POINT%20LIGHT%201.png" alt="Point" class="app-home-icon" loading="lazy">
+                                <span>Point</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Graphics -->
+                    <div id="graphics" class="portfolio-block">
+                        <h3 class="portfolio-block-title" data-i18n="pfGraphicsTitle">גרפיקה</h3>
+                        <div id="graphicsStack" class="scroll-tilted-grid" aria-label="גלריית עבודות גרפיקה"></div>
+                    </div>
+
+                    <!-- Video -->
+                    <div id="video" class="portfolio-block">
+                        <h3 class="portfolio-block-title" data-i18n="pfVideoTitle">וידיאו</h3>
+                        <p class="portfolio-block-sub" data-i18n="futureosDesc">
                             FutureOS הוא עמוד סושיאל שאני מתחזק, שמציג קונספטים למערכות ההפעלה של Apple שנוצרו ב-After Effects וב-Blender. זה פרויקט שנעשה נטו מתוך אהבה ליצירה.
                         </p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                            <div class="rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg">
-                                <iframe width="100%" height="315" src="https://www.youtube.com/embed/XtUpUCwhHJE?si=ryX3BhyVZMscV1Co" 
-                                    title="נגן וידיאו של YouTube" frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            <div class="rounded-2xl overflow-hidden glass-card video-frame">
+                                <iframe width="100%" height="315" src="https://www.youtube.com/embed/XtUpUCwhHJE?si=ryX3BhyVZMscV1Co"
+                                    title="נגן וידיאו של YouTube" frameborder="0" loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
-                            <div class="rounded-2xl overflow-hidden backdrop-blur-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 shadow-lg">
-                                <iframe width="100%" height="315" src="https://www.youtube.com/embed/wJMh2dYj7KE?si=lfwi224VoWOwOTCA" 
-                                    title="נגן וידיאו של YouTube" frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            <div class="rounded-2xl overflow-hidden glass-card video-frame">
+                                <iframe width="100%" height="315" src="https://www.youtube.com/embed/wJMh2dYj7KE?si=lfwi224VoWOwOTCA"
+                                    title="נגן וידיאו של YouTube" frameborder="0" loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Eldio Section -->
-                <section class="py-12 px-6 md:px-12 bg-gray-50 dark:bg-gray-900/50">
-                    <div class="max-w-7xl mx-auto">
-                        <h2 class="section-title page-section-title text-center" dir="rtl">אלדיו השד</h2>
-                        <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
-                            אלדיו השד היא סדרת אנימציה קצרה שיצרתי לסושיאל. היא מספרת על שד שמנסה להגיע לגן עדן.
-                        </p>
-                        <div class="elfsight-app-8ee8d420-ec94-4471-8efe-5f836d3c154f" data-elfsight-app-lazy></div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Apps Page -->
-            <div id="apps-page" class="page-content hidden">
-                <!-- Imagine is hidden for now because the project is not ready yet. -->
-                <section class="hidden py-12 px-6 md:px-12 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden" aria-hidden="true" data-project-status="not-ready">
-                    <div class="galaxy-background absolute inset-0"></div>
-                    <canvas id="imagine-stars-canvas" class="absolute inset-0"></canvas>
-                    <div class="max-w-7xl mx-auto relative z-10">
-                        <div class="text-center mb-8">
-                            <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-2 border-white/30 p-2">
-                                <img src="imagine icon web.png" alt="לוגו Imagine" class="w-full h-full object-contain rounded-full">
-                            </div>
-                            <h2 class="section-title page-section-title text-white" dir="rtl">פרויקט Imagine</h2>
-                            <p class="text-white/90 max-w-2xl mx-auto">
-                                Imagine הוא הפרויקט הכי שאפתני שלי עד היום: כלי שמאפשר ליצור עולמות תלת מימד בעזרת בינה מלאכותית מכל דפדפן, כולל VR.
+                        <div class="mt-12">
+                            <h4 class="portfolio-block-title portfolio-block-title-sm" data-i18n="eldioTitle">אלדיו השד</h4>
+                            <p class="portfolio-block-sub" data-i18n="eldioDesc">
+                                אלדיו השד היא סדרת אנימציה קצרה שיצרתי לסושיאל. היא מספרת על שד שמנסה להגיע לגן עדן.
                             </p>
-                        </div>
-                        <div class="instagram-reel-frame max-w-sm mx-auto rounded-2xl overflow-hidden backdrop-blur-xl bg-black/35 border border-white/20 shadow-2xl">
-                            <iframe width="100%" height="620" src="https://www.instagram.com/reel/DXoOhy_DVzi/embed/"
-                                title="ריל Instagram של Imagine" frameborder="0"
-                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <div class="elfsight-app-8ee8d420-ec94-4471-8efe-5f836d3c154f" data-elfsight-app-lazy></div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <section class="apps-home-section py-16 px-6 md:px-12">
-                    <div class="apps-home-content">
-                        <h2 class="section-title page-section-title text-center" dir="rtl">אפליקציות</h2>
-                    <div class="apps-home-grid" aria-label="אפליקציות">
-                        <a class="app-home-button" href="https://www.imagine3d.io/demo.html" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Imagine">
-                            <img src="imagineicon.jpg" alt="Imagine" class="app-home-icon">
-                            <span>Imagine</span>
-                        </a>
-                        <a class="app-home-button" href="https://apps.apple.com/il/app/dreamspace/id6747836503" target="_blank" rel="noopener noreferrer" aria-label="פתיחת dreamspace ב-App Store">
-                            <img src="apps/dreamspace%20icon-macOS-Default-1024x1024@1x.png" alt="dreamspace" class="app-home-icon">
-                            <span>dreamspace</span>
-                        </a>
-                        <a class="app-home-button" href="https://apps.apple.com/il/app/dreamspace/id6747836503" target="_blank" rel="noopener noreferrer" aria-label="פתיחת בראשית ב-App Store">
-                            <img src="apps/בראשית%20אייקון%20לבן.png" alt="בראשית" class="app-home-icon">
-                            <span>בראשית</span>
-                        </a>
-                        <a class="app-home-button" href="https://apps.apple.com/il/app/tictac-boom/id6757354286" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Tic Tac Boom ב-App Store">
-                            <img src="apps/xo%20icon%201.png" alt="Tic Tac Boom!" class="app-home-icon">
-                            <span>Tic Tac Boom!</span>
-                        </a>
-                        <a class="app-home-button" href="https://apps.apple.com/il/app/videtor-pro/id6760938192" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Videtor Pro ב-App Store">
-                            <img src="apps/videtor%20light13.png" alt="Videtor Pro" class="app-home-icon">
-                            <span>Videtor Pro</span>
-                        </a>
-                        <a class="app-home-button" href="https://apps.apple.com/il/app/point/id6749490557" target="_blank" rel="noopener noreferrer" aria-label="פתיחת Point ב-App Store">
-                            <img src="apps/POINT%20LIGHT%201.png" alt="Point" class="app-home-icon">
-                            <span>Point</span>
-                        </a>
-                    </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Contact Page -->
-            <div id="contact-page" class="page-content hidden">
-                <section class="py-12 px-6 md:px-12 min-h-[60vh] flex items-center justify-center">
-                    <div class="max-w-2xl mx-auto text-center">
-                        <h2 class="section-title page-section-title" dir="rtl">יצירת קשר</h2>
-                        <p class="text-gray-600 dark:text-gray-400 mb-12 text-lg">
-                            אשמח לשמוע ממך ולדבר על פרויקטים מעניינים.
+            <!-- ============ ABOUT ============ -->
+            <section id="about" class="py-16 px-6 md:px-12">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="landing-section-title" data-i18n="aboutTitle">נעים להכיר, ליאור</h2>
+                    <p class="section-lead about-text" data-i18n="aboutText">
+                        אני מפתח ומעצב, ובעיקר — אדם שאוהב לבנות דברים. העליתי חמש אפליקציות ל-App Store, אני מנהל את FutureOS — עמוד קונספטים למערכות ההפעלה של אפל, יצרתי את סדרת האנימציה "אלדיו השד", ואני עובד על Imagine — כלי ליצירת עולמות תלת מימד עם בינה מלאכותית. כשאתם עובדים איתי, אתם מקבלים את כל התשוקה הזאת מכוונת לפרויקט שלכם.
+                    </p>
+                    <div class="hero-listening-panel mt-10">
+                        <p class="text-sm md:text-base mb-3 text-center listening-label" data-i18n="aboutListening">
+                            אני מאזין עכשיו ל...
                         </p>
+                        <!-- Elfsight Audio Player -->
+                        <div class="elfsight-app-525f6cb1-a655-4aaa-bcdb-c7fd5fbcf0b8" data-elfsight-app-lazy></div>
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
+
+            <!-- ============ FINAL CTA ============ -->
+            <section id="contact" class="py-20 px-6 md:px-12">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="landing-section-title" data-i18n="ctaTitle">יש לכם רעיון? בואו נהפוך אותו למציאות.</h2>
+                    <p class="section-lead" data-i18n="ctaSub">
+                        ספרו לי מה אתם צריכים — אתר, אפליקציה, מיתוג או וידיאו — ותקבלו מענה אישי תוך 24 שעות.
+                    </p>
+                    <div class="hero-cta-row mt-8">
+                        <a class="liquid-btn liquid-btn-xl liquid-btn-whatsapp" data-wa="waGeneral"
+                           href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%D7%9A%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98"
+                           target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-whatsapp"></i>
+                            <span data-i18n="ctaWhatsapp">שלחו לי הודעה עכשיו</span>
+                        </a>
+                        <button id="allChannelsBtn" class="liquid-btn liquid-btn-lg">
+                            <i class="fas fa-address-book"></i>
+                            <span data-i18n="ctaAllChannels">כל דרכי ההתקשרות</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Contact Menu (Floating) - Above Main Nav -->
@@ -317,84 +418,91 @@
                         <i class="fas fa-times text-xl transition-transform duration-300 ease-in-out"></i>
                     </span>
                 </button>
-                
+
                 <!-- Profile Image - Top Center -->
                 <div class="flex justify-center mb-4 mt-2 relative z-20">
                     <div class="contact-profile-portrait w-24 h-24 rounded-full overflow-hidden shadow-lg">
-                        <img src="liorpsy.jpg" alt="ליאור אזולאי" 
+                        <img src="liorpsy.jpg" alt="ליאור אזולאי"
                             class="w-full h-full object-cover rounded-full contact-profile-image"
                             onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'><rect width=\'200\' height=\'200\' fill=\'%23f0f0f0\'/><text x=\'50%\' y=\'50%\' font-size=\'18\' text-anchor=\'middle\' fill=\'%23999\'>%D7%AA%D7%9E%D7%95%D7%A0%D7%94</text></svg>'">
                     </div>
                 </div>
-                
+
                 <!-- Title - Centered -->
                 <div class="flex justify-center items-center mb-5 relative z-20">
-                    <h3 class="contact-menu-title text-gray-900 dark:text-white transition-all duration-300 ease-in-out" dir="rtl">יצירת קשר</h3>
+                    <h3 class="contact-menu-title transition-all duration-300 ease-in-out" data-i18n="cmTitle">יצירת קשר</h3>
                 </div>
                 <div class="space-y-3 contact-menu-items relative z-20">
-                    <a href="https://www.linkedin.com/in/azulay-lior-42b43122a/" target="_blank" 
+                    <a href="https://www.linkedin.com/in/azulay-lior-42b43122a/" target="_blank"
                         class="glass-button glass-button-contact contact-linkedin flex items-center gap-3">
-                        <i class="fab fa-linkedin-in text-xl text-blue-600 dark:text-blue-400 transition-transform duration-300 ease-in-out"></i>
-                        <span class="glass-button-text font-medium text-gray-900 dark:text-white transition-all duration-300 ease-in-out">לינקדאין</span>
+                        <i class="fab fa-linkedin-in text-xl transition-transform duration-300 ease-in-out"></i>
+                        <span class="glass-button-text font-medium transition-all duration-300 ease-in-out" data-i18n="cmLinkedin">לינקדאין</span>
                     </a>
-                    <a href="https://www.instagram.com/lior.azul/" target="_blank" 
+                    <a href="https://www.instagram.com/lior.azul/" target="_blank"
                         class="glass-button glass-button-contact contact-instagram flex items-center gap-3">
-                        <i class="fab fa-instagram text-xl text-pink-600 dark:text-pink-400 transition-transform duration-300 ease-in-out"></i>
-                        <span class="glass-button-text font-medium text-gray-900 dark:text-white transition-all duration-300 ease-in-out">אינסטגרם</span>
+                        <i class="fab fa-instagram text-xl transition-transform duration-300 ease-in-out"></i>
+                        <span class="glass-button-text font-medium transition-all duration-300 ease-in-out" data-i18n="cmInstagram">אינסטגרם</span>
                     </a>
-                    <button id="copyEmail" 
+                    <button id="copyEmail"
                         class="glass-button glass-button-contact contact-email w-full flex items-center gap-3">
-                        <i class="fas fa-copy text-xl text-gray-600 dark:text-gray-400 transition-transform duration-300 ease-in-out"></i>
-                        <span class="glass-button-text font-medium text-gray-900 dark:text-white transition-all duration-300 ease-in-out">העתקת אימייל</span>
+                        <i class="fas fa-copy text-xl transition-transform duration-300 ease-in-out"></i>
+                        <span class="glass-button-text font-medium transition-all duration-300 ease-in-out" data-i18n="cmCopyEmail">העתקת אימייל</span>
                     </button>
-                    <a href="https://wa.me/+972523321674" target="_blank" 
+                    <a href="https://wa.me/972523321674" target="_blank" data-wa="waGeneral"
                         class="glass-button glass-button-contact contact-whatsapp flex items-center gap-3">
-                        <i class="fab fa-whatsapp text-xl text-green-600 dark:text-green-400 transition-transform duration-300 ease-in-out"></i>
-                        <span class="glass-button-text font-medium text-gray-900 dark:text-white transition-all duration-300 ease-in-out">יצירת קשר ב-WhatsApp</span>
+                        <i class="fab fa-whatsapp text-xl transition-transform duration-300 ease-in-out"></i>
+                        <span class="glass-button-text font-medium transition-all duration-300 ease-in-out" data-i18n="cmWhatsapp">יצירת קשר ב-WhatsApp</span>
                     </a>
                     <a href="‎⁨קוחH⁩.pdf" download
                         class="glass-button glass-button-contact contact-cv flex items-center gap-3">
                         <i class="fas fa-download text-xl transition-transform duration-300 ease-in-out"></i>
-                        <span class="glass-button-text font-medium text-gray-900 dark:text-white transition-all duration-300 ease-in-out" dir="rtl">הורדת קו״ח</span>
+                        <span class="glass-button-text font-medium transition-all duration-300 ease-in-out" data-i18n="cmCv">הורדת קו״ח</span>
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation Dock -->
+        <!-- Bottom Navigation Dock (anchor navigation) -->
         <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none max-w-[calc(100%-2rem)]">
             <nav class="glass-button-wrap glass-dock pointer-events-auto" aria-label="ניווט ראשי">
                 <div class="glass-dock-distortion"></div>
                 <div class="glass-dock-tint"></div>
                 <div class="glass-dock-highlight"></div>
                 <div class="dock-icons">
-                    <button data-page="graphics" class="glass-button nav-item dock-icon active" aria-label="גרפיקה">
+                    <a href="#top" data-section="top" class="glass-button nav-item dock-icon active" aria-label="ראשי">
                         <span class="glass-button-text glass-button-text-icon">
-                            <i class="fas fa-palette"></i>
-                            <span class="dock-label">גרפיקה</span>
+                            <i class="fas fa-home"></i>
+                            <span class="dock-label" data-i18n="dockHome">ראשי</span>
                         </span>
-                    </button>
-                    <button data-page="video" class="glass-button nav-item dock-icon" aria-label="וידיאו">
+                    </a>
+                    <a href="#services" data-section="services" class="glass-button nav-item dock-icon" aria-label="שירותים">
                         <span class="glass-button-text glass-button-text-icon">
-                            <i class="fas fa-video"></i>
-                            <span class="dock-label">וידיאו</span>
+                            <i class="fas fa-briefcase"></i>
+                            <span class="dock-label" data-i18n="dockServices">שירותים</span>
                         </span>
-                    </button>
-                    <button data-page="apps" class="glass-button nav-item dock-icon" aria-label="אפליקציות">
+                    </a>
+                    <a href="#portfolio" data-section="portfolio" class="glass-button nav-item dock-icon" aria-label="עבודות">
                         <span class="glass-button-text glass-button-text-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                            <span class="dock-label">אפליקציות</span>
+                            <i class="fas fa-layer-group"></i>
+                            <span class="dock-label" data-i18n="dockWorks">עבודות</span>
                         </span>
-                    </button>
-                    <button data-page="contact" id="contactNavButton" class="glass-button nav-item dock-icon" aria-label="יצירת קשר" aria-expanded="false">
+                    </a>
+                    <button id="contactNavButton" class="glass-button nav-item dock-icon" aria-label="יצירת קשר" aria-expanded="false">
                         <span class="glass-button-text glass-button-text-icon">
                             <i class="fas fa-envelope"></i>
-                            <span class="dock-label">קשר</span>
+                            <span class="dock-label" data-i18n="dockContact">קשר</span>
                         </span>
                     </button>
                 </div>
             </nav>
         </div>
+
+        <!-- Floating WhatsApp Button -->
+        <a id="whatsappFloat" class="whatsapp-float" data-wa="waGeneral"
+           href="https://wa.me/972523321674?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%99%D7%90%D7%95%D7%A8%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%D7%9A%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98"
+           target="_blank" rel="noopener noreferrer" aria-label="שליחת הודעת WhatsApp לליאור">
+            <i class="fab fa-whatsapp"></i>
+        </a>
 
         <!-- Enhanced Liquid Glass Styles -->
         <style>
@@ -402,7 +510,7 @@
             .liquid-glass-contact {
                 background: rgba(255, 255, 255, 0.08) !important;
                 border: 2px solid transparent !important;
-                box-shadow: 
+                box-shadow:
                     0 0 0 2px rgba(255, 255, 255, 0.6),
                     0 16px 32px rgba(0, 0, 0, 0.12) !important;
                 isolation: isolate;
@@ -428,14 +536,12 @@
                 isolation: isolate;
             }
 
-            @media (prefers-color-scheme: dark) {
-                .liquid-glass-contact {
-                    background: rgba(255, 255, 255, 0.05) !important;
-                    border: 2px solid transparent !important;
-                    box-shadow: 
-                        0 0 0 2px rgba(255, 255, 255, 0.3),
-                        0 16px 32px rgba(0, 0, 0, 0.4) !important;
-                }
+            html.dark .liquid-glass-contact {
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 2px solid transparent !important;
+                box-shadow:
+                    0 0 0 2px rgba(255, 255, 255, 0.3),
+                    0 16px 32px rgba(0, 0, 0, 0.4) !important;
             }
         </style>
 
@@ -446,7 +552,9 @@
     <!-- Elfsight Scripts -->
     <script src="https://static.elfsight.com/platform/platform.js" async></script>
 
-    <script src="script.js"></script>
+    <script src="gradflow-bg.js?v=1"></script>
+    <script src="i18n.js?v=1"></script>
+    <script src="script.js?v=2"></script>
     <script>
         // Loading screen
         let siteRevealStarted = false;
@@ -461,86 +569,24 @@
                     loadingScreen.style.display = 'none';
                 }, 500);
                 document.body.classList.add('loaded');
-            }, 1000);
+            }, 800);
         }
         window.addEventListener('load', revealSite);
         document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(revealSite, 1400);
-        });
-
-        // Navigation
-        const navButtons = document.querySelectorAll('.nav-item[data-page]');
-        const pages = document.querySelectorAll('.page-content');
-        const contactMenu = document.getElementById('contactMenu');
-        const contactNavButton = document.getElementById('contactNavButton');
-
-        navButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                if (this.getAttribute('data-page') === 'contact') {
-                    e.preventDefault();
-                    const isHidden = contactMenu.classList.contains('hidden');
-                    if (isHidden) {
-                        showContactMenu();
-                        this.setAttribute('aria-expanded', 'true');
-                    } else {
-                        hideContactMenu();
-                        this.setAttribute('aria-expanded', 'false');
-                    }
-                    return;
-                }
-                
-                // Close contact menu if open
-                if (!contactMenu.classList.contains('hidden')) {
-                    hideContactMenu();
-                    if (contactNavButton) {
-                        contactNavButton.classList.remove('active');
-                        contactNavButton.setAttribute('aria-expanded', 'false');
-                    }
-                }
-                
-                const targetPage = this.getAttribute('data-page');
-                
-                // Update active states
-                navButtons.forEach(b => {
-                    b.classList.remove('active');
-                    if (b.getAttribute('data-page') === targetPage) {
-                        b.classList.add('active');
-                    }
-                });
-
-                // Show/hide pages
-                pages.forEach(page => {
-                    page.classList.add('hidden');
-                    page.classList.remove('active');
-                });
-
-                const targetPageEl = document.getElementById(targetPage + '-page');
-                if (targetPageEl) {
-                    targetPageEl.classList.remove('hidden');
-                    targetPageEl.classList.add('active');
-                    
-                    // Scroll to the start of the section (after header)
-                    setTimeout(() => {
-                        const header = document.querySelector('header');
-                        const headerHeight = header ? header.offsetHeight : 0;
-                        window.scrollTo({ 
-                            top: headerHeight, 
-                            behavior: 'smooth' 
-                        });
-                    }, 50);
-                }
-            });
+            setTimeout(revealSite, 1200);
         });
 
         // Contact menu
+        const contactMenu = document.getElementById('contactMenu');
+        const contactNavButton = document.getElementById('contactNavButton');
         const closeContactMenu = document.getElementById('closeContactMenu');
+        const allChannelsBtn = document.getElementById('allChannelsBtn');
 
         function hideContactMenu() {
             const menuContent = contactMenu.querySelector('.contact-menu-content');
             const profileImage = menuContent.querySelector('.contact-profile-image');
             const menuItems = menuContent.querySelectorAll('.contact-menu-items > *');
-            
-            // Animate menu items out first
+
             menuItems.forEach((item, index) => {
                 setTimeout(() => {
                     item.style.transition = 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -548,8 +594,7 @@
                     item.style.transform = 'translateY(8px)';
                 }, index * 30);
             });
-            
-            // Animate profile image
+
             if (profileImage) {
                 setTimeout(() => {
                     profileImage.parentElement.parentElement.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -557,18 +602,16 @@
                     profileImage.parentElement.parentElement.style.transform = 'scale(0.9)';
                 }, 50);
             }
-            
-            // Animate menu container
+
             setTimeout(() => {
                 menuContent.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 menuContent.style.opacity = '0';
                 menuContent.style.transform = 'translateY(8px) scale(0.95)';
             }, 150);
-            
+
             setTimeout(() => {
                 contactMenu.classList.add('hidden');
                 contactMenu.classList.remove('flex');
-                // Reset all styles
                 menuContent.style.opacity = '';
                 menuContent.style.transform = '';
                 menuItems.forEach((item) => {
@@ -580,26 +623,21 @@
                     profileImage.parentElement.parentElement.style.transform = '';
                 }
             }, 450);
-        }
 
-        closeContactMenu.addEventListener('click', function() {
-            hideContactMenu();
             if (contactNavButton) {
                 contactNavButton.classList.remove('active');
                 contactNavButton.setAttribute('aria-expanded', 'false');
             }
-        });
+        }
 
-        // Show contact menu with animation
         function showContactMenu() {
             contactMenu.classList.remove('hidden');
             contactMenu.classList.add('flex');
-            
+
             const menuContent = contactMenu.querySelector('.contact-menu-content');
             const profileImage = menuContent.querySelector('.contact-profile-image');
             const menuItems = menuContent.querySelectorAll('.contact-menu-items > *');
-            
-            // Reset initial states
+
             menuContent.style.opacity = '0';
             menuContent.style.transform = 'translateY(8px) scale(0.95)';
             menuItems.forEach((item) => {
@@ -610,15 +648,13 @@
                 profileImage.parentElement.parentElement.style.opacity = '0';
                 profileImage.parentElement.parentElement.style.transform = 'scale(0.9)';
             }
-            
-            // Animate menu container in
+
             setTimeout(() => {
                 menuContent.style.transition = 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
                 menuContent.style.opacity = '1';
                 menuContent.style.transform = 'translateY(0) scale(1)';
             }, 10);
-            
-            // Animate profile image in
+
             if (profileImage) {
                 setTimeout(() => {
                     profileImage.parentElement.parentElement.style.transition = 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -626,8 +662,7 @@
                     profileImage.parentElement.parentElement.style.transform = 'scale(1)';
                 }, 100);
             }
-            
-            // Animate menu items in with stagger
+
             menuItems.forEach((item, index) => {
                 setTimeout(() => {
                     item.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
@@ -635,19 +670,38 @@
                     item.style.transform = 'translateY(0)';
                 }, 200 + (index * 40));
             });
+
+            if (contactNavButton) {
+                contactNavButton.classList.add('active');
+                contactNavButton.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        contactNavButton.addEventListener('click', function () {
+            if (contactMenu.classList.contains('hidden')) {
+                showContactMenu();
+            } else {
+                hideContactMenu();
+            }
+        });
+
+        closeContactMenu.addEventListener('click', hideContactMenu);
+
+        if (allChannelsBtn) {
+            allChannelsBtn.addEventListener('click', showContactMenu);
         }
 
         // Copy email
-        document.getElementById('copyEmail').addEventListener('click', function() {
+        document.getElementById('copyEmail').addEventListener('click', function () {
+            const label = this.querySelector('span');
             navigator.clipboard.writeText('Liorazulay72@gmail.com').then(() => {
-                const originalText = this.querySelector('span').textContent;
-                this.querySelector('span').textContent = 'הועתק!';
+                const originalText = label.textContent;
+                label.textContent = (window.i18n && window.i18n.t('cmCopied')) || 'הועתק!';
                 setTimeout(() => {
-                    this.querySelector('span').textContent = originalText;
+                    label.textContent = originalText;
                 }, 2000);
             });
         });
-
     </script>
 </body>
 

@@ -1,4 +1,4 @@
-/* ========== CSS Variables - Dark Only ========== */
+/* ========== CSS Variables — Dark (default) / Light themes ========== */
 :root {
     color-scheme: dark;
 
@@ -6,33 +6,69 @@
     --bg-secondary: #070813;
     --bg-panel: rgba(255, 255, 255, 0.055);
     --text-primary: #f8fafc;
-    --text-secondary: rgba(248, 250, 252, 0.64);
+    --text-secondary: rgba(248, 250, 252, 0.7);
     --accent-cyan: #62e8ff;
     --accent-cyan-light: #a7f3ff;
     --accent-violet: #a78bfa;
     --accent-pink: #f472b6;
 
-    --gradient-background-start: rgb(108, 0, 162);
-    --gradient-background-end: rgb(0, 17, 82);
-    --first-color: 18, 113, 255;
-    --second-color: 221, 74, 255;
-    --third-color: 100, 220, 255;
-    --fourth-color: 200, 50, 50;
-    --fifth-color: 180, 180, 50;
-    --pointer-color: 140, 100, 255;
-    --size: 80%;
-    --blending-value: hard-light;
-    
-    /* Glass Effect Colors */
-    --glass-bg-light: rgba(255, 255, 255, 0.08);
-    --glass-bg-dark: rgba(255, 255, 255, 0.08);
-    --glass-border-light: rgba(255, 255, 255, 0.18);
-    --glass-border-dark: rgba(255, 255, 255, 0.18);
-    
+    /* Glass surfaces */
+    --glass-tint: rgba(255, 255, 255, 0.085);
+    --glass-tint-strong: rgba(255, 255, 255, 0.14);
+    --glass-border: rgba(255, 255, 255, 0.16);
+    --glass-highlight: rgba(255, 255, 255, 0.42);
+    --card-bg: rgba(10, 13, 28, 0.55);
+
+    /* Scrim over the GradFlow canvas */
+    --scrim: linear-gradient(180deg, rgba(2, 3, 10, 0.82), rgba(2, 3, 10, 0.88) 40%, rgba(2, 3, 10, 0.93));
+
     /* Shadow Colors */
     --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2);
     --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.25);
     --shadow-strong: 0 18px 55px rgba(0, 0, 0, 0.42);
+    --title-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+}
+
+html.light {
+    color-scheme: light;
+
+    --bg-primary: #eef1f8;
+    --bg-secondary: #e3e7f2;
+    --bg-panel: rgba(255, 255, 255, 0.5);
+    --text-primary: #0d1020;
+    --text-secondary: rgba(13, 16, 32, 0.7);
+
+    --glass-tint: rgba(255, 255, 255, 0.5);
+    --glass-tint-strong: rgba(255, 255, 255, 0.66);
+    --glass-border: rgba(255, 255, 255, 0.75);
+    --glass-highlight: rgba(255, 255, 255, 0.95);
+    --card-bg: rgba(255, 255, 255, 0.62);
+
+    --scrim: linear-gradient(180deg, rgba(240, 243, 250, 0.72), rgba(240, 243, 250, 0.8) 40%, rgba(240, 243, 250, 0.88));
+
+    --shadow-soft: 0 2px 8px rgba(30, 40, 80, 0.1);
+    --shadow-medium: 0 4px 12px rgba(30, 40, 80, 0.12);
+    --shadow-strong: 0 18px 55px rgba(30, 40, 80, 0.18);
+    --title-shadow: none;
+}
+
+/* ========== GradFlow background + scrim ========== */
+#gradflow-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    display: block;
+}
+
+.bg-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--scrim);
+    pointer-events: none;
+    transition: background 0.4s ease;
 }
 
 /* ========== Reset & Base Styles ========== */
@@ -49,39 +85,21 @@ html {
 
 body {
     font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    direction: rtl;
-    background: var(--bg-primary);
+    background: transparent;
     color: var(--text-primary);
     overflow-x: hidden;
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 body::selection {
     background: rgba(167, 139, 250, 0.45);
 }
 
-/* Header Text Alignment */
-header h1,
-header p {
-    text-align: center !important;
-    direction: rtl !important;
-}
-
-header .flex {
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-/* Profile Image Border - Blue Pink Yellow Gradient */
-.profile-image-border {
-    background: linear-gradient(135deg, #3b82f6 0%, #ec4899 50%, #eab308 100%);
-    padding: 3px;
-    border-radius: 50%;
-}
-
-.profile-image-border img {
-    border-radius: 50%;
+/* Loading screen surface */
+#loadingScreen {
+    background: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 /* Contact Menu Animations */
@@ -194,27 +212,6 @@ header .flex {
     transform: scale(1.15);
 }
 
-/* ========== Page Content ========== */
-.page-content {
-    display: block;
-    animation: fadeIn 0.3s ease;
-}
-
-.page-content.hidden {
-    display: none;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* ========== Gallery Items ========== */
 .gallery-item {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -230,69 +227,6 @@ header .flex {
     width: 100%;
     height: auto;
     display: block;
-}
-
-/* ========== Imagine Section Galaxy Background ========== */
-.galaxy-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(ellipse at 20% 30%, rgba(138, 43, 226, 0.4) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 60%, rgba(64, 224, 208, 0.4) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(138, 43, 226, 0.3) 0%, transparent 60%),
-        radial-gradient(ellipse at 10% 80%, rgba(64, 224, 208, 0.3) 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
-        linear-gradient(180deg, #000000 0%, #1a0033 25%, #330066 50%, #1a0033 75%, #000000 100%);
-    animation: galaxyPulse 15s ease-in-out infinite;
-    z-index: 0;
-}
-
-.galaxy-background::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: 
-        radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.3) 0%, transparent 40%),
-        radial-gradient(circle at 70% 60%, rgba(64, 224, 208, 0.3) 0%, transparent 40%);
-    animation: nebulaRotate 30s linear infinite;
-    mix-blend-mode: screen;
-    filter: blur(40px);
-}
-
-#imagine-stars-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-}
-
-@keyframes galaxyPulse {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.9;
-        transform: scale(1.05);
-    }
-}
-
-@keyframes nebulaRotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 /* ========== Scrollbar Styling ========== */
@@ -337,119 +271,492 @@ header .flex {
     }
 }
 
-/* ========== Dark Studio Redesign ========== */
+/* ========== Landing Sections ========== */
+section[id],
+header[id] {
+    scroll-margin-top: 1.5rem;
+}
+
 .portfolio-hero {
-    background:
-        radial-gradient(circle at 50% 110%, rgba(98, 232, 255, 0.08), transparent 38%),
-        #02030a;
+    background: transparent;
 }
 
-.hero-background-photo {
-    position: absolute;
-    inset: -18vh -18vw;
-    z-index: 0;
-    background-image: url("psywallpapaer.jpg");
-    background-size: cover;
-    background-position: center top;
-    transform: scale(1.22);
-    transform-origin: center top;
-    filter: saturate(1.04) contrast(1.04);
-    pointer-events: none;
-    user-select: none;
+.hero-headline {
+    color: var(--text-primary);
+    text-wrap: balance;
+    text-shadow: var(--title-shadow);
 }
 
-.hero-background-shade {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background:
-        radial-gradient(circle at 50% 36%, rgba(2, 3, 10, 0.08), rgba(2, 3, 10, 0.52) 52%, rgba(2, 3, 10, 0.9) 100%),
-        linear-gradient(180deg, rgba(2, 3, 10, 0.16), rgba(2, 3, 10, 0.52) 58%, #02030a 100%);
-    pointer-events: none;
+.hero-subtitle {
+    color: var(--text-secondary);
 }
 
-.background-gradient-animation {
-    background: linear-gradient(40deg, var(--gradient-background-start), var(--gradient-background-end));
+.hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+/* ========== Top corner toggles (language + theme) ========== */
+.top-toggles {
+    position: fixed;
+    top: 1rem;
+    inset-inline-end: 1rem;
+    z-index: 55;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.top-toggle-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    background: var(--card-bg);
+}
+
+.top-toggle-btn i {
+    font-size: 1.05rem;
+}
+
+/* אלמנטים קבועים מעל הקנבס החי — בלי backdrop blur (יקר מאוד מעל WebGL) */
+.top-toggle-btn,
+.top-toggle-btn.glass-button-icon {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.top-toggle-text {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+/* ========== Liquid Glass Buttons (vanilla port) ========== */
+.liquid-btn {
+    position: relative;
     isolation: isolate;
-    opacity: 0.42;
-    mix-blend-mode: screen;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.85rem 1.7rem;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+    background: var(--card-bg);
+    box-shadow:
+        inset 1px 1px 0 var(--glass-highlight),
+        inset -1px -1px 0 rgba(255, 255, 255, 0.12),
+        0 0 0 1px var(--glass-border),
+        0 14px 34px rgba(0, 0, 0, 0.22);
+    transition:
+        transform 460ms cubic-bezier(0.175, 0.885, 0.32, 1.55),
+        background 260ms ease,
+        box-shadow 260ms ease;
 }
 
-.gradient-vignette {
+.liquid-btn::before {
+    content: "";
     position: absolute;
     inset: 0;
-    z-index: 3;
+    z-index: -1;
+    border-radius: inherit;
     background:
-        radial-gradient(circle at center, transparent 0%, rgba(2, 3, 10, 0.12) 35%, rgba(2, 3, 10, 0.72) 100%),
-        linear-gradient(180deg, rgba(2, 3, 10, 0.12), rgba(2, 3, 10, 0.88));
+        radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.4), transparent 32%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 42%, rgba(255, 255, 255, 0.12));
+    opacity: 0.9;
     pointer-events: none;
 }
 
-.gradients-container {
-    position: absolute;
-    inset: 0;
+.liquid-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: var(--glass-tint-strong);
+    box-shadow:
+        inset 1px 1px 0 var(--glass-highlight),
+        0 0 0 1px var(--glass-border),
+        0 20px 44px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(167, 139, 250, 0.18);
+}
+
+.liquid-btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.liquid-btn i {
+    font-size: 1.2em;
+}
+
+.liquid-btn-lg {
+    padding: 1rem 2.1rem;
+    font-size: 1.08rem;
+}
+
+.liquid-btn-xl {
+    padding: 1.2rem 2.6rem;
+    font-size: 1.22rem;
+}
+
+.liquid-btn-block {
     width: 100%;
-    height: 100%;
-    filter: none;
-    opacity: 0.92;
-    transform: translateZ(0);
+    margin-top: auto;
 }
 
-.gradient-orb {
+.liquid-btn-whatsapp {
+    color: #fff;
+    background: rgba(37, 211, 102, 0.32);
+    box-shadow:
+        inset 1px 1px 0 rgba(255, 255, 255, 0.45),
+        inset -1px -1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(37, 211, 102, 0.45),
+        0 14px 34px rgba(18, 140, 126, 0.3);
+}
+
+.liquid-btn-whatsapp::before {
+    background:
+        radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.4), transparent 32%),
+        linear-gradient(135deg, rgba(37, 211, 102, 0.5), rgba(18, 140, 126, 0.28));
+}
+
+.liquid-btn-whatsapp:hover {
+    background: rgba(37, 211, 102, 0.44);
+    box-shadow:
+        inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+        0 0 0 1px rgba(37, 211, 102, 0.6),
+        0 20px 44px rgba(18, 140, 126, 0.4),
+        0 0 34px rgba(37, 211, 102, 0.35);
+}
+
+html.light .liquid-btn-whatsapp {
+    color: #063;
+    background: rgba(37, 211, 102, 0.3);
+}
+
+/* ========== Section titles & leads ========== */
+.landing-section-title {
+    margin: 0 auto clamp(1rem, 2.5vw, 1.6rem);
+    color: var(--text-primary);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.08;
+    text-align: center;
+    text-wrap: balance;
+    text-shadow: var(--title-shadow);
+}
+
+.section-lead {
+    margin: 0 auto clamp(2rem, 5vw, 3.25rem);
+    max-width: 44rem;
+    color: var(--text-secondary);
+    font-size: clamp(1.02rem, 2.2vw, 1.2rem);
+    text-align: center;
+    text-wrap: balance;
+}
+
+/* ========== Glass cards ==========
+   בלי backdrop-filter בכוונה: עשרות כרטיסים עם blur מעל קנבס WebGL חי
+   גורמים ל-re-composite של כל פריים והדפדפן נתקע. רקע חצי-שקוף בלבד. */
+.glass-card {
+    border-radius: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+        inset 1px 1px 0 rgba(255, 255, 255, 0.14),
+        0 22px 70px rgba(0, 0, 0, 0.22);
+}
+
+/* ========== Trust strip ========== */
+.trust-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.trust-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 1.4rem 1rem;
+    text-align: center;
+}
+
+.trust-big {
+    color: var(--text-primary);
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    font-weight: 900;
+    background: linear-gradient(120deg, var(--accent-cyan), var(--accent-violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+html.light .trust-big {
+    background: linear-gradient(120deg, #087ea4, #6d28d9);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.trust-small {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+/* ========== Why cards ========== */
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.why-card {
+    padding: 1.8rem 1.6rem;
+    text-align: center;
+}
+
+.why-icon {
+    display: block;
+    margin: 0 auto 0.9rem;
+    font-size: 1.7rem;
+    color: var(--accent-violet);
+}
+
+html.light .why-icon {
+    color: #6d28d9;
+}
+
+.why-card h3 {
+    margin-bottom: 0.55rem;
+    color: var(--text-primary);
+    font-size: 1.22rem;
+    font-weight: 800;
+}
+
+.why-card p {
+    color: var(--text-secondary);
+    font-size: 0.98rem;
+}
+
+/* ========== Services / packages ========== */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.package-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 2rem 1.8rem;
+}
+
+.package-icon {
+    font-size: 1.9rem;
+    color: var(--accent-cyan);
+}
+
+html.light .package-icon {
+    color: #087ea4;
+}
+
+.package-card h3 {
+    color: var(--text-primary);
+    font-size: 1.45rem;
+    font-weight: 900;
+}
+
+.package-card > p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.package-bullets {
+    margin: 0.25rem 0 1.1rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.package-bullets li {
+    position: relative;
+    padding-inline-start: 1.6rem;
+    color: var(--text-secondary);
+    font-size: 0.97rem;
+}
+
+.package-bullets li::before {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
     position: absolute;
-    width: var(--size);
-    height: var(--size);
-    top: calc(50% - var(--size) / 2);
-    left: calc(50% - var(--size) / 2);
-    mix-blend-mode: var(--blending-value);
-    transform-origin: center center;
-    opacity: 1;
-    will-change: transform;
+    inset-inline-start: 0;
+    top: 0.1em;
+    font-size: 0.85em;
+    color: var(--accent-cyan);
 }
 
-.gradient-orb-first {
-    background: radial-gradient(circle at center, rgba(var(--first-color), 1) 0, rgba(var(--first-color), 0) 52%) no-repeat;
-    animation: gradientFirst 24s ease-in-out infinite;
+html.light .package-bullets li::before {
+    color: #087ea4;
 }
 
-.gradient-orb-second {
-    background: radial-gradient(circle at center, rgba(var(--second-color), 0.8) 0, rgba(var(--second-color), 0) 52%) no-repeat;
-    transform-origin: calc(50% - 400px);
-    animation: gradientSecond 22s ease-in-out infinite;
+/* ========== Process steps ========== */
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.1rem;
 }
 
-.gradient-orb-third {
-    background: radial-gradient(circle at center, rgba(var(--third-color), 0.78) 0, rgba(var(--third-color), 0) 52%) no-repeat;
-    transform-origin: calc(50% + 400px);
-    animation: gradientThird 28s ease-in-out infinite;
+.process-step {
+    padding: 1.7rem 1.3rem;
+    text-align: center;
 }
 
-.gradient-orb-fourth {
-    background: radial-gradient(circle at center, rgba(var(--fourth-color), 0.58) 0, rgba(var(--fourth-color), 0) 52%) no-repeat;
-    transform-origin: calc(50% - 200px);
-    animation: gradientFourth 26s ease-in-out infinite;
-    opacity: 0.7;
+.process-num {
+    display: flex;
+    width: 2.6rem;
+    height: 2.6rem;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.85rem;
+    border-radius: 999px;
+    color: var(--text-primary);
+    background:
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.34), transparent 34%),
+        var(--glass-tint);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+        inset 1px 1px 0 rgba(255, 255, 255, 0.22),
+        0 12px 30px rgba(0, 0, 0, 0.2);
+    font-size: 1.1rem;
+    font-weight: 900;
 }
 
-.gradient-orb-fifth {
-    background: radial-gradient(circle at center, rgba(var(--fifth-color), 0.62) 0, rgba(var(--fifth-color), 0) 52%) no-repeat;
-    transform-origin: calc(50% - 800px) calc(50% + 800px);
-    animation: gradientFifth 30s ease-in-out infinite;
+.process-step h3 {
+    margin-bottom: 0.45rem;
+    color: var(--text-primary);
+    font-size: 1.08rem;
+    font-weight: 800;
 }
 
-.gradient-pointer-orb {
-    width: 100%;
-    height: 100%;
-    top: -50%;
-    left: -50%;
-    background: radial-gradient(circle at center, rgba(var(--pointer-color), 0.72) 0, rgba(var(--pointer-color), 0) 52%) no-repeat;
-    opacity: 0.65;
-    transform: translate(50vw, 50vh);
+.process-step p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+}
+
+/* ========== Portfolio blocks ========== */
+.portfolio-block {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.portfolio-block-title {
+    margin-bottom: 0.8rem;
+    color: var(--text-primary);
+    font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+    font-weight: 900;
+    text-align: center;
+}
+
+.portfolio-block-title-sm {
+    font-size: clamp(1.25rem, 2.8vw, 1.7rem);
+}
+
+.portfolio-block-sub {
+    margin: 0 auto 1.8rem;
+    max-width: 42rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.video-frame {
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.video-frame iframe {
+    display: block;
+    border: 0;
+}
+
+.about-text {
+    margin-bottom: 0;
+}
+
+.listening-label {
+    color: var(--text-secondary);
+}
+
+/* ========== Floating WhatsApp button ========== */
+.whatsapp-float {
+    position: fixed;
+    inset-inline-end: 1.1rem;
+    bottom: 7rem;
+    z-index: 45;
+    display: flex;
+    width: 3.6rem;
+    height: 3.6rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 1.7rem;
+    text-decoration: none;
+    background: rgba(37, 211, 102, 0.55);
+    border: 1px solid rgba(37, 211, 102, 0.65);
+    box-shadow:
+        inset 1px 1px 0 rgba(255, 255, 255, 0.45),
+        0 14px 34px rgba(18, 140, 126, 0.4);
+    animation: whatsappPulse 3s ease-in-out infinite;
+    transition: transform 300ms ease, background 260ms ease;
+}
+
+.whatsapp-float:hover {
+    transform: translateY(-3px) scale(1.07);
+    background: rgba(37, 211, 102, 0.6);
+    animation-play-state: paused;
+}
+
+@keyframes whatsappPulse {
+    0%, 100% {
+        box-shadow:
+            inset 1px 1px 0 rgba(255, 255, 255, 0.45),
+            0 14px 34px rgba(18, 140, 126, 0.4),
+            0 0 0 0 rgba(37, 211, 102, 0.4);
+    }
+    50% {
+        box-shadow:
+            inset 1px 1px 0 rgba(255, 255, 255, 0.45),
+            0 14px 34px rgba(18, 140, 126, 0.4),
+            0 0 0 12px rgba(37, 211, 102, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-float {
+        animation: none;
+    }
 }
 
 .hero-profile-portrait {
     position: relative;
-    width: clamp(220px, 30vw, 430px);
+    width: clamp(160px, 20vw, 280px);
     aspect-ratio: 1;
     margin: 0 auto 1.75rem;
     display: flex;
@@ -504,7 +811,8 @@ header .flex {
 .hero-title {
     letter-spacing: 0;
     text-wrap: balance;
-    text-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    color: var(--text-primary);
+    text-shadow: var(--title-shadow);
 }
 
 .hero-subtitle,
@@ -519,110 +827,24 @@ header .flex {
     margin: 0 auto;
     padding: 1rem;
     border-radius: 24px;
-    background: rgba(255, 255, 255, 0.055);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
     box-shadow:
         inset 1px 1px 0 rgba(255, 255, 255, 0.14),
         0 22px 70px rgba(0, 0, 0, 0.34);
-    backdrop-filter: blur(24px) saturate(160%);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
 }
 
 .section-title {
     letter-spacing: 0;
-    text-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
-}
-
-.page-content .page-section-title,
-.page-section-title {
-    margin: 0 auto clamp(2rem, 5vw, 4rem);
-    color: #fff;
-    font-size: clamp(3.6rem, 9vw, 8rem) !important;
-    font-weight: 900 !important;
-    line-height: 0.92;
-    text-align: center;
-    letter-spacing: 0;
-    direction: rtl;
-    text-wrap: balance;
-}
-
-.page-section-title::before {
-    content: "↑";
-    display: flex;
-    width: clamp(2.4rem, 6vw, 3.4rem);
-    height: clamp(2.4rem, 6vw, 3.4rem);
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto clamp(0.9rem, 2.4vw, 1.4rem);
-    border-radius: 999px;
-    color: rgba(255, 255, 255, 0.92);
-    background:
-        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.34), transparent 34%),
-        rgba(255, 255, 255, 0.09);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.22),
-        0 12px 30px rgba(0, 0, 0, 0.26);
-    font-size: clamp(1.15rem, 3vw, 1.65rem);
-    font-weight: 800;
-    line-height: 1;
-    backdrop-filter: blur(18px) saturate(170%);
-    -webkit-backdrop-filter: blur(18px) saturate(170%);
-    animation: scrollUpHint 1.9s ease-in-out infinite;
+    text-shadow: var(--title-shadow);
 }
 
 .contact-menu-title {
-    color: #fff !important;
+    color: var(--text-primary) !important;
     font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: 900;
     line-height: 1;
     letter-spacing: 0;
-}
-
-.page-content section {
-    background-color: #02030a;
-}
-
-.page-content section:nth-child(even),
-.page-content .bg-gray-50 {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
-        #050611 !important;
-}
-
-.page-content p {
-    color: rgba(248, 250, 252, 0.62);
-}
-
-.page-content h2,
-.page-content h3 {
-    color: #fff;
-}
-
-.page-content iframe,
-.page-content video,
-.page-content img {
-    background: #050611;
-}
-
-.instagram-reel-frame {
-    box-shadow:
-        0 30px 90px rgba(0, 0, 0, 0.45),
-        0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.apps-home-section {
-    min-height: calc(100vh - 60px);
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    background:
-        radial-gradient(circle at 50% 0%, rgba(98, 232, 255, 0.08), transparent 34%),
-        #02030a !important;
-}
-
-.apps-home-content {
-    width: min(100%, 760px);
 }
 
 .apps-home-grid {
@@ -641,7 +863,7 @@ header .flex {
     flex-direction: column;
     align-items: center;
     gap: 0.85rem;
-    color: #fff;
+    color: var(--text-primary);
     text-align: center;
     text-decoration: none;
     transition: transform 260ms ease, filter 260ms ease;
@@ -669,11 +891,11 @@ header .flex {
 
 .app-home-button span {
     max-width: 100%;
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--text-primary);
     font-size: clamp(1rem, 2.3vw, 1.25rem);
     font-weight: 700;
     line-height: 1.2;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
+    text-shadow: var(--title-shadow);
 }
 
 /* ========== Graphics Gallery ========== */
@@ -1009,34 +1231,45 @@ header .flex {
     color: #fff !important;
 }
 
-@keyframes scrollUpHint {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+/* ========== Light-mode adjustments for glass components ========== */
+html.light .glass-button,
+html.light .dock-icon,
+html.light .dock-icon i,
+html.light .dock-label,
+html.light .glass-button-contact .glass-button-text,
+html.light .glass-button-contact i {
+    color: var(--text-primary) !important;
 }
 
-@keyframes gradientFirst {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(70px, -90px) rotate(18deg); }
+html.light .glass-dock-tint {
+    background: rgba(255, 255, 255, 0.5);
 }
 
-@keyframes gradientSecond {
-    0%, 100% { transform: rotate(0deg) translate(0, 0); }
-    50% { transform: rotate(160deg) translate(40px, 90px); }
+html.light .glass-button {
+    background: rgba(255, 255, 255, 0.4);
 }
 
-@keyframes gradientThird {
-    0%, 100% { transform: rotate(0deg) translate(0, 0); }
-    50% { transform: rotate(-140deg) translate(-80px, 40px); }
+html.light .dock-icon {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
-@keyframes gradientFourth {
-    0%, 100% { transform: rotate(0deg) translate(0, 0); }
-    50% { transform: rotate(120deg) translate(90px, 60px); }
+html.light .dock-icon.active,
+html.light .nav-item.active {
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--text-primary);
 }
 
-@keyframes gradientFifth {
-    0%, 100% { transform: rotate(0deg) translate(0, 0); }
-    50% { transform: rotate(-100deg) translate(-110px, -40px); }
+html.light .hero-listening-panel {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+html.light .liquid-glass-contact {
+    background: rgba(255, 255, 255, 0.55) !important;
+    box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.9),
+        0 16px 32px rgba(30, 40, 80, 0.14) !important;
 }
 
 @media (max-width: 768px) {
@@ -1045,12 +1278,33 @@ header .flex {
     }
 
     .hero-title {
-        font-size: clamp(3.4rem, 18vw, 5.8rem);
+        font-size: clamp(2.6rem, 13vw, 4.2rem);
     }
 
     .hero-profile-portrait {
-        width: clamp(190px, 68vw, 310px);
-        margin-bottom: 1.25rem;
+        width: clamp(140px, 42vw, 220px);
+        margin-bottom: 1rem;
+    }
+
+    .trust-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .why-grid,
+    .services-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .process-steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .whatsapp-float {
+        bottom: 6.4rem;
+        width: 3.2rem;
+        height: 3.2rem;
+        font-size: 1.5rem;
     }
 
     .scroll-tilted-grid {
@@ -1119,15 +1373,17 @@ header .flex {
         font-size: 10px;
     }
 
-    .hero-background-photo {
-        inset: -10vh -58vw;
-        transform: scale(1.1);
-        background-size: auto 100%;
-        background-position: center top;
-    }
-
     .scroll-tilted-grid {
         gap: 0.7rem;
         padding-inline: 0.75rem;
+    }
+
+    .process-steps {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .top-toggles {
+        top: 0.75rem;
+        inset-inline-end: 0.75rem;
     }
 }
