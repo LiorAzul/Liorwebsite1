@@ -1,93 +1,102 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // ========== מתג דארק/לייט ==========
-    function initThemeToggle() {
-        const html = document.documentElement;
-        const btn = document.getElementById('themeToggle');
-        const icon = btn ? btn.querySelector('i') : null;
+    var site = document.querySelector('.site');
+    var html = document.documentElement;
 
-        function applyTheme(theme) {
-            if (theme === 'light') {
-                html.classList.add('light');
-                html.classList.remove('dark');
-            } else {
-                html.classList.add('dark');
-                html.classList.remove('light');
-            }
-            if (icon) {
-                icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-            }
-            if (btn) {
-                const he = (window.i18n ? window.i18n.lang : 'he') === 'he';
-                btn.setAttribute('aria-label', theme === 'light'
-                    ? (he ? 'מעבר למצב כהה' : 'Switch to dark mode')
-                    : (he ? 'מעבר למצב בהיר' : 'Switch to light mode'));
-            }
-            try { localStorage.setItem('theme', theme); } catch (e) { /* private mode */ }
+    // ========== Loader עם ספירה ==========
+    (function initLoader() {
+        var loader = document.getElementById('loader');
+        var num = document.getElementById('loadnum');
+        if (!loader || !num) return;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) { loader.classList.add('off'); return; }
+        var t0 = performance.now(), dur = 1300;
+        function tick(now) {
+            var p = Math.min((now - t0) / dur, 1);
+            num.textContent = String(Math.round(p * 100)).padStart(3, '0');
+            if (p < 1) requestAnimationFrame(tick);
+            else setTimeout(function () { loader.classList.add('off'); }, 250);
         }
+        requestAnimationFrame(tick);
+    })();
 
-        let saved = 'dark';
-        try {
-            const s = localStorage.getItem('theme');
-            if (s === 'light' || s === 'dark') saved = s;
-        } catch (e) { /* private mode */ }
-        applyTheme(saved);
-
-        if (btn) {
-            btn.addEventListener('click', function () {
-                applyTheme(html.classList.contains('light') ? 'dark' : 'light');
-            });
+    // ========== שפה (עברית / English) ==========
+    var WA = 'https://wa.me/972523321674?text=';
+    var WA_MSG = {
+        he: 'היי ליאור, הגעתי מהאתר שלך ואשמח לשמוע פרטים על פרויקט',
+        en: "Hi Lior, I found your website and I'd love to hear more about working together"
+    };
+    var META = {
+        he: {
+            title: 'ליאור אזולאי — מפתח ומעצב',
+            desc: 'ליאור אזולאי — מפתח ומעצב עצמאי. אפליקציות iOS, אתרים, וידאו ותלת מימד. מהשרטוט הראשון ועד ה-App Store.'
+        },
+        en: {
+            title: 'Lior Azulay — Developer & Designer',
+            desc: 'Lior Azulay — independent developer and designer. iOS apps, websites, video and 3D. From first sketch to the App Store.'
         }
+    };
+
+    function applyLang(lang) {
+        var en = lang === 'en';
+        site.classList.toggle('on-en', en);
+        html.setAttribute('lang', lang);
+        html.setAttribute('dir', en ? 'ltr' : 'rtl');
+        document.title = META[lang].title;
+        var meta = document.getElementById('metaDescription');
+        if (meta) meta.setAttribute('content', META[lang].desc);
+        var btn = document.getElementById('langToggle');
+        if (btn) btn.textContent = en ? 'עב' : 'EN';
+        document.querySelectorAll('[data-wa]').forEach(function (a) {
+            a.setAttribute('href', WA + encodeURIComponent(WA_MSG[lang]));
+        });
+        try { localStorage.setItem('lang', lang); } catch (e) { /* private mode */ }
     }
 
-    initThemeToggle();
+    var lang = 'he';
+    try {
+        var savedLang = localStorage.getItem('lang');
+        if (savedLang === 'en' || savedLang === 'he') lang = savedLang;
+    } catch (e) { /* private mode */ }
+    applyLang(lang);
 
-    // ========== Scroll-spy לניווט ה-dock ==========
-    function initScrollSpy() {
-        const navItems = Array.from(document.querySelectorAll('.dock-icon[data-section]'));
-        if (!navItems.length || !('IntersectionObserver' in window)) return;
-
-        // כל עוגן ב-dock "מכסה" את הסקשנים שבינו לבין העוגן הבא
-        const sectionToNav = {
-            top: 'top', trust: 'top', why: 'top',
-            services: 'services', process: 'services',
-            portfolio: 'portfolio', about: 'portfolio', contact: 'portfolio'
-        };
-
-        const observed = Object.keys(sectionToNav)
-            .map(id => document.getElementById(id))
-            .filter(Boolean);
-
-        function setActive(navId) {
-            navItems.forEach(item => {
-                item.classList.toggle('active', item.getAttribute('data-section') === navId);
-            });
-        }
-
-        const spy = new IntersectionObserver((entries) => {
-            // בוחרים את הסקשן הנראה ביותר
-            let best = null;
-            entries.forEach(entry => {
-                if (entry.isIntersecting && (!best || entry.intersectionRatio > best.intersectionRatio)) {
-                    best = entry;
-                }
-            });
-            if (best) {
-                const navId = sectionToNav[best.target.id];
-                if (navId) setActive(navId);
-            }
-        }, { threshold: [0.25, 0.5], rootMargin: '-15% 0px -25% 0px' });
-
-        observed.forEach(sec => spy.observe(sec));
+    var langBtn = document.getElementById('langToggle');
+    if (langBtn) {
+        langBtn.addEventListener('click', function () {
+            lang = lang === 'he' ? 'en' : 'he';
+            applyLang(lang);
+        });
     }
 
-    initScrollSpy();
+    // ========== ערכת נושא (כהה / בהיר) ==========
+    function applyTheme(theme) {
+        html.classList.toggle('light', theme === 'light');
+        html.classList.toggle('dark', theme !== 'light');
+        var btn = document.getElementById('themeToggle');
+        if (btn) btn.textContent = theme === 'light' ? '☀' : '☾';
+        try { localStorage.setItem('theme', theme); } catch (e) { /* private mode */ }
+    }
 
-    // ========== גלריית תמונות - רשת ריבועים פשוטה ==========
-    function initGraphicsGrid() {
-        const grid = document.getElementById('graphicsStack');
+    var theme = 'dark';
+    try {
+        var savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') theme = savedTheme;
+    } catch (e) { /* private mode */ }
+    applyTheme(theme);
+
+    var themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', function () {
+            theme = theme === 'light' ? 'dark' : 'light';
+            applyTheme(theme);
+        });
+    }
+
+    // ========== גלריית גרפיקה ==========
+    (function initGraphicsGrid() {
+        var grid = document.getElementById('graphicsStack');
         if (!grid) return;
 
-        const images = [
+        var images = [
             'Artboard 5@2x.png',
             'המרכז ללימודי תעודה.png',
             'lior1.jpg',
@@ -101,71 +110,31 @@ document.addEventListener('DOMContentLoaded', function () {
             'lior10.webp'
         ];
 
-        grid.innerHTML = '';
-        images.forEach((src, index) => {
-            const figure = document.createElement('figure');
-            figure.className = 'scroll-tilted-tile';
-
-            const img = document.createElement('img');
+        images.forEach(function (src, index) {
+            var figure = document.createElement('figure');
+            var img = document.createElement('img');
             img.src = src;
-            img.alt = `עבודת גרפיקה ${index + 1}`;
+            img.alt = 'עבודת גרפיקה ' + (index + 1);
             img.loading = 'lazy';
             img.decoding = 'async';
-
             figure.appendChild(img);
             grid.appendChild(figure);
         });
-    }
+    })();
 
-    initGraphicsGrid();
-
-    // ========== אנימציות fade-in עדינות בגלילה ==========
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduceMotion) {
-        document.querySelectorAll('.glass-card, .gallery-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    }
-
-    // ========== הפעלת וידאו אוטומטית ==========
-    const videos = document.querySelectorAll('video');
-
+    // ========== אנימציות חשיפה בגלילה ==========
     if ('IntersectionObserver' in window) {
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    try {
-                        entry.target.play().catch(e => console.log('שגיאת הפעלת וידאו:', e));
-                    } catch (error) {
-                        console.log('שגיאה בהפעלת וידאו:', error);
-                    }
-                } else {
-                    entry.target.pause();
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('in');
+                    io.unobserve(e.target);
                 }
             });
-        }, { threshold: 0.5 });
-
-        videos.forEach(video => {
-            videoObserver.observe(video);
-        });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+    } else {
+        document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
     }
 
     console.log('✨ האתר נטען בהצלחה!');
