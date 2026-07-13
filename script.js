@@ -27,12 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     var META = {
         he: {
-            title: 'ליאור אזולאי — מפתח ומעצב',
-            desc: 'ליאור אזולאי — מפתח ומעצב עצמאי. אפליקציות iOS, אתרים, וידאו ותלת מימד. מהשרטוט הראשון ועד ה-App Store.'
+            title: 'ליאור אזולאי · מפתח ומעצב',
+            desc: 'ליאור אזולאי, מפתח ומעצב עצמאי. אפליקציות iOS, אתרים, וידאו ותלת מימד. מהשרטוט הראשון ועד ה-App Store.'
         },
         en: {
-            title: 'Lior Azulay — Developer & Designer',
-            desc: 'Lior Azulay — independent developer and designer. iOS apps, websites, video and 3D. From first sketch to the App Store.'
+            title: 'Lior Azulay · Developer & Designer',
+            desc: 'Lior Azulay, independent developer and designer. iOS apps, websites, video and 3D. From first sketch to the App Store.'
         }
     };
 
@@ -67,12 +67,40 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ========== צבע accent: אקראי בכל רענון, מתחלף בכפתור ✦ ==========
+    // לכל צבע: גרסה למצב כהה [צבע, R,G,B] וגרסה כהה יותר למצב בהיר
+    var ACCENTS = [
+        { d: ['#ff8a4c', '255,138,76'], l: ['#e06a20', '224,106,32'] },   // כתום
+        { d: ['#a78bfa', '167,139,250'], l: ['#7c3aed', '124,58,237'] },  // סגול
+        { d: ['#7aa2ff', '122,162,255'], l: ['#2f5fd8', '47,95,216'] },   // כחול
+        { d: ['#2ee6a8', '46,230,168'], l: ['#0b9e6e', '11,158,110'] },   // ירוק
+        { d: ['#ff6b6b', '255,107,107'], l: ['#d43d3d', '212,61,61'] }    // אדום
+    ];
+    var accentIdx = Math.floor(Math.random() * ACCENTS.length);
+
+    function applyAccent() {
+        var isLight = html.classList.contains('light');
+        var pair = isLight ? ACCENTS[accentIdx].l : ACCENTS[accentIdx].d;
+        html.style.setProperty('--a1', pair[0]);
+        html.style.setProperty('--glow', pair[1]);
+    }
+
+    var accentBtn = document.getElementById('accentToggle');
+    if (accentBtn) {
+        accentBtn.addEventListener('click', function () {
+            accentIdx = (accentIdx + 1) % ACCENTS.length;
+            applyAccent();
+        });
+    }
+
     // ========== ערכת נושא (כהה / בהיר) ==========
     function applyTheme(theme) {
         html.classList.toggle('light', theme === 'light');
         html.classList.toggle('dark', theme !== 'light');
         var btn = document.getElementById('themeToggle');
         if (btn) btn.textContent = theme === 'light' ? '☀' : '☾';
+        applyAccent();
+        if (window.GradFlowBG) window.GradFlowBG.setLight(theme === 'light');
         try { localStorage.setItem('theme', theme); } catch (e) { /* private mode */ }
     }
 

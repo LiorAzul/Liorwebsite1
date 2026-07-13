@@ -35,6 +35,7 @@
         'uniform float u_speed;',
         'uniform float u_scale;',
         'uniform float u_noise;',
+        'uniform float u_light;',
         'uniform vec2 u_resolution;',
         'varying vec2 vUv;',
         '',
@@ -60,7 +61,10 @@
         '    float grain = noise(vUv * 200.0 + time * 0.1);',
         '    color *= (1.0 - u_noise * 0.4 + u_noise * grain * 0.4);',
         '  }',
-        '  gl_FragColor = vec4(color, 1.0);',
+        '  // שחור-לבן: בהירות בלבד, מכווץ לטווח כהה (דארק) או בהיר (לייט)',
+        '  float lum = dot(color, vec3(0.299, 0.587, 0.114));',
+        '  float shade = mix(lum * 0.42, 1.0 - (1.0 - lum) * 0.45, u_light);',
+        '  gl_FragColor = vec4(vec3(shade), 1.0);',
         '}'
     ].join('\n');
 
@@ -121,6 +125,7 @@
             speed: gl.getUniformLocation(prog, 'u_speed'),
             scale: gl.getUniformLocation(prog, 'u_scale'),
             noise: gl.getUniformLocation(prog, 'u_noise'),
+            light: gl.getUniformLocation(prog, 'u_light'),
             resolution: gl.getUniformLocation(prog, 'u_resolution')
         };
 
@@ -130,6 +135,15 @@
         gl.uniform1f(u.speed, CONFIG.speed);
         gl.uniform1f(u.scale, CONFIG.scale);
         gl.uniform1f(u.noise, CONFIG.noise);
+        gl.uniform1f(u.light, document.documentElement.classList.contains('light') ? 1 : 0);
+
+        // מאפשר ל-script.js לעדכן את מצב הבהירות של השיידר בהחלפת theme
+        window.GradFlowBG = {
+            setLight: function (isLight) {
+                gl.uniform1f(u.light, isLight ? 1 : 0);
+                if (!running) renderFrame(lastTime);
+            }
+        };
 
         // רזולוציה מוקטנת בכוונה — הרקע ממילא מאחורי scrim, וזה חוסך המון GPU
         var DPR = Math.min(window.devicePixelRatio || 1, 1) * 0.75;

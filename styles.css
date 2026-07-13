@@ -27,8 +27,13 @@
     --glass-border: rgba(242, 239, 233, 0.22);
     --glass-highlight: rgba(255, 255, 255, 0.32);
 
-    /* Scrim מעל קנבס ה-GradFlow */
-    --scrim: linear-gradient(180deg, rgba(18, 18, 18, 0.86), rgba(18, 18, 18, 0.9) 45%, rgba(18, 18, 18, 0.94));
+    /* Scrim מעל קנבס ה-GradFlow: כמעט שקוף בהירו, כהה בהמשך הדף */
+    --scrim: linear-gradient(180deg,
+        rgba(18, 18, 18, 0.05) 0,
+        rgba(18, 18, 18, 0.1) 55vh,
+        rgba(18, 18, 18, 0.72) 95vh,
+        rgba(18, 18, 18, 0.9) 125vh,
+        rgba(18, 18, 18, 0.92) 100%);
 }
 
 html.light {
@@ -51,7 +56,12 @@ html.light {
     --glass-border: rgba(22, 20, 15, 0.2);
     --glass-highlight: rgba(255, 255, 255, 0.8);
 
-    --scrim: linear-gradient(180deg, rgba(242, 239, 233, 0.86), rgba(242, 239, 233, 0.9) 45%, rgba(242, 239, 233, 0.94));
+    --scrim: linear-gradient(180deg,
+        rgba(242, 239, 233, 0.05) 0,
+        rgba(242, 239, 233, 0.1) 55vh,
+        rgba(242, 239, 233, 0.72) 95vh,
+        rgba(242, 239, 233, 0.9) 125vh,
+        rgba(242, 239, 233, 0.92) 100%);
 }
 
 /* ========== Base ========== */
@@ -64,6 +74,7 @@ html {
 
 body {
     margin: 0;
+    position: relative;
     background: var(--bg-solid);
     color: var(--ink);
     font-family: 'Heebo', system-ui, sans-serif;
@@ -87,12 +98,13 @@ a:hover { color: var(--a1); }
 }
 
 .bg-scrim {
-    position: fixed;
+    /* absolute (לא fixed) כדי שהגרדיאנט ימדד ביחס לגובה המסמך:
+       שקוף בהירו, מתכהה אחרי גובה מסך אחד */
+    position: absolute;
     inset: 0;
     z-index: -1;
     background: var(--scrim);
     pointer-events: none;
-    transition: background 0.4s ease;
 }
 
 /* ========== Layout ========== */
@@ -204,8 +216,13 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 140px 0 60px;
+    /* בלי padding תחתון: הקאטאאוט יושב צמוד לפס הנע */
+    padding: 140px 0 0;
     position: relative;
+}
+
+.herosplit > div:first-child {
+    padding-bottom: 60px;
 }
 
 /* מונע מהזוהר של הקאטאאוט להרחיב את ה-viewport במובייל */
@@ -262,8 +279,8 @@ section[id], footer[id] { scroll-margin-top: 40px; }
 
 .cutout {
     position: relative;
-    width: 100%;
-    max-width: 520px;
+    width: 140%;
+    max-width: 780px;
     display: block;
     filter: drop-shadow(0 0 44px rgba(var(--glow), 0.34)) drop-shadow(0 24px 60px rgba(0, 0, 0, 0.5));
 }
@@ -271,6 +288,7 @@ section[id], footer[id] { scroll-margin-top: 40px; }
 .cutout.isphoto {
     border-radius: 10px;
     max-width: 420px;
+    width: 100%;
     filter: grayscale(0.2) contrast(1.05) drop-shadow(0 24px 60px rgba(0, 0, 0, 0.5));
 }
 
@@ -399,24 +417,25 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     box-shadow: none;
 }
 
+/* כפתור וואטסאפ בצבע ה-theme הנוכחי */
 .btn.wa {
-    background: rgba(37, 211, 102, 0.28);
-    border-color: rgba(37, 211, 102, 0.5);
+    background: rgba(var(--glow), 0.3);
+    border-color: rgba(var(--glow), 0.55);
     color: var(--ink);
 }
 
 .btn.wa::before {
     background:
         radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.3), transparent 34%),
-        linear-gradient(135deg, rgba(37, 211, 102, 0.4), rgba(18, 140, 126, 0.2));
+        linear-gradient(135deg, rgba(var(--glow), 0.42), rgba(var(--glow), 0.14));
 }
 
 .btn.wa:hover {
-    border-color: rgba(37, 211, 102, 0.8);
+    border-color: rgba(var(--glow), 0.85);
     box-shadow:
         inset 1px 1px 0 var(--glass-highlight),
-        0 0 34px rgba(37, 211, 102, 0.4),
-        0 12px 40px rgba(18, 140, 126, 0.25);
+        0 0 34px rgba(var(--glow), 0.45),
+        0 12px 40px rgba(var(--glow), 0.22);
 }
 
 /* ========== Marquee ========== */
@@ -524,13 +543,39 @@ section[id], footer[id] { scroll-margin-top: 40px; }
 
 .workrow {
     display: grid;
-    grid-template-columns: 70px 1fr auto auto;
-    gap: 30px;
+    grid-template-columns: 44px 56px 1fr auto auto;
+    gap: 24px;
     align-items: center;
-    padding: 34px 0;
+    padding: 30px 0;
     border-bottom: 1px solid var(--line);
     color: inherit;
     transition: padding 0.35s ease;
+}
+
+.workicon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--line);
+    transition: transform 0.3s ease;
+}
+
+.workrow:hover .workicon {
+    transform: scale(1.08);
+}
+
+.worktile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink-60);
+    background: rgba(127, 127, 127, 0.1);
+    border: 1px solid var(--line);
 }
 
 .workrow:hover { color: inherit; padding-right: 16px; }
@@ -641,26 +686,6 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     letter-spacing: -0.01em;
 }
 
-/* ========== Toolbox ========== */
-.trust { padding: 110px 0; }
-
-.trustline {
-    font-family: 'Rubik', sans-serif;
-    font-size: clamp(21px, 2.5vw, 32px);
-    font-weight: 500;
-    line-height: 1.9;
-    color: var(--ink-72);
-    margin: 0;
-}
-
-.trustline i {
-    font-style: normal;
-    color: var(--ink-35);
-    padding: 0 14px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65em;
-}
-
 /* ========== Big footer ========== */
 .bigfoot {
     border-top: 1px solid var(--line);
@@ -712,6 +737,22 @@ section[id], footer[id] { scroll-margin-top: 40px; }
 
 .footnote { color: var(--ink-40); }
 
+.footlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.footico {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    opacity: 0.75;
+    transition: opacity 0.3s;
+}
+
+.footlink:hover .footico { opacity: 1; }
+
 .footbar {
     display: flex;
     justify-content: space-between;
@@ -723,37 +764,6 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     color: var(--ink-35);
     flex-wrap: wrap;
     gap: 10px;
-}
-
-/* ========== Floating WhatsApp ========== */
-.whatsapp-float {
-    position: fixed;
-    inset-inline-end: 22px;
-    bottom: 22px;
-    z-index: 45;
-    display: flex;
-    width: 54px;
-    height: 54px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    color: #fff;
-    background: rgba(37, 211, 102, 0.5);
-    border: 1px solid rgba(37, 211, 102, 0.6);
-    box-shadow:
-        inset 1px 1px 0 rgba(255, 255, 255, 0.4),
-        0 14px 34px rgba(18, 140, 126, 0.35);
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.whatsapp-float:hover {
-    transform: translateY(-3px) scale(1.06);
-    background: rgba(37, 211, 102, 0.68);
-    color: #fff;
-}
-
-html.light .whatsapp-float {
-    background: rgba(31, 178, 86, 0.85);
 }
 
 /* ========== Reveal ========== */
@@ -786,6 +796,9 @@ html.light .whatsapp-float {
     .exprow { grid-template-columns: 50px 1fr; gap: 16px; }
     .expdesc { grid-column: 2; }
     .workrow { grid-template-columns: 44px 1fr auto; gap: 14px; }
+    .workno { display: none; }
+    .workicon { width: 44px; height: 44px; border-radius: 11px; }
+    .worktile { font-size: 17px; }
     .workarrow { display: none; }
     .aboutgrid { grid-template-columns: 1fr; gap: 44px; }
     .footgrid { grid-template-columns: 1fr; }
