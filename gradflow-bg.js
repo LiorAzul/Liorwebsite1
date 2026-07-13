@@ -137,17 +137,20 @@
         gl.uniform1f(u.noise, CONFIG.noise);
         gl.uniform1f(u.light, document.documentElement.classList.contains('light') ? 1 : 0);
 
-        // מאפשר ל-script.js לעדכן את מצב הבהירות של השיידר בהחלפת theme
-        window.GradFlowBG = {
-            setLight: function (isLight) {
-                gl.uniform1f(u.light, isLight ? 1 : 0);
-                if (!running) renderFrame(lastTime);
-            }
-        };
-
-        // רזולוציה מוקטנת בכוונה — הרקע ממילא מאחורי scrim, וזה חוסך המון GPU
-        var DPR = Math.min(window.devicePixelRatio || 1, 1) * 0.75;
+        // רזולוציה מוקטנת בכוונה — הרקע ממילא מאחורי scrim, וזה חוסך המון GPU.
+        // במובייל היא נמוכה עוד קצת כדי לתת עדיפות לגלילה ולאנימציות שמעליה.
+        var isMobile = window.matchMedia('(pointer: coarse), (max-width: 840px)').matches;
+        var DPR = Math.min(window.devicePixelRatio || 1, 1) * (isMobile ? 0.6 : 0.75);
         var FRAME_INTERVAL = 1000 / 30; // 30fps מספיק לגרדיאנט איטי
+        var start = performance.now();
+        var lastTime = 0;
+        var lastFrameAt = 0;
+        var running = false;
+        var rafId = null;
+        var resizeTimer = null;
+        var scrollTimer = null;
+        var pausedForScroll = false;
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         function resize() {
             var w = window.innerWidth;
@@ -157,34 +160,37 @@
             gl.viewport(0, 0, canvas.width, canvas.height);
             gl.uniform2f(u.resolution, w, h);
         }
-        resize();
-        window.addEventListener('resize', function () {
-            resize();
-            if (!running) renderFrame(lastTime);
-        });
 
-        var start = performance.now();
-        var lastTime = 0;
-        var running = false;
-        var rafId = null;
-        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // Safari ו-Chrome משנים את גובה ה-viewport בזמן גלילה במובייל.
+        // דחייה קצרה מונעת הקצאה מחדש של WebGL בכל אירוע resize.
+        function scheduleResize() {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(function () {
+                resize();
+                if (!running) renderFrame(lastTime);
+            }, 180);
+        }
+
+        resize();
+        window.addEventListener('resize', scheduleResize, { passive: true });
 
         function renderFrame(t) {
             gl.uniform1f(u.time, t);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
-        var lastFrameAt = 0;
         function loop(now) {
-            rafId = requestAnimationFrame(loop);
-            if (now - lastFrameAt < FRAME_INTERVAL) return;
-            lastFrameAt = now;
-            lastTime = (now - start) / 1000;
-            renderFrame(lastTime);
+            if (!running) return;
+            if (now - lastFrameAt >= FRAME_INTERVAL) {
+                lastFrameAt = now;
+                lastTime = (now - start) / 1000;
+                renderFrame(lastTime);
+            }
+            if (running) rafId = requestAnimationFrame(loop);
         }
 
         function play() {
-            if (running || reduceMotion) return;
+            if (running || reduceMotion || document.hidden || pausedForScroll) return;
             running = true;
             start = performance.now() - lastTime * 1000;
             rafId = requestAnimationFrame(loop);
@@ -196,10 +202,30 @@
             rafId = null;
         }
 
+        function pauseDuringMobileScroll() {
+            if (!isMobile || reduceMotion) return;
+            pausedForScroll = true;
+            pause();
+            window.clearTimeout(scrollTimer);
+            scrollTimer = window.setTimeout(function () {
+                pausedForScroll = false;
+                play();
+            }, 220);
+        }
+
         document.addEventListener('visibilitychange', function () {
             if (document.hidden) pause();
-            else play();
+            else if (!pausedForScroll) play();
         });
+        window.addEventListener('scroll', pauseDuringMobileScroll, { passive: true });
+
+        // מאפשר ל-script.js לעדכן את מצב הבהירות של השיידר בהחלפת theme.
+        window.GradFlowBG = {
+            setLight: function (isLight) {
+                gl.uniform1f(u.light, isLight ? 1 : 0);
+                if (!running) renderFrame(lastTime);
+            }
+        };
 
         // reduced-motion: פריים סטטי אחד יפה במקום אנימציה
         renderFrame(reduceMotion ? 7.3 : 0);

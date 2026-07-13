@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!grid) return;
 
         var images = [
-            'Artboard 5@2x.png',
+            'Artboard 5.jpg',
             'המרכז ללימודי תעודה.png',
             'lior1.jpg',
             'lior3.jpg',
@@ -138,15 +138,40 @@ document.addEventListener('DOMContentLoaded', function () {
             'lior10.webp'
         ];
 
+        var imageObserver = 'IntersectionObserver' in window
+            ? new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+                    var img = entry.target;
+                    imageObserver.unobserve(img);
+
+                    // דחיית הורדה ופענוח לרגע פנוי שומרת על גלילה חלקה במובייל.
+                    var loadImage = function () {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    };
+                    if ('requestIdleCallback' in window) {
+                        window.requestIdleCallback(loadImage, { timeout: 500 });
+                    } else {
+                        window.setTimeout(loadImage, 0);
+                    }
+                });
+            }, { rootMargin: '320px 0px' })
+            : null;
+
         images.forEach(function (src, index) {
             var figure = document.createElement('figure');
             var img = document.createElement('img');
-            img.src = src;
             img.alt = 'עבודת גרפיקה ' + (index + 1);
             img.loading = 'lazy';
             img.decoding = 'async';
+            img.fetchPriority = 'low';
+            img.dataset.src = src;
             figure.appendChild(img);
             grid.appendChild(figure);
+
+            if (imageObserver) imageObserver.observe(img);
+            else img.src = src;
         });
     })();
 

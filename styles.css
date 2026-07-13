@@ -271,6 +271,7 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     background: radial-gradient(circle at 50% 70%, rgba(var(--glow), 0.4), rgba(var(--glow), 0.1) 45%, transparent 70%);
     filter: blur(50px);
     animation: pulse 5s ease-in-out infinite alternate;
+    will-change: transform, opacity;
 }
 
 @keyframes pulse {
@@ -458,6 +459,7 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     color: var(--ink-72);
     white-space: nowrap;
     align-items: baseline;
+    will-change: transform;
 }
 
 .marqin span { padding: 0 26px; }
@@ -772,6 +774,8 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     transform: translateY(26px);
     transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
+.rv:not(.in) { will-change: opacity, transform; }
 
 .rv.in {
     opacity: 1;
