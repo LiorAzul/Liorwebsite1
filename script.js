@@ -119,6 +119,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ========== השהיית אנימציות אינסופיות בזמן גלילה (מובייל) ==========
+    // ה-compositor של iOS מתפנה לגלילה עצמה; האנימציות חוזרות אחרי 180ms שקט.
+    if (window.matchMedia('(pointer: coarse), (max-width: 840px)').matches) {
+        var scrollIdleTimer = null;
+        window.addEventListener('scroll', function () {
+            if (!html.classList.contains('is-scrolling')) {
+                html.classList.add('is-scrolling');
+            }
+            window.clearTimeout(scrollIdleTimer);
+            scrollIdleTimer = window.setTimeout(function () {
+                html.classList.remove('is-scrolling');
+            }, 180);
+        }, { passive: true });
+    }
+
     // ========== גלריית גרפיקה ==========
     (function initGraphicsGrid() {
         var grid = document.getElementById('graphicsStack');

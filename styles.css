@@ -826,6 +826,12 @@ html.light .langbtn { border-color: rgba(22, 20, 15, 0.4); }
     .cutglow { animation: none; }
 }
 
+/* בזמן גלילה פעילה במובייל משהים אנימציות אינסופיות —
+   משחרר את ה-compositor לטובת הגלילה עצמה (script.js מנהל את הקלאס) */
+html.is-scrolling .marqin {
+    animation-play-state: paused;
+}
+
 /* ========== Responsive ========== */
 @media (max-width: 840px) {
     .wrap { padding: 0 22px; }
@@ -835,8 +841,31 @@ html.light .langbtn { border-color: rgba(22, 20, 15, 0.4); }
     .cutwrap { min-height: 300px; }
     .h1 { font-size: clamp(64px, 17vw, 104px); line-height: 0.98; }
     .statement { font-size: 19px; }
-    /* blur כבד שמונפש יקר במובייל — גרדיאנט רדיאלי כבר רך מספיק */
-    .cutglow { filter: blur(28px); }
+
+    /* ===== חיסול עלויות ראסטר של ההירו ב-iOS =====
+       כל אחד מאלה מכריח את Safari לרסטר מחדש שכבות ענק בזמן גלילה */
+
+    /* drop-shadow כפול על PNG של 1000px = בלור אלפא יקר מאוד */
+    .cutout {
+        filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.45));
+    }
+
+    /* הזוהר הפועם: בלי אנימציה ובלור מתון — הגרדיאנט הרדיאלי רך ממילא */
+    .cutglow {
+        animation: none;
+        filter: blur(22px);
+        opacity: 0.8;
+        will-change: auto;
+    }
+
+    /* זוהר ההירו העליון בקושי נראה מעל השיידר — טקסטורת בלור ענקית בחינם */
+    .heroglow { display: none; }
+
+    /* text-shadow ברדיוס 90px על גליפים ענקיים יקר לרסטר */
+    .h1 em,
+    .bigcta em {
+        text-shadow: 0 0 22px rgba(var(--glow), 0.5);
+    }
     .brand { white-space: nowrap; font-size: 12px; }
     .navlinks { gap: 12px; font-size: 13px; }
     .navlinks a { display: none; }
