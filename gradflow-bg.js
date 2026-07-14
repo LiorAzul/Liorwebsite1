@@ -155,7 +155,8 @@
 
         function resize() {
             var w = window.innerWidth;
-            var h = window.innerHeight;
+            // הקנבס גבוה 140vh (מכסה את ההירו + מעבר הדרגתי) — לא כל הדף
+            var h = Math.round(window.innerHeight * 1.4);
             canvas.width = Math.round(w * DPR);
             canvas.height = Math.round(h * DPR);
             gl.viewport(0, 0, canvas.width, canvas.height);

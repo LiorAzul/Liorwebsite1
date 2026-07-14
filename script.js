@@ -184,7 +184,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     io.unobserve(e.target);
                 }
             });
-        }, { threshold: 0.1 });
+        }, {
+            // טריגר מוקדם (180px לפני הכניסה למסך) כדי שבגלילה מהירה
+            // התוכן כבר באמצע האנימציה כשהוא נגלה — בלי "בורות" ריקים
+            threshold: 0,
+            rootMargin: '0px 0px 180px 0px'
+        });
         document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
     } else {
         document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
