@@ -134,6 +134,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { passive: true });
     }
 
+    // ========== 101: הטמעת סרטון בלחיצה + העתקת הפרומפט ==========
+    (function initEpisodes() {
+        // ה-iframe של YouTube נטען רק בלחיצה — חוסך ~1MB בטעינת הדף
+        document.querySelectorAll('.epvideo[data-yt]').forEach(function (box) {
+            function playVideo() {
+                if (box.querySelector('iframe')) return;
+                var id = box.getAttribute('data-yt');
+                var iframe = document.createElement('iframe');
+                iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+                iframe.title = '101';
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+                iframe.allowFullscreen = true;
+                box.appendChild(iframe);
+                box.style.cursor = 'default';
+            }
+            box.addEventListener('click', playVideo);
+            box.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    playVideo();
+                }
+            });
+        });
+
+        document.querySelectorAll('.promptcopy').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var text = btn.closest('.prompt').querySelector('.prompttext').textContent.trim();
+                navigator.clipboard.writeText(text).then(function () {
+                    var original = btn.innerHTML;
+                    btn.textContent = lang === 'he' ? 'הועתק!' : 'Copied!';
+                    setTimeout(function () { btn.innerHTML = original; }, 2000);
+                });
+            });
+        });
+    })();
+
     // ========== גלריית גרפיקה ==========
     (function initGraphicsGrid() {
         var grid = document.getElementById('graphicsStack');
