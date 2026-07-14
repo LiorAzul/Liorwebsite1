@@ -150,6 +150,7 @@
         var resizeTimer = null;
         var scrollTimer = null;
         var pausedForScroll = false;
+        var pausedOffscreen = false;
         var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         function resize() {
@@ -190,7 +191,7 @@
         }
 
         function play() {
-            if (running || reduceMotion || document.hidden || pausedForScroll) return;
+            if (running || reduceMotion || document.hidden || pausedForScroll || pausedOffscreen) return;
             running = true;
             start = performance.now() - lastTime * 1000;
             rafId = requestAnimationFrame(loop);
@@ -218,6 +219,17 @@
             else if (!pausedForScroll) play();
         });
         window.addEventListener('scroll', pauseDuringMobileScroll, { passive: true });
+
+        // עצירה מלאה כשההירו מחוץ למסך: השיידר ממילא מוסתר מאחורי ה-scrim
+        // בהמשך הדף, אז אין טעם לרנדר — חוסך את כל ה-GPU בזמן גלילה למטה.
+        var hero = document.querySelector('.hero') || document.getElementById('top');
+        if (hero && 'IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries) {
+                pausedOffscreen = !entries[0].isIntersecting;
+                if (pausedOffscreen) pause();
+                else play();
+            }, { rootMargin: '80px' }).observe(hero);
+        }
 
         // מאפשר ל-script.js לעדכן את מצב הבהירות של השיידר בהחלפת theme.
         window.GradFlowBG = {

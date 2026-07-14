@@ -174,7 +174,13 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     align-items: center;
     justify-content: space-between;
     padding: 26px 40px;
-    mix-blend-mode: difference;
+    /* בלי mix-blend-mode: הוא כפה recomposite של כל הניווט מול הקנבס החי
+       בכל פריים גלילה. text-shadow נותן קונטרסט זהה בעלות אפסית. */
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+}
+
+html.light .nav {
+    text-shadow: 0 1px 14px rgba(255, 255, 255, 0.65);
 }
 
 .brand {
@@ -184,6 +190,12 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     letter-spacing: 0.04em;
     color: #fff;
 }
+
+html.light .brand,
+html.light .navlinks a,
+html.light .langbtn { color: var(--ink); }
+
+html.light .langbtn { border-color: rgba(22, 20, 15, 0.4); }
 
 .navlinks {
     display: flex;
@@ -816,6 +828,8 @@ section[id], footer[id] { scroll-margin-top: 40px; }
     .cutwrap { min-height: 300px; }
     .h1 { font-size: clamp(64px, 17vw, 104px); line-height: 0.98; }
     .statement { font-size: 19px; }
+    /* blur כבד שמונפש יקר במובייל — גרדיאנט רדיאלי כבר רך מספיק */
+    .cutglow { filter: blur(28px); }
     .brand { white-space: nowrap; font-size: 12px; }
     .navlinks { gap: 12px; font-size: 13px; }
     .navlinks a { display: none; }
