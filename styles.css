@@ -669,6 +669,37 @@ html.light .langbtn { border-color: rgba(22, 20, 15, 0.4); }
     padding-top: 40px;
 }
 
+.ep + .ep {
+    margin-top: 60px;
+}
+
+/* קישור לאתר חי */
+.eplink {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 13px 22px;
+    border-radius: 99px;
+    border: 1px solid var(--line-strong);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+
+.eplink:hover {
+    color: var(--a1);
+    border-color: var(--a1);
+    background: rgba(var(--glow), 0.08);
+}
+
+.eplink-arrow {
+    font-size: 15px;
+    color: var(--a1);
+}
+
 .ephead {
     display: flex;
     align-items: baseline;
