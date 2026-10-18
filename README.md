@@ -1,136 +1,49 @@
-# 🌌 אתר תיק העבודות של ליאור ישראל אזולאי - Galaxy Theme
+# VibeMagic ✦
 
-דף נחיתה מדהים עם תמת גלקסיה להצגת התיק עבודות של ליאור ישראל אזולאי, גרפיקאי, עורך וידאו ויזם אפליקציות.
+דף הנחיתה של VibeMagic: פיתוח אתרים ואפליקציות מבוסס AI, עם ליווי אישי מהרעיון ועד ההשקה.
+אתר סטטי (HTML / CSS / JS) בלי שלב build, מתפרסם ב-Vercel מהענף lior2. כל הספריות, הפונטים והתמונות יושבים מקומית.
+האתר הקודם (תיק העבודות) נשמר כמו שהוא ב-`legacy/`.
 
-## ✨ תכונות עיקריות
+## הרצה מקומית
 
-### 🎨 עיצוב Galaxy מתקדם
-- **רקע גלקסיה אנימטיבי**: כוכבים מצמצמים וזזים ברקע עם אפקטי תנועה חלקים
-- **גרדיאנטים דינמיים**: צבעים משתנים ונעים של סגול, כחול, ציאן וורוד
-- **אפקטי זוהר (Glow)**: כל האלמנטים עם אפקטי תאורה וזוהר מתקדמים
-- **אנימציות מיקרו**: אפקטים עדינים על כל אלמנט
-
-### 🎬 אנימציות Scroll מתקדמות
-- **Intersection Observer**: אנימציות חכמות שמופעלות כאשר אלמנטים נכנסים למסך
-- **אנימציות מדורגות**: כל כרטיס נכנס בהשהייה קלה אחרי הקודם
-- **אפקט 3D Tilt**: הכרטיסים מגיבים לתנועת העכבר עם אפקט תלת-ממד (בדסקטופ)
-- **Parallax עדין**: אפקט עומק לכותרות בזמן גלילה
-
-### 📱 Mobile-First Design
-- **אופטימיזציה מלאה למובייל**: העיצוב מותאם קודם כל למכשירים ניידים
-- **ביצועים משופרים**: פחות כוכבים ואנימציות פשוטות יותר במובייל
-- **אפקטי Touch**: אנימציות מותאמות למגע במסכים מגע
-- **רספונסיבי מלא**: נראה מעולה בכל גודל מסך
-
-### 🚀 תכונות נוספות
-- כפתור וואטסאפ מונפש
-- גלריית עבודות עם אפקטי hover מתקדמים
-- סקציית FutureOS עם סרטוני יוטיוב
-- אזור אלדיו עם אינטגרציה של אינסטגרם
-- 3 אפליקציות מוטמעות (בראשית, DreamSpace, Point)
-- קישורי רשתות חברתיות מעוצבים
-
-## קבצים
-
-- `index.html` - מבנה האתר
-- `styles.css` - עיצוב האתר
-- `script.js` - אנימציות ואינטראקציות
-- תמונות ווידאו
-
-## איך להריץ
-
-פשוט פתח את קובץ ה-`index.html` בדפדפן כלשהו. האתר לא דורש שרת או התקנות נוספות.
-
-## 🛠️ טכנולוגיות בשימוש
-
-- **HTML5**: מבנה סמנטי מתקדם
-- **CSS3**: 
-  - CSS Variables לניהול צבעים
-  - CSS Grid & Flexbox למבנה רספונסיבי
-  - CSS Animations & Transitions
-  - Backdrop Filter לאפקטי זכוכית
-  - Custom Scrollbar
-- **JavaScript (Vanilla)**:
-  - Canvas API לאנימציית הכוכבים
-  - Intersection Observer API לאנימציות scroll
-  - Event Listeners לאינטראקציות
-  - Performance optimizations
-- **Font Awesome**: אייקונים
-- **Google Fonts**: פונט Heebo
-- **Elfsight**: פיד אינסטגרם
-
-## 🎯 אופטימיזציות ביצועים
-
-### Mobile-First Approach
-- פחות כוכבים במסכים קטנים (100 במקום 200)
-- ביטול אנימציות מורכבות במובייל
-- Loading state אופטימלי
-- אפקטי Touch במקום Hover
-
-### אופטימיזציות נוספות
-- **Hardware Acceleration**: שימוש ב-transform ו-opacity לאנימציות
-- **Intersection Observer**: הפעלת אנימציות רק כשאלמנטים נראים
-- **RequestAnimationFrame**: אנימציית canvas מאופטמת
-- **Preconnect**: טעינה מהירה של משאבים חיצוניים
-- **Lazy Loading**: טעינת תמונות בעת הצורך
-
-## 🎨 פלטת צבעים
-
-```css
-Galaxy Dark:   #0a0e27  /* רקע עיקרי */
-Galaxy Deep:   #1a1b3d  /* רקע משני */
-Galaxy Purple: #6b3fa0  /* סגול גלקטי */
-Galaxy Blue:   #2d4a8e  /* כחול עמוק */
-Galaxy Cyan:   #0dceda  /* ציאן בהיר */
-Galaxy Pink:   #e91e63  /* ורוד חי */
-Galaxy Gold:   #ffd700  /* זהב */
-Star White:    #ffffff  /* כוכבים לבנים */
-Star Blue:     #b8d4ff  /* כוכבים כחולים */
-Star Purple:   #d4a5ff  /* כוכבים סגולים */
+```bash
+python3 -m http.server 8000
 ```
 
-## 🎬 אפקטי אנימציה
+ואז לפתוח `http://localhost:8000/`. (מ-`file://` חלק מהאפקטים לא ייטענו.)
 
-### אנימציות רקע
-- כוכבים מצמצמים עם מהירויות שונות
-- תנועה איטית של כוכבים
-- גרדיאנטים נעים ומשתנים
-- אפקטי זוהר דינמיים
+## מבנה
 
-### אנימציות אלמנטים
-- Fade in + Scale על כרטיסים
-- 3D Tilt effect על hover
-- Glow effects על כפתורים
-- Parallax scrolling על כותרות
-- Staggered animations (מדורג)
+| קובץ | מה יש בו |
+|------|-----------|
+| `index.html` | כל ה-markup והקופי, כולל ספרייט SVG (לוגו, אייקונים) בראש ה-body |
+| `css/core.css` · `js/core.js` | טוקנים לשתי התמות, טיפוגרפיה, מוטיבים מהפוסטרים, Lenis + ScrollTrigger, מערכת reveal, `window.VM` |
+| `js/intro.js` · `css/intro.css` | פתיח הניאון של הלוגו (פעם אחת בכל סשן) |
+| `js/nav.js` · `css/nav.css` | ה-pill שמשנה צורה בגלילה, ההמבורגר, התפריט המעוקל ומתג התמה (View Transitions) |
+| `js/hero.js` · `js/fx/hero-shader.js` · `js/fx/sparkles.js` · `css/hero.css` | ההירו: שיידר WebGL, ניצוצות, טקסט מתחלף, מרקיז |
+| `js/fx/text.js` · `css/text.css` | אפקטי טקסט גלובליים (`data-split`, `data-scrub-words`, `data-scramble`, `data-count`) והמניפסט |
+| `js/services.js` · `css/services.css` | דיאגרמת הקרניים, הבנטו של השירותים, טבלת ההשוואה, `data-spotlight` |
+| `js/playground.js` · `css/playground.css` | "נסו את הקסם": רעיון → קונספט → וואטסאפ |
+| `js/works.js` · `css/works.css` | Imagine, קיר צילומי המסך, כרטיסי האפליקציות |
+| `js/story.js` · `css/story.css` | תהליך, אודות, סדרת 101, שאלות נפוצות |
+| `js/fx/delight.js` · `css/footer.css` | הפוטר, כפתור הוואטסאפ הצף, קונפטי, שובל קסם לעכבר, ביצת פסחא |
+| `vendor/` | GSAP 3.15 (+ScrollTrigger, SplitText), Lenis 1.3.26, canvas-confetti 1.9.4 |
+| `tools/shot.mjs` | צילומי מסך headless לבדיקות (Chrome + Node 22, הוראות שימוש בראש הקובץ) |
 
-## 🚀 דברים לשיפור בעתיד
+רכיבים שהועברו מ-[21st.dev](https://21st.dev) (React → vanilla): Mesh Gradient (Paper Shaders), Sparkles + Particles,
+Morphing Text, Text Generate Effect, Text Reveal, Encrypted Text, Number Ticker, Text Highlighter, Morphing Scroll Navbar,
+Menu Toggle Icon, Curved Menu, Animated Theme Toggler, Animated Beam, Magic Card + Glowing Effect, Border Beam,
+Container Scroll Animation, 3D Marquee, Comet Card, Lamp, Timeline, Orbiting Circles, Cinematic Footer, Magic Cursor,
+Magnetic, Confetti, Shooting Stars. הקרדיט לכל רכיב מופיע בראש הקובץ שמממש אותו.
 
-- [ ] הוספת מצב יום/לילה
-- [ ] גלריה אינטראקטיבית עם lightbox
-- [ ] טופס יצירת קשר מלא
-- [ ] הוספת בלוג
-- [ ] אפקטי קול (אופציונלי)
-- [ ] PWA support
+## פרמטרים לבדיקה
 
-## 📱 תאימות דפדפנים
+- `?intro=1` מכריח את פתיח הניאון, `?nointro=1` מדלג עליו
+- `?rm=1` מדמה reduced motion
+- `?nolenis=1` גלילה רגילה בלי Lenis
 
-- ✅ Chrome 90+
-- ✅ Firefox 88+
-- ✅ Safari 14+
-- ✅ Edge 90+
-- ✅ Mobile browsers
+## עריכות נפוצות
 
-## 👨‍💻 יוצר
-
-**ליאור ישראל אזולאי**  
-גרפיקאי, עורך וידאו ויזם אפליקציות
-
-- 📧 Email: Liorazulay72@gmail.com
-- 📱 WhatsApp: 0523321674
-- 🔗 [LinkedIn](https://www.linkedin.com/in/azulay-lior-42b43122a/)
-- 📷 [Instagram](https://www.instagram.com/lior.azul/)
-
----
-
-*עוצב בגאווה עם ❤️ ו-✨ בתמת Galaxy* 
+- **מספר הוואטסאפ וההודעה הדיפולטית:** `VM.WA_NUMBER` / `VM.WA_DEFAULT` ב-`js/core.js`. כל קישור עם `data-wa` מקבל אותם אוטומטית.
+- **אפליקציה חדשה:** לשכפל `<li class="app">` ב-`#work` ולהוסיף אייקון 256px ל-`assets/apps/`.
+- **צבעים:** הטוקנים בראש `css/core.css` (`[data-theme="dark"]` / `[data-theme="light"]`).
