@@ -1,6 +1,7 @@
 {
   "redirects": [
     { "source": "/vibemagic", "destination": "/", "permanent": true },
-    { "source": "/vibemagic/:path*", "destination": "/", "permanent": true }
+    { "source": "/vibemagic/", "destination": "/", "permanent": true },
+    { "source": "/vibemagic/:path+", "destination": "/", "permanent": true }
   ]
 }
