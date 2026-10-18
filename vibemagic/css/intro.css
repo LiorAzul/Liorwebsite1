@@ -1,0 +1,230 @@
+/* ==========================================================================
+   VibeMagic — intro.css  ·  NEON LOGO INTRO overlay (DOM is built by js/intro.js)
+   Ported technique: 21st.dev "Neon Sign" (glass-blown neon) by Meng To / ThreeUI,
+   layered tube passes (blurred spill, bloom, saturated tube, white-hot core),
+   plus the Aceternity "Lamp" beam ignite (Manu Arora): a glowing line scaling open.
+   Restyled to the owner's sting (2.webp): yellow beam, magenta haze, olive smoke on light.
+
+   Geometry: the intro SVGs share viewBox "-40 160 1640 660". The logo occupies
+   33..1535 x 219..760 and the beam passes svg y 382 (33.6% down the box).
+   Only transform / opacity / dashoffset / mask geometry is animated; every blur
+   below is static, so the compositor applies it without re-running filter params.
+   ========================================================================== */
+
+#vm-intro {
+  --lw: min(84vw, 760px);                        /* SVG box width */
+  --lh: calc(var(--lw) * .402439);               /* 660 / 1640 */
+  --W: calc(var(--lw) * .905488);                /* logo width (1485 units) in px */
+  --cy: 47%;                                     /* optical centre of the logo */
+  --by: calc(var(--cy) - var(--lh) * .163636);   /* beam y = svg y 382 */
+  --bh: max(2.5px, calc(var(--W) * .0062));      /* beam core thickness */
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro, 100);
+  overflow: hidden;
+  contain: strict;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+#vm-intro > * { position: absolute; pointer-events: none; }
+#vm-intro.is-leaving { pointer-events: none; }
+
+/* solid backdrop (faded on its own layer at handoff, not via background-color) */
+#vm-intro .vi-bg { inset: 0; background: var(--bg); will-change: opacity; }
+
+/* ---------- smoke band (light only: lets the white-hot strokes read on white) ---------- */
+#vm-intro .vi-smoke { display: none; }
+[data-theme="light"] #vm-intro .vi-smoke {
+  display: block;
+  left: -12%;
+  right: -12%;
+  top: calc(var(--by) - var(--W) * .30);
+  height: calc(var(--W) * .33);
+  opacity: 0;
+  /* soft by construction (eased stops) instead of a blur filter: zero per-frame filter cost */
+  background:
+    radial-gradient(24% 60% at 31% 80%, rgba(110, 98, 64, .5), rgba(110, 98, 64, .22) 45%, rgba(110, 98, 64, 0) 100%),
+    radial-gradient(30% 52% at 63% 86%, rgba(121, 109, 74, .36), rgba(121, 109, 74, .14) 50%, rgba(121, 109, 74, 0) 100%),
+    linear-gradient(to bottom, rgba(121, 109, 74, 0) 0%, rgba(121, 109, 74, .05) 18%, rgba(121, 109, 74, .16) 36%, rgba(121, 109, 74, .33) 54%, rgba(121, 109, 74, .48) 70%, rgba(150, 122, 40, .5) 84%, rgba(169, 129, 11, .3) 94%, rgba(169, 129, 11, 0) 100%);
+  will-change: opacity;
+}
+
+/* ---------- magenta / violet haze under the beam (travels left to right) ---------- */
+#vm-intro .vi-haze {
+  left: -35%;
+  width: 170%;
+  top: var(--by);
+  height: calc(var(--W) * .34);
+  opacity: 0;
+  background: radial-gradient(30% 100% at 50% 0%, rgba(227, 90, 248, .9) 0%, rgba(153, 88, 183, .55) 40%, rgba(130, 76, 130, .25) 62%, rgba(130, 76, 130, 0) 82%);
+  will-change: transform, opacity;
+}
+[data-theme="light"] #vm-intro .vi-haze {
+  background: radial-gradient(30% 100% at 50% 0%, rgba(227, 90, 248, .72) 0%, rgba(153, 88, 183, .44) 40%, rgba(209, 200, 214, .3) 64%, rgba(209, 200, 214, 0) 84%);
+}
+
+/* ---------- the beam ---------- */
+#vm-intro .vi-beamwrap { left: 0; right: 0; top: var(--by); height: 0; opacity: 0; will-change: opacity; }
+#vm-intro .vi-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--bh) * -.5);
+  height: var(--bh);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+#vm-intro .vi-beam > i { position: absolute; display: block; }
+#vm-intro .vi-beam__line {
+  inset: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #FFF7A6, #FFFDE6 50%, #FFF7A6);   /* white-hot core */
+  box-shadow:
+    0 0 calc(var(--W) * .004) calc(var(--W) * .003) #FFF75E,
+    0 0 calc(var(--W) * .012) calc(var(--W) * .006) #FFE000,
+    0 0 calc(var(--W) * .026) calc(var(--W) * .011) rgba(255, 224, 0, .85),
+    0 0 calc(var(--W) * .07) calc(var(--W) * .028) rgba(255, 200, 0, .5),
+    0 0 calc(var(--W) * .17) calc(var(--W) * .06) rgba(255, 170, 0, .24);
+}
+/* bloom boost: a second glow faded in with opacity instead of animating box-shadow */
+#vm-intro .vi-beam__hot {
+  inset: 0;
+  opacity: 0;
+  border-radius: 99px;
+  box-shadow:
+    0 0 calc(var(--W) * .012) calc(var(--W) * .005) rgba(255, 253, 220, .95),
+    0 0 calc(var(--W) * .045) calc(var(--W) * .016) rgba(255, 236, 90, .6),
+    0 0 calc(var(--W) * .12) calc(var(--W) * .04) rgba(255, 196, 0, .3);
+}
+/* orange seam + magenta under-glow */
+#vm-intro .vi-beam__under {
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: calc(var(--W) * .075);
+  background: linear-gradient(to bottom, rgba(225, 162, 47, .7) 0%, rgba(236, 128, 160, .58) 22%, rgba(227, 90, 248, .48) 44%, rgba(227, 90, 248, .2) 70%, rgba(227, 90, 248, .06) 86%, rgba(227, 90, 248, 0) 100%);
+}
+[data-theme="light"] #vm-intro .vi-beam__under { opacity: .85; }
+
+/* white-hot flare where the beam crosses "vibe" (bloom phase) */
+#vm-intro .vi-flare {
+  left: calc(50% - var(--W) * .5 + var(--W) * .08);
+  top: calc(var(--by) - var(--W) * .1);
+  width: calc(var(--W) * .46);
+  height: calc(var(--W) * .22);
+  opacity: 0;
+  background: radial-gradient(closest-side, rgba(255, 255, 248, .95), rgba(255, 246, 170, .6) 38%, rgba(255, 214, 60, .18) 66%, rgba(255, 214, 60, 0));
+  will-change: transform, opacity;
+}
+
+/* ---------- logo stage ---------- */
+#vm-intro .vi-stage {
+  left: calc(50% - var(--lw) / 2);
+  top: calc(var(--cy) - var(--lh) / 2);
+  width: var(--lw);
+  height: var(--lh);
+}
+#vm-intro .vi-l,
+#vm-intro .vi-fly,
+#vm-intro .vi-solid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: visible;
+}
+#vm-intro .vi-l path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 2;            /* pathLength="1": offset 1 = hidden, 0 = fully drawn */
+}
+
+/* neon passes, wide to sharp (stroke paint is set as attributes in JS) */
+#vm-intro .vi-l--halo { opacity: .95; filter: blur(calc(var(--lw) * .026)); will-change: opacity; }
+#vm-intro .vi-l--halo path { stroke-width: 38; }
+#vm-intro .vi-l--bloom { filter: blur(calc(var(--lw) * .0065)); will-change: opacity; }
+#vm-intro .vi-l--bloom path { stroke-width: 14; }
+#vm-intro .vi-l--tube { will-change: opacity; }
+#vm-intro .vi-g--tube path { stroke-width: 7; }
+#vm-intro .vi-g--core path { stroke-width: 2.2; }
+#vm-intro .vi-g--hot { opacity: 0; }
+#vm-intro .vi-g--hot path { stroke-width: 4.6; }
+/* MAGIC's thin stems (17u): hot cores wide enough to fuse the outline into one white-hot line */
+#vm-intro .vi-g--core path.is-thin { stroke-width: 3; }
+#vm-intro .vi-g--hot path.is-thin { stroke-width: 12; }
+[data-theme="light"] #vm-intro .vi-l--halo { opacity: .85; }
+[data-theme="light"] #vi-gHalo stop:last-child { stop-color: #FFB300; }
+[data-theme="light"] #vi-gHalo stop:first-child { stop-color: #E040FB; }
+
+/* the solid logo, revealed by the wipe mask and then FLIPped into the header */
+#vm-intro .vi-solid { color: var(--text); }
+[data-theme="dark"] #vm-intro .vi-solid {
+  color: #FDFDFD;
+  filter:
+    drop-shadow(calc(var(--lw) * -.01) 0 calc(var(--lw) * .022) rgba(248, 216, 8, .5))
+    drop-shadow(calc(var(--lw) * .01) 0 calc(var(--lw) * .024) rgba(167, 3, 215, .62));
+}
+[data-theme="light"] #vm-intro .vi-solid { color: #0A0A0B; }
+
+/* ---------- skip ---------- */
+#vm-intro .vi-skip {
+  pointer-events: auto;
+  bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 14px));
+  inset-inline-start: clamp(16px, 3vw, 32px);
+  /* RTL: inline-start is the right edge; stay clear of a landscape notch */
+  inset-inline-start: max(clamp(16px, 3vw, 32px), calc(env(safe-area-inset-right, 0px) + 12px));
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  padding: .62em 1.15em .66em;
+  border-radius: 999px;
+  overflow: hidden;
+  font-family: var(--font-he);
+  font-size: .92rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .02em;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+  border: 1px solid var(--line);
+  opacity: 0;
+  visibility: hidden;
+  transition: color .25s, border-color .25s, background-color .25s;
+}
+#vm-intro .vi-skip .i { width: 1em; height: 1em; transform: rotate(90deg); } /* chevron points forward (left) in RTL */
+#vm-intro .vi-skip__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--grad-brand);
+  transform: scaleX(0);
+  transform-origin: right center;   /* progress runs with the reading direction */
+  opacity: .9;
+}
+@media (hover: hover) and (pointer: fine) {
+  #vm-intro .vi-skip:hover { color: var(--text); border-color: var(--line-strong); background: color-mix(in srgb, var(--text) 9%, transparent); }
+}
+
+/* while the clone flies, the real header logo stays hidden so it never doubles up */
+html.vi-flying #site-logo { visibility: hidden !important; }
+
+/* ---------- small screens: thicker tubes so the neon reads at 390px ---------- */
+@media (max-width: 720px) {
+  #vm-intro { --cy: 46%; }
+  #vm-intro .vi-l--halo path { stroke-width: 52; }
+  #vm-intro .vi-l--bloom path { stroke-width: 20; }
+  #vm-intro .vi-g--tube path { stroke-width: 10; }
+  #vm-intro .vi-g--core path { stroke-width: 3.4; }
+  #vm-intro .vi-g--hot path { stroke-width: 6.5; }
+  #vm-intro .vi-g--core path.is-thin { stroke-width: 4; }
+  #vm-intro .vi-g--hot path.is-thin { stroke-width: 15; }
+  #vm-intro .vi-l--halo { filter: blur(calc(var(--lw) * .028)); }
+  #vm-intro .vi-l--bloom { filter: blur(calc(var(--lw) * .009)); }
+}

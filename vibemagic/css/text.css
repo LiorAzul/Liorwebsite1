@@ -1,0 +1,566 @@
+/* ==========================================================================
+   VibeMagic — css/text.css
+   Text effects (site-wide) + the manifesto section (poster 1 brought to life).
+   Ports of 21st.dev components, driven by js/fx/text.js:
+     [data-split]        Text Generate Effect, Manu Arora (Aceternity UI)
+     [data-scrub-words]  Text Reveal, Dillion Verma (Magic UI)
+     [data-scramble]     Encrypted Text, Manu Arora (Aceternity UI)
+     [data-count]        Number Ticker, Dillion Verma (Magic UI)
+     .hl                 Text Highlighter, Daniel Petho (fancy components)
+   Every hidden starting state lives under html.js and has a failsafe.
+   ========================================================================== */
+
+/* ---------- [data-split]: per-word blur-in ---------- */
+/* hidden only until text.js has split the heading (then the words carry the
+   state); if text.js never runs, the heading shows up on its own after 4.5s */
+html.js [data-split]:not(.tx-split) {
+  opacity: 0;
+  animation: tx-failsafe 1ms linear 4.5s forwards;
+}
+@keyframes tx-failsafe { to { opacity: 1; } }
+
+/* gradient phrases repeat the full gradient on every line they wrap to, so
+   the per-word slices painted during the animation match the resting state */
+[data-split] .grad-text {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* while split: the phrase stops painting and each word paints its own slice
+   of the very same gradient (inherited, so the light-theme gradient follows) */
+[data-split] .grad-text.tx-g {
+  background-size: 0 0;
+  background-repeat: no-repeat;
+}
+[data-split] .grad-text.tx-g .tx-w {
+  background-image: inherit;
+  background-repeat: no-repeat;
+  background-size: var(--tx-gw, 100%) 100%;
+  background-position: var(--tx-gx, 0px) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- [data-scramble]: encrypted label ---------- */
+.tx-scr {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.tx-scr__real { opacity: 0; }
+.tx-scr__fx {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.tx-scr__enc {
+  color: var(--accent);
+  opacity: .9;
+  text-shadow: 0 0 calc(10px * var(--glow-a)) rgba(224, 138, 247, calc(.8 * var(--glow-a)));
+}
+
+/* ---------- [data-count]: number ticker ---------- */
+.tx-count {
+  font-variant-numeric: tabular-nums;
+}
+.tx-count--inline {
+  display: inline-block;
+  text-align: right; /* digits run LTR: keep the units digit still while counting */
+}
+
+/* ---------- .hl: Text Highlighter (marker sweep from the right) ----------
+   core.css owns the trigger (--hl-s flips 0 -> 1 when the [data-reveal]
+   ancestor gets .in). Here the block is painted, not stretched: a clip-path
+   uncovers it right to left like a marker stroke, with uneven hand-drawn
+   corners and a slight tilt. */
+.hl::before {
+  --hl-g: max(.6em, 30px); /* room for the soft edge / neon glow outside the block */
+  border-radius: .26em .5em .34em .44em / .52em .3em .56em .36em;
+  transform: rotate(-.9deg);
+  clip-path: inset(calc(var(--hl-g) * -1) calc(var(--hl-g) * -1) calc(var(--hl-g) * -1) calc((1 - var(--hl-s, 1)) * (100% + var(--hl-g) * 2) - var(--hl-g)));
+  transition: clip-path 1.05s cubic-bezier(.22, 1, .36, 1) var(--hl-delay, .2s);
+}
+.hl--lilac::before {
+  border-radius: .5em .38em .46em .3em / .4em .55em .34em .5em;
+  transform: rotate(.7deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hl::before { clip-path: none; transition: none; }
+}
+html.rm .hl::before { clip-path: none; transition: none; }
+
+/* ==========================================================================
+   MANIFESTO (poster 1): heavy two-line headline with a split glow, swoosh,
+   Q&A lines with highlighters and haloed line icons, then the big paragraph
+   that lights up word by word inside a sticky scrub track.
+   ========================================================================== */
+.manifesto {
+  --m-xl: clamp(3.5rem, 15.5vw, 9.25rem);
+  --m-vc: clamp(2.2rem, 9.4vw, 5.6rem);
+  --m-q: clamp(1.55rem, 6.6vw, 2.9rem);
+  --m-icon: clamp(54px, 15vw, 92px);
+  --m-glow: linear-gradient(90deg, #FFF45A 0%, #FFEB6E 34%, #F9C2EC 58%, #E79BF8 78%, #DD7DF6 100%);
+  --m-glow-o: .95;
+  --m-glow-r: .1em;
+  --m-halo-y: #FBF98A;
+  --m-halo-l: #F1ADFD;
+  --m-dash-a: #FFFD2D;
+  --m-dash-b: #EAA1F5;
+  --m-dash-ink: #111;
+  --m-dash-tip: #D35CF0;
+  position: relative;
+  overflow-x: clip;
+  isolation: isolate;
+}
+[data-theme="dark"] .manifesto {
+  --m-glow: linear-gradient(90deg, rgba(255, 232, 60, .95) 0%, rgba(255, 222, 110, .8) 26%, rgba(255, 196, 238, .62) 50%, rgba(221, 84, 253, .88) 72%, rgba(176, 40, 255, .92) 100%);
+  --m-glow-o: 1;
+  --m-glow-r: .11em;
+  --m-halo-y: rgba(255, 224, 0, .42);
+  --m-halo-l: rgba(200, 5, 254, .55);
+  --m-dash-ink: #FFFFFF;
+  --m-dash-tip: #FC38FE;
+}
+@media (min-width: 721px) {
+  .manifesto {
+    --m-xl: clamp(4rem, 10.6vw, 9.25rem);
+    --m-vc: clamp(2.4rem, 6.3vw, 5.6rem);
+    --m-q: clamp(1.7rem, 3.3vw, 2.9rem);
+    --m-icon: clamp(64px, 6.4vw, 96px);
+  }
+}
+
+/* soft poster blobs: yellow top-right, lilac + yellow bottom-left */
+.manifesto::before,
+.manifesto::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+}
+.manifesto::before {
+  top: -6%;
+  right: -18vw;
+  width: min(70vw, 900px);
+  height: min(70vw, 900px);
+  background: radial-gradient(closest-side, rgba(254, 252, 166, .95), rgba(249, 227, 252, .55) 55%, transparent);
+}
+.manifesto::after {
+  top: 30%;
+  left: -22vw;
+  width: min(80vw, 1000px);
+  height: min(80vw, 1000px);
+  background: radial-gradient(closest-side, rgba(245, 201, 252, .8), rgba(254, 230, 172, .45) 50%, transparent);
+}
+[data-theme="dark"] .manifesto::before {
+  background: radial-gradient(closest-side, rgba(203, 146, 3, .16), rgba(109, 4, 160, .14) 55%, transparent);
+}
+[data-theme="dark"] .manifesto::after {
+  background: radial-gradient(closest-side, rgba(109, 4, 160, .4), rgba(42, 8, 69, .25) 55%, transparent);
+}
+
+/* poster corner brackets: neon gold / violet in dark */
+[data-theme="dark"] .manifesto .brackets::before {
+  background:
+    linear-gradient(rgba(255, 228, 92, .75) 0 0) top left / 100% 1.5px no-repeat,
+    linear-gradient(rgba(255, 228, 92, .75) 0 0) top left / 1.5px 100% no-repeat;
+}
+[data-theme="dark"] .manifesto .brackets::after {
+  background:
+    linear-gradient(rgba(233, 48, 245, .75) 0 0) top left / 100% 1.5px no-repeat,
+    linear-gradient(rgba(233, 48, 245, .75) 0 0) top left / 1.5px 100% no-repeat;
+}
+.manifesto__plus--1 { top: clamp(380px, 30vw, 560px); left: clamp(10px, 4.5vw, 70px); }
+.manifesto__plus--2 { top: 58%; left: clamp(14px, 6vw, 96px); }
+
+.manifesto__inner { position: relative; z-index: 1; }
+
+/* ---------- headline ---------- */
+.manifesto__title {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  font-size: var(--m-xl);
+  line-height: .96;
+  letter-spacing: -.015em;
+  color: var(--text);
+}
+.manifesto__line {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+.manifesto__line--2 { margin-top: .02em; }
+/* the poster's split glow: a blurred, gradient-filled copy of the words behind
+   them (yellow on the left, lilac on the right; gold to violet neon in dark).
+   An aria-hidden span, not ::before + attr(): engines without alt text for
+   `content` (Safari < 17.4, Firefox < 128) read generated text into the heading's
+   name ("אני מציע אני מציע ..."). */
+.manifesto__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background: var(--m-glow);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: blur(var(--m-glow-r));
+  opacity: var(--m-glow-o);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+[data-theme="dark"] .manifesto__line {
+  text-shadow: 0 0 .32em rgba(215, 41, 255, .18);
+}
+.manifesto__vc {
+  display: block;
+  margin-top: .1em;
+  font-size: var(--m-vc);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+}
+.manifesto__title .manifesto__swoosh {
+  width: min(86%, 640px);
+  margin-top: clamp(8px, 1.2vw, 18px);
+}
+
+/* sparkle (top right of line 1) and the two pop dashes (top left) */
+.manifesto__sparkle {
+  position: absolute;
+  top: -.26em;
+  inset-inline-start: -.42em;
+  width: .4em;
+  height: .4em;
+}
+.manifesto__sparkle use { stroke: var(--ink); stroke-width: calc(5px * (1 - var(--glow-a))); }
+.manifesto__pops {
+  position: absolute;
+  top: -.34em;
+  inset-inline-end: -.44em;
+  width: .5em;
+  height: .5em;
+  pointer-events: none;
+}
+.manifesto__pops i {
+  position: absolute;
+  height: .065em;
+  border-radius: 1em;
+  background: linear-gradient(90deg, var(--m-dash-a), var(--m-dash-b));
+  box-shadow: 0 0 calc(10px * var(--glow-a)) rgba(252, 56, 254, calc(.7 * var(--glow-a)));
+  transform-origin: right center;
+  transform: rotate(var(--r)) scaleX(var(--s, 1));
+}
+.manifesto__pops i:nth-child(1) { --r: 28deg; width: .4em; left: -.04em; top: .3em; }
+.manifesto__pops i:nth-child(2) { --r: 62deg; width: .32em; left: .22em; top: .06em; background: linear-gradient(90deg, var(--m-dash-b), var(--m-dash-b)); }
+
+/* ---------- Q & A ---------- */
+.manifesto__qa {
+  display: grid;
+  justify-items: center;
+  gap: clamp(26px, 4vw, 44px);
+  margin-top: clamp(64px, 9vw, 120px);
+}
+.manifesto__q {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 3vw, 40px);
+  font-size: var(--m-q);
+  font-weight: 400;
+  line-height: 1.22;
+  color: var(--text);
+}
+.manifesto__q b { font-weight: 900; }
+.manifesto__qt { text-align: center; }
+.manifesto__q .hl { --hl-delay: .5s; }
+.manifesto__q--app .hl { --hl-delay: .62s; }
+.manifesto__q .hl::before { inset: .04em -.2em -.02em -.07em; }
+.manifesto__q .hl--lilac::before { inset: -.02em -.26em -.06em -.14em; }
+/* dark: the markers turn into solid neon blocks with ink text (poster 1, lit up).
+   The word turns from white to ink exactly where the marker has passed: a
+   two-tone fill clipped to the glyphs slides right to left in step with it. */
+[data-theme="dark"] .manifesto__q .hl b {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg, var(--text) 50%, #0A0A0B 50%) no-repeat;
+  background-size: 200% 100%;
+  background-position: calc(var(--hl-s, 1) * 100%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-position 1.05s cubic-bezier(.22, 1, .36, 1) calc(var(--hl-delay, .2s) + .03s);
+}
+[data-theme="dark"] .manifesto__q .hl::before {
+  background: linear-gradient(100deg, #FFF06A, #FFE000 60%, #FFD60A);
+  filter: none;
+  box-shadow: 0 0 14px rgba(255, 224, 0, .55), 0 0 40px rgba(255, 190, 0, .28);
+}
+[data-theme="dark"] .manifesto__q .hl--lilac::before {
+  background: linear-gradient(100deg, #F3C5FD, #E696F9 45%, #DD6FF8);
+  box-shadow: 0 0 14px rgba(230, 150, 249, .6), 0 0 40px rgba(200, 5, 254, .38);
+}
+
+.manifesto__icon {
+  position: relative;
+  z-index: 0;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--m-icon);
+  aspect-ratio: 1;
+  color: var(--text);
+}
+.manifesto__icon .i {
+  width: 100%;
+  height: 100%;
+  stroke-width: 1.75;
+  overflow: visible;
+}
+.manifesto__icon::before {
+  content: '';
+  position: absolute;
+  inset: -55%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--halo), transparent);
+  opacity: .95;
+  transition: opacity 1.2s var(--ease-out) .35s;
+}
+.manifesto__icon--browser {
+  --halo: var(--m-halo-y);
+  transform: rotate(-10deg);
+}
+.manifesto__icon--browser::before {
+  background:
+    radial-gradient(closest-side at 42% 44%, var(--m-halo-y), transparent),
+    radial-gradient(closest-side at 62% 72%, var(--m-halo-l2, var(--m-halo-l)), transparent 80%);
+}
+[data-theme="dark"] .manifesto__icon--browser { --m-halo-l2: rgba(200, 5, 254, .16); }
+.manifesto__icon--phone {
+  --halo: var(--m-halo-l);
+  transform: rotate(15deg);
+  width: calc(var(--m-icon) * .86);
+}
+[data-theme="dark"] .manifesto__icon--browser .i { filter: drop-shadow(0 0 6px rgba(255, 224, 0, .7)) drop-shadow(0 0 16px rgba(255, 200, 0, .35)); }
+[data-theme="dark"] .manifesto__icon--phone .i { filter: drop-shadow(0 0 6px rgba(252, 56, 254, .75)) drop-shadow(0 0 18px rgba(200, 5, 254, .45)); }
+
+/* the phone's three pop dashes, fanning out to the right (its outer side) */
+.manifesto__dashes {
+  position: absolute;
+  left: 92%;
+  top: 22%;
+  width: 40%;
+  height: 56%;
+  pointer-events: none;
+}
+.manifesto__dashes i {
+  position: absolute;
+  left: 0;
+  height: max(4px, 7%);
+  border-radius: 9px;
+  background: linear-gradient(90deg, var(--m-dash-ink) 0 42%, var(--m-dash-tip) 62%);
+  box-shadow: 0 0 calc(10px * var(--glow-a)) rgba(252, 56, 254, calc(.8 * var(--glow-a)));
+  transform-origin: left center;
+  transform: rotate(var(--r)) scaleX(var(--s, 1));
+}
+.manifesto__dashes i:nth-child(1) { --r: -38deg; top: 18%; width: 78%; }
+.manifesto__dashes i:nth-child(2) { --r: -2deg; top: 52%; width: 86%; }
+.manifesto__dashes i:nth-child(3) { --r: 40deg; top: 82%; width: 40%; }
+
+/* ---------- scrub paragraph ---------- */
+.manifesto__track {
+  position: relative;
+  margin-top: clamp(72px, 10vw, 140px);
+}
+.manifesto__scrub {
+  max-width: 17em;
+  margin-inline: auto;
+  font-size: clamp(1.9rem, 4.1vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--text);
+}
+.manifesto__scrub b { font-weight: 900; }
+.manifesto__track.is-on .manifesto__scrub { pointer-events: auto; }
+.manifesto__scrub .grad-text { font-weight: 900; }
+/* pulled up so the centred paragraph sits ~120px under the Q&A instead of half a screen */
+html.js .manifesto__track.is-on { height: 215vh; margin-top: calc(clamp(72px, 10vw, 140px) - 34vh); }
+/* ...and the same on the way out: the stick is a full screen with the paragraph centred,
+   so its lower half (50svh - nav/2 + 6px - half the paragraph) would stay empty after the
+   pin releases. Pull #vibe up into it so the gap below the paragraph is the usual section
+   rhythm again (8rem stands in for half the paragraph). A negative margin leaves the track's
+   own box alone, so the sticky range and the scrub's 'bottom bottom' end do not move. */
+html.js .manifesto__track.is-on {
+  margin-bottom: calc(var(--nav-h) / 2 + 8rem - 50vh);
+  margin-bottom: calc(var(--nav-h) / 2 + 8rem - 50svh);
+}
+.manifesto__track.is-on .manifesto__stick {
+  pointer-events: none;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding-block: calc(var(--nav-h) + 12px) 24px;
+}
+@media (max-width: 720px) {
+  html.js .manifesto__track.is-on { height: 185vh; margin-top: calc(56px - 24vh); }
+}
+
+/* the closing "קסם." pop */
+.tx-pop {
+  position: relative;
+  display: inline-block;
+  font-size: 1.14em;
+  font-weight: 900;
+  isolation: isolate;
+  transform-origin: 50% 62%;
+}
+.tx-pop__fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.tx-pop__halo {
+  position: absolute;
+  inset: -.42em -.5em -.36em;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(closest-side at 32% 50%, rgba(254, 252, 140, .95), transparent),
+    radial-gradient(closest-side at 70% 52%, rgba(241, 173, 253, .9), transparent);
+}
+[data-theme="dark"] .tx-pop__halo {
+  background:
+    radial-gradient(closest-side at 32% 50%, rgba(255, 214, 10, .34), transparent),
+    radial-gradient(closest-side at 70% 52%, rgba(200, 5, 254, .48), transparent);
+}
+.tx-pop__spark {
+  position: absolute;
+  width: .58em;
+  height: .58em;
+  overflow: visible;
+  stroke: var(--ink);
+  stroke-width: calc(5px * (1 - var(--glow-a)));
+  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) #FFE000) drop-shadow(0 0 calc(14px * var(--glow-a)) #C805FE);
+}
+.tx-pop__spark:nth-child(2) { top: -.16em; left: -.5em; }
+.tx-pop__spark:nth-child(3) { bottom: -.12em; left: -.26em; width: .24em; height: .24em; }
+.tx-pop__spark:nth-child(4) { bottom: -.34em; left: 46%; width: .3em; height: .3em; }
+.tx-pop .grad-text { transition: filter .9s var(--ease-out); }
+/* a single shockwave ring when the word lands */
+.tx-pop__halo::after {
+  content: '';
+  position: absolute;
+  inset: 8% 14%;
+  border-radius: 50%;
+  border: 2px solid rgba(221, 84, 253, .55);
+  box-shadow: 0 0 calc(18px * var(--glow-a)) rgba(255, 224, 0, .45), inset 0 0 calc(14px * var(--glow-a)) rgba(200, 5, 254, .4);
+  opacity: 0;
+}
+.tx-pop.is-lit .tx-pop__halo::after { animation: tx-ring 1.1s var(--ease-out) both; }
+@keyframes tx-ring {
+  0% { opacity: .95; transform: scale(.55); }
+  100% { opacity: 0; transform: scale(1.55); }
+}
+[data-theme="dark"] .tx-pop.is-lit .grad-text {
+  filter: drop-shadow(0 0 10px rgba(255, 220, 80, .55)) drop-shadow(0 0 28px rgba(215, 41, 255, .8));
+}
+/* one sheen across the word when it lands */
+.tx-pop.is-lit .grad-text {
+  background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .95) 50%, transparent 62%), var(--grad-headline);
+  background-size: 260% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  animation: tx-sheen 1.5s var(--ease-in-out) .1s both;
+}
+[data-theme="light"] .tx-pop.is-lit .grad-text {
+  background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .9) 50%, transparent 62%), linear-gradient(90deg, #E8B100 0%, #F29A1F 26%, #EE5FA8 48%, #C82AE8 70%, #9B00D6 100%);
+}
+@keyframes tx-sheen {
+  from { background-position: 130% 0, 0 0; }
+  to { background-position: -30% 0, 0 0; }
+}
+.tx-pop.is-lit .tx-pop__spark { animation: tx-twinkle 2.8s var(--ease-in-out) infinite; }
+.tx-pop.is-lit .tx-pop__spark:nth-child(3) { animation-delay: -.9s; }
+.tx-pop.is-lit .tx-pop__spark:nth-child(4) { animation-delay: -1.8s; }
+.tx-pop.is-off .tx-pop__spark { animation-play-state: paused; }
+@keyframes tx-twinkle {
+  0%, 100% { scale: 1; rotate: 0deg; }
+  50% { scale: .62; rotate: 45deg; }
+}
+
+/* ---------- entrance choreography (keyed on core's .in) ---------- */
+html.js .manifesto__title .manifesto__line,
+html.js .manifesto__title .manifesto__vc {
+  opacity: 0;
+  transform: translate3d(0, .3em, 0) rotate(-2.5deg);
+  filter: blur(12px);
+  transition: opacity 1s var(--ease-out), transform 1.15s var(--ease-out), filter 1s var(--ease-out);
+}
+html.js .manifesto__title .manifesto__line--2 { transition-delay: .12s; }
+html.js .manifesto__title .manifesto__vc { transition-delay: .26s; transform: translate3d(0, .4em, 0); }
+html.js .manifesto__title.in .manifesto__line,
+html.js .manifesto__title.in .manifesto__vc { opacity: 1; transform: none; filter: none; }
+
+html.js .manifesto__title .manifesto__glow { opacity: 0; transition: opacity 1.6s var(--ease-out) .55s; }
+html.js .manifesto__title.in .manifesto__glow { opacity: var(--m-glow-o); }
+
+html.js .manifesto__title[data-reveal] .manifesto__swoosh { transition: clip-path 1.25s var(--ease-out) .6s; }
+
+html.js .manifesto__title .manifesto__sparkle { scale: 0; rotate: -140deg; transition: scale .9s var(--ease-spring) .8s, rotate 1.1s var(--ease-out) .8s; }
+html.js .manifesto__title.in .manifesto__sparkle { scale: 1; rotate: 0deg; }
+
+html.js .manifesto__title .manifesto__pops i { --s: 0; transition: transform .7s var(--ease-spring) .95s; }
+html.js .manifesto__title .manifesto__pops i:nth-child(2) { transition-delay: 1.05s; }
+html.js .manifesto__title.in .manifesto__pops i { --s: 1; }
+
+html.js .manifesto__q .manifesto__icon {
+  opacity: 0;
+  scale: .45;
+  rotate: -22deg;
+  transition: opacity .6s var(--ease-out) .3s, scale .9s var(--ease-spring) .3s, rotate 1s var(--ease-spring) .3s;
+}
+html.js .manifesto__q .manifesto__icon::before { opacity: 0; }
+html.js .manifesto__q.in .manifesto__icon { opacity: 1; scale: 1; rotate: 0deg; }
+html.js .manifesto__q.in .manifesto__icon::before { opacity: .95; }
+html.js .manifesto__q .manifesto__dashes i { --s: 0; transition: transform .55s var(--ease-spring); }
+html.js .manifesto__q .manifesto__dashes i:nth-child(1) { transition-delay: .75s; }
+html.js .manifesto__q .manifesto__dashes i:nth-child(2) { transition-delay: .83s; }
+html.js .manifesto__q .manifesto__dashes i:nth-child(3) { transition-delay: .91s; }
+html.js .manifesto__q.in .manifesto__dashes i { --s: 1; }
+
+/* desktop only: icons answer the pointer with a little wiggle */
+@media (hover: hover) and (pointer: fine) {
+  .manifesto__q:hover .manifesto__icon--browser { animation: m-wiggle .7s var(--ease-out); }
+  .manifesto__q:hover .manifesto__icon--phone { animation: m-buzz .5s linear; }
+}
+@keyframes m-wiggle { 30% { rotate: 8deg; } 60% { rotate: -5deg; } 100% { rotate: 0deg; } }
+@keyframes m-buzz { 20%, 60% { translate: 2px 0; } 40%, 80% { translate: -2px 0; } 100% { translate: 0 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .manifesto__title .manifesto__line,
+  html.js .manifesto__title .manifesto__vc { opacity: 1; transform: none; filter: none; }
+  html.js .manifesto__title .manifesto__sparkle { scale: 1; rotate: 0deg; }
+  html.js .manifesto__title .manifesto__pops i,
+  html.js .manifesto__q .manifesto__dashes i { --s: 1; }
+  html.js .manifesto__q .manifesto__icon { opacity: 1; scale: 1; rotate: 0deg; }
+}
+/* ?rm=1 (html.rm) mirrors the media query */
+html.rm.js .manifesto__title .manifesto__line,
+html.rm.js .manifesto__title .manifesto__vc { opacity: 1; transform: none; filter: none; }
+html.rm.js .manifesto__title .manifesto__sparkle { scale: 1; rotate: 0deg; }
+html.rm.js .manifesto__title .manifesto__pops i,
+html.rm.js .manifesto__q .manifesto__dashes i { --s: 1; }
+html.rm.js .manifesto__q .manifesto__icon { opacity: 1; scale: 1; rotate: 0deg; }

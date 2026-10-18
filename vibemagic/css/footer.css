@@ -1,0 +1,882 @@
+/* ==========================================================================
+   VibeMagic · footer.css
+   Final CTA footer (#contact), floating WhatsApp (.wa-fab) and the global
+   delight layers created by js/fx/delight.js (wand trail, confetti canvas,
+   spell toast).
+   21st.dev ports (vanilla):
+     · "Cinematic Footer" by Hossain Jahed (@jahed): curtain reveal (here a pure
+       CSS sticky curtain, no fixed footer needed), breathing aurora, masked
+       60px grid, tilted marquee band, giant wordmark rising on scroll.
+     · "Shooting Stars" + "Stars Background" by Manu Arora (Aceternity UI):
+       canvas.footer__stars (drawn by delight.js, dark theme only).
+     · "Floating Action Button" by Motion (@motiondotdev): spring pop-in,
+       hover scale, attention pulse (.wa-fab).
+     · "Magic Cursor" by Ritesh Bucha (@bucharitesh): fall-1/2/3 keyframes for
+       the wand trail stars (.fx-star).
+   Brand axis: gradients run yellow (left) to purple (right), never mirrored.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- tokens */
+.footer {
+  /* how far the page "lifts" off the stage. The card edge first uncovers the stage at this
+     depth and the reveal then grows upward, so it must land in the gap between the tilted
+     band and the "( בואו נדבר )" label (a deeper curtain sliced through the giant title).
+     18vw tracks that gap from tablet to wide desktop. */
+  --curtain: min(18vw, 30vh, 260px);
+  --f-inset: clamp(8px, 1.1vw, 16px);
+  --f-radius: clamp(26px, 3.4vw, 52px);
+  --f-bg: #030106;
+  --f-rim: conic-gradient(from -45deg, #FFE45C 0deg, #FFCB9F 15deg, #E841F2 28deg, #4C047C 55deg, #590D84 95deg, #A225CC 110deg, #6000AB 125deg, #E44AF7 150deg, #F547F8 165deg, #FEE862 185deg, #BB9D15 205deg, #9B7114 220deg, #FFEA6B 235deg, #F532FF 255deg, #8907A5 275deg, #F45EF5 290deg, #D8B335 315deg, #ECE31E 335deg, #FFE45C 360deg);
+  --f-rim-w: 1.5px;
+  --f-rim-o: 1;
+  --f-shadow: -26px 0 70px -44px rgba(248, 226, 15, .55), 26px 0 70px -44px rgba(217, 22, 227, .6), 0 -24px 80px -56px rgba(200, 5, 254, .7);
+  --f-inner: inset 0 0 0 1px rgba(255, 255, 255, .03), inset 0 50px 90px -60px rgba(200, 5, 254, .45);
+  --f-aur-a: rgba(255, 190, 0, .17);
+  --f-aur-b: rgba(200, 5, 254, .3);
+  --f-corner-a: rgba(203, 146, 3, .16);
+  --f-corner-b: rgba(109, 4, 160, .32);
+  --f-lines: rgba(255, 255, 255, .045);
+  --f-band-bg: rgba(10, 6, 18, .72);
+  --f-rule: rgba(255, 255, 255, .16);
+  --f-link-hover: var(--accent-gold);
+}
+[data-theme="light"] .footer {
+  --f-bg: #FFFFFF;
+  --f-rim: linear-gradient(90deg, #FFE45C 0%, #FFD48E 28%, #F7ACE2 52%, #DD54FD 76%, #C805FE 100%);
+  --f-rim-w: 1.5px;
+  --f-rim-o: .75;
+  --f-shadow: 0 2px 6px rgba(10, 6, 18, .04), 0 40px 90px -40px rgba(80, 10, 120, .22);
+  --f-inner: inset 0 0 0 1px rgba(10, 10, 11, .03);
+  --f-aur-a: rgba(254, 252, 166, .95);
+  --f-aur-b: rgba(245, 201, 252, .95);
+  --f-corner-a: rgba(254, 246, 150, .9);
+  --f-corner-b: rgba(243, 197, 253, .85);
+  --f-lines: rgba(10, 10, 11, .045);
+  --f-band-bg: rgba(255, 255, 255, .78);
+  --f-rule: rgba(10, 10, 11, .14);
+  --f-link-hover: var(--accent);
+}
+
+/* ---------------------------------------------------------------- shell + curtain
+   The card moves with the page; .footer__stage is sticky, so for the first
+   --curtain px of scroll it stays put while the card's top edge slides up over
+   it: the "page lifts off the footer" reveal of the Cinematic Footer, done with
+   native sticky positioning (compositor-driven, no JS, no scroll jank). */
+.footer {
+  position: relative;
+  z-index: var(--z-content);
+  display: flow-root;                  /* keeps the track's negative margin inside */
+  margin: clamp(10px, 2vw, 28px) var(--f-inset) var(--f-inset);
+  border-radius: var(--f-radius);
+  overflow: hidden;
+  overflow: clip;                      /* clip, not hidden: sticky still tracks the viewport */
+  background: var(--f-bg);
+  box-shadow: var(--f-shadow);
+  color: var(--text);
+  transition: background-color .5s var(--ease-out), box-shadow .5s var(--ease-out);
+}
+/* inner light leak along the top edge (behind the stage) */
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  box-shadow: var(--f-inner);
+  pointer-events: none;
+}
+/* the neon frame (poster 3), on top of everything */
+.footer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: var(--f-rim-w);
+  background: var(--f-rim);
+  opacity: var(--f-rim-o);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.footer__stage { position: relative; display: flow-root; isolation: isolate; } /* flow-root: no margin collapse through the stage */
+/* only where overflow:clip exists (overflow:hidden would trap the sticky stage) */
+@supports (overflow: clip) {
+  .footer:not(.is-static) .footer__track { margin-top: calc(-1 * var(--curtain)); }
+  .footer:not(.is-static) .footer__track::after { content: ''; display: block; height: var(--curtain); }
+  .footer:not(.is-static) .footer__stage {
+    position: sticky;
+    top: calc(100vh - var(--curtain));
+    top: calc(100svh - var(--curtain));
+  }
+}
+/* reduced motion: .is-static (set by delight.js, also for ?rm=1) + the media query below */
+
+/* ---------------------------------------------------------------- stage fx */
+.footer__fx {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* silk-like corner glows (poster 4) / pastel blobs (poster 1) */
+.footer__fx::before,
+.footer__fx::after {
+  content: '';
+  position: absolute;
+  width: min(70vw, 900px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--c), transparent);
+}
+.footer__fx::before { --c: var(--f-corner-a); top: -22%; left: -24%; }
+.footer__fx::after { --c: var(--f-corner-b); bottom: -26%; right: -26%; }
+
+/* "Cinematic Footer" aurora: gold on the left, violet on the right, breathing */
+.footer__aurora {
+  position: absolute;
+  left: 50%;
+  top: clamp(380px, 34%, 620px);
+  width: min(1500px, 130vw);
+  height: min(1000px, 110vh);
+  translate: -50% -50%;
+  background:
+    radial-gradient(closest-side at 33% 50%, var(--f-aur-a), transparent),
+    radial-gradient(closest-side at 67% 52%, var(--f-aur-b), transparent);
+  animation: footer-breathe 8s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+@keyframes footer-breathe {
+  0% { transform: scale(1); opacity: .6; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+/* masked 64px grid */
+.footer__lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--f-lines) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--f-lines) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: 50% 0;
+  -webkit-mask: radial-gradient(75% 46% at 50% 30%, #000 20%, transparent 100%);
+  mask: radial-gradient(75% 46% at 50% 30%, #000 20%, transparent 100%);
+}
+
+/* Aceternity night sky (dark only, drawn by delight.js) */
+.footer__stars {
+  position: absolute;
+  inset: 0 0 auto 0;
+  width: 100%;
+  height: min(78%, 1100px);
+  -webkit-mask: linear-gradient(#000 55%, transparent);
+  mask: linear-gradient(#000 55%, transparent);
+}
+[data-theme="light"] .footer__stars { display: none; }
+
+/* magic dust (animated by js/fx/sparkles.js) */
+.footer__sparkles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+/* viewport-sized dust: a sticky, screen-tall canvas at the top of the stage (the negative
+   margin keeps it out of the flow), so the backing store and each frame cover only what can
+   be seen instead of the whole ~1900px footer. Needs overflow:clip on .footer (hidden would
+   make the footer the sticky scroller); older engines keep the full-size absolute canvas. */
+@supports (overflow: clip) {
+  .footer__sparkles {
+    position: sticky;
+    inset: auto;
+    top: 0;
+    height: 100vh;
+    height: 100lvh;
+    margin-bottom: -100vh;
+    margin-bottom: -100lvh;
+  }
+}
+/* poster corner brackets framing the title + CTA zone (between the band and the link grid) */
+.footer__brackets {
+  z-index: 0;
+  inset: clamp(190px, 15vw, 224px) clamp(14px, 3vw, 40px) auto;
+  height: clamp(560px, 47vw, 680px);
+}
+
+/* ---------------------------------------------------------------- tilted marquee band */
+.footer__band {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(44px, 6vw, 86px);
+  margin-inline: -6%;
+  padding-block: clamp(12px, 1.4vw, 18px);
+  rotate: -2deg;
+  white-space: nowrap;
+  background: var(--f-band-bg);
+  border-block: 1px solid var(--line);
+  box-shadow: 0 18px 50px -30px rgba(0, 0, 0, calc(.25 + .35 * var(--glow-a)));
+}
+.footer__band-track {
+  display: flex;
+  width: max-content;
+  animation: footer-band 52s linear infinite;
+  will-change: transform;
+}
+.footer__band-group {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 36px);
+  padding-inline-end: clamp(18px, 2.4vw, 36px);
+  font-weight: 800;
+  font-size: clamp(1rem, 1.7vw, 1.45rem);
+  line-height: 1.2;
+  color: var(--text-2);
+}
+.footer__band-group svg {
+  width: .85em;
+  height: .85em;
+  flex: none;
+  overflow: visible;
+  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) rgba(255, 224, 0, .8));
+}
+.footer__band-group svg:nth-of-type(even) { filter: drop-shadow(0 0 calc(6px * var(--glow-a)) rgba(200, 5, 254, .9)); }
+/* RTL: the duplicated track slides to the right (same direction as the hero marquee) */
+@keyframes footer-band { to { transform: translate3d(50%, 0, 0); } }
+
+/* pause every decorative loop while the footer is off screen */
+.footer.is-off .footer__aurora,
+.footer.is-off .footer__band-track,
+.footer.is-off .wa-big::before,
+.footer.is-off .wa-big::after,
+.footer.is-off .footer__note::before,
+.footer.is-off .footer__title::after,
+.footer.is-off .beam::after { animation-play-state: paused; }
+
+/* ---------------------------------------------------------------- content */
+.footer__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  padding-top: clamp(64px, 8vw, 124px);
+}
+
+.footer__title {
+  position: relative;
+  margin-top: clamp(16px, 2vw, 26px);
+  font-size: clamp(2.5rem, 8.2vw, 7.6rem);
+  line-height: 1.02;
+  text-shadow: 0 0 calc(44px * var(--glow-a)) rgba(255, 255, 255, calc(.14 * var(--glow-a)));
+}
+.footer__title .grad-text { display: inline-block; text-shadow: none; }
+/* poster 1 four-point sparkle at the title's top corner */
+.footer__title::after {
+  content: '';
+  position: absolute;
+  top: -.12em;
+  inset-inline-start: -.42em;
+  width: .42em;
+  height: .42em;
+  background: var(--grad-sparkle);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 0 calc(8px * var(--glow-a)) #FFE000) drop-shadow(0 0 calc(18px * var(--glow-a)) #C805FE);
+  animation: sparkle-tw 3.2s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+
+/* saber divider with an ignition flare */
+.footer__saber {
+  position: relative;
+  width: min(780px, 88%);
+  margin-block: clamp(26px, 3.4vw, 48px) clamp(34px, 4vw, 58px);
+  overflow: visible;
+}
+.footer__saber::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 220px;
+  height: 46px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 253, 236, .95), rgba(255, 190, 255, .45) 45%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+html.js .footer__saber.in { animation: saber-flicker .55s linear backwards; }
+html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) both; }
+@keyframes saber-flicker {
+  0% { opacity: 0; }
+  12% { opacity: 1; }
+  22% { opacity: .35; }
+  34% { opacity: .95; }
+  46% { opacity: .55; }
+  60% { opacity: 1; }
+  /* no 100% keyframe: it settles on the theme's own opacity (.7 on light) */
+}
+@keyframes saber-flare {
+  0% { opacity: 0; scale: .2 1; }
+  18% { opacity: calc(.35 + .65 * var(--glow-a)); scale: 1 1; }
+  100% { opacity: 0; scale: 3.2 .6; }
+}
+
+.footer__cta {
+  display: grid;
+  justify-items: center;
+  gap: clamp(16px, 1.8vw, 22px);
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------- the BIG WhatsApp button */
+.wa-big {
+  --wa-h: clamp(84px, 7.4vw, 106px);
+  --wa-ink: #03170B;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 22px);
+  min-height: var(--wa-h);
+  max-width: 100%;
+  padding-block: 10px;
+  padding-inline: 10px clamp(14px, 1.6vw, 20px);
+  border-radius: 999px;
+  color: var(--wa-ink);
+  background: linear-gradient(160deg, #57EE95 0%, #25D366 46%, #16B653 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .5),
+    inset 0 -3px 0 rgba(0, 70, 30, .16),
+    0 24px 54px -20px rgba(14, 140, 70, .8),
+    0 0 0 calc(7px * var(--glow-a)) rgba(37, 211, 102, calc(.1 * var(--glow-a))),
+    0 0 calc(90px * var(--glow-a)) rgba(37, 211, 102, calc(.32 * var(--glow-a)));
+  text-align: start;
+  transition: box-shadow .5s var(--ease-out), filter .4s ease, scale .35s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+/* attention pulse ring */
+.wa-big::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  border: 2px solid rgba(37, 211, 102, .65);
+  animation: wa-ring 2.8s var(--ease-out) infinite;
+  pointer-events: none;
+}
+@keyframes wa-ring {
+  0% { transform: scale(1); opacity: .9; }
+  70%, 100% { transform: scale(1.06, 1.3); opacity: 0; }
+}
+/* shine sweep */
+.wa-big::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .55) 48%, rgba(255, 255, 255, .1) 54%, transparent 62%) no-repeat;
+  background-size: 260% 100%;
+  background-position: 160% 0;
+  animation: wa-shine 4.6s ease-in-out 1.2s infinite;
+  pointer-events: none;
+}
+@keyframes wa-shine {
+  0% { background-position: 160% 0; }
+  32%, 100% { background-position: -60% 0; }
+}
+.wa-big > :not(.beam) { position: relative; z-index: 1; }
+.wa-big .beam { z-index: 2; --beam-size: 120px; --beam-dur: 5.5s; }
+.wa-big .beam::after { background: linear-gradient(to left, #FFFFFF, #FFF6B0 35%, #FFE000 65%, transparent); }
+
+.wa-big__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: calc(var(--wa-h) - 20px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #1BAF56;
+  box-shadow: 0 8px 20px -8px rgba(0, 60, 25, .55), inset 0 -2px 0 rgba(0, 0, 0, .06);
+  transition: transform .7s var(--ease-spring);
+}
+.wa-big__icon .i { width: 54%; height: 54%; }
+.wa-big__txt { display: grid; gap: 3px; line-height: 1.12; min-width: 0; }
+.wa-big__l1 {
+  font-weight: 800;
+  font-size: clamp(1.12rem, 1.9vw, 1.72rem);
+  letter-spacing: -.005em;
+}
+.wa-big__l2 {
+  justify-self: start;
+  font-weight: 700;
+  font-size: clamp(.98rem, 1.25vw, 1.2rem);
+  letter-spacing: .07em;
+  opacity: .8;
+}
+.wa-big__go {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: clamp(42px, 3.6vw, 50px);
+  aspect-ratio: 1;
+  margin-inline-start: clamp(2px, 1.2vw, 18px);
+  border-radius: 50%;
+  border: 1.5px solid rgba(3, 23, 11, .26);
+  transition: background-color .3s ease, border-color .3s ease;
+}
+.wa-big__go .i { width: 46%; height: 46%; stroke-width: 2.4; transition: transform .5s var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .wa-big:hover {
+    filter: saturate(1.08) brightness(1.03);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .55),
+      inset 0 -3px 0 rgba(0, 70, 30, .16),
+      0 30px 70px -22px rgba(14, 140, 70, .9),
+      0 0 0 calc(10px * var(--glow-a)) rgba(37, 211, 102, calc(.14 * var(--glow-a))),
+      0 0 calc(120px * var(--glow-a)) rgba(37, 211, 102, calc(.45 * var(--glow-a)));
+  }
+  .wa-big:hover .wa-big__icon { transform: rotate(-12deg) scale(1.06); }
+  .wa-big:hover .wa-big__go { background: rgba(3, 23, 11, .9); border-color: rgba(3, 23, 11, .9); color: #57EE95; }
+  .wa-big:hover .wa-big__go .i { transform: translate(-2px, -2px); }
+}
+.wa-big:active { scale: .98; }
+.wa-big:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 6px; border-radius: 999px; }
+
+.footer__note {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .98rem;
+}
+.footer__note::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #25D366;
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, .18), 0 0 calc(10px * var(--glow-a)) #25D366;
+  animation: wa-dot 2.2s ease-in-out infinite;
+}
+@keyframes wa-dot { 50% { opacity: .45; } }
+
+/* ---------------------------------------------------------------- link grid */
+.footer__grid {
+  width: 100%;
+  margin-top: clamp(72px, 9vw, 132px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--line);
+}
+.footer__col {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  padding: clamp(26px, 3vw, 42px) 16px;
+}
+.footer__col + .footer__col::before {
+  content: '';
+  position: absolute;
+  inset-block: 18%;
+  inset-inline-start: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--f-rule), transparent);
+}
+.footer__hd {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  margin-bottom: 8px;
+  font-size: .84rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  color: var(--accent);
+}
+.footer__hd::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dot, #F8DA05);
+  box-shadow: 0 0 calc(8px * var(--glow-a)) var(--dot, #F8DA05);
+}
+.footer__col:nth-child(2) .footer__hd { --dot: #F524FD; }
+.footer__col a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 2px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: linear-gradient(90deg, #FFE000, #F7ACE2 50%, #C805FE) no-repeat 50% 100% / 0 1.5px;
+  transition: color .3s ease, background-size .45s var(--ease-out);
+}
+.footer__col a .i {
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  transition: color .3s ease, transform .5s var(--ease-spring);
+}
+@media (hover: hover) {
+  .footer__col a:hover { color: var(--text); background-size: 100% 1.5px; }
+  .footer__col a:hover .i { color: var(--f-link-hover); transform: translateY(-2px) rotate(-8deg); }
+}
+/* touch: 44px rows (phone and mail sat 2px apart) */
+@media (pointer: coarse) {
+  .footer__col a,
+  .footer__top { min-height: 44px; }
+}
+
+/* ---------------------------------------------------------------- giant wordmark */
+.footer__wordmark {
+  width: 100%;
+  margin-top: clamp(56px, 8vw, 118px);
+  /* clip only at the floor: the logo rises out of it */
+  clip-path: inset(-40% -8% -12% -8%);
+}
+.footer__wm-move { position: relative; transform-origin: 50% 100%; }
+.footer__wordmark.is-scrub .footer__wm-move { will-change: transform, opacity; }
+.footer__wm {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1502 / 541;
+  overflow: visible;
+  fill: url(#wm-grad);
+}
+.footer__wm--main { position: relative; }
+/* the blurred twin = poster split glow: gold behind "vibe", violet behind MAGIC */
+.footer__wm--glow {
+  position: absolute;
+  inset: 0;
+  filter: blur(26px);
+  opacity: .55;
+}
+[data-theme="light"] .footer__wm--main { fill: var(--ink); }
+[data-theme="light"] .footer__wm--glow { filter: blur(36px); opacity: .62; }
+
+/* ---------------------------------------------------------------- bottom bar */
+.footer__bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: clamp(18px, 3vw, 36px);
+  padding-block: 24px calc(26px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  font-size: .9rem;
+  color: var(--muted);
+}
+.footer__made { display: inline-flex; align-items: center; gap: 7px; }
+.footer__made svg { width: 14px; height: 14px; overflow: visible; filter: drop-shadow(0 0 calc(5px * var(--glow-a)) #FFE000); }
+.footer__top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--text-2);
+  font-weight: 600;
+  transition: color .3s ease, border-color .3s ease, background-color .3s ease;
+}
+.footer__top .i { width: 16px; height: 16px; rotate: 180deg; transition: translate .4s var(--ease-out); }
+@media (hover: hover) {
+  .footer__top:hover { color: var(--text); border-color: var(--line-strong); background: color-mix(in srgb, var(--text) 5%, transparent); }
+  .footer__top:hover .i { translate: 0 -3px; }
+}
+
+/* ---------------------------------------------------------------- footer: small screens */
+@media (max-width: 900px) {
+  .footer__grid { grid-template-columns: minmax(0, 1fr); border-bottom: 0; }
+  .footer__col {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px 18px;
+    padding: 24px 8px;
+  }
+  .footer__hd { flex-basis: 100%; justify-content: center; margin-bottom: 4px; }
+  .footer__col + .footer__col::before {
+    inset: 0 18% auto;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--f-rule), transparent);
+  }
+}
+@media (max-width: 720px) {
+  .footer { --curtain: min(17vh, 140px); --f-radius: 26px; } /* band-to-label gap on phones: ~90-163px */
+  .footer__brackets { display: none; }
+  .footer__band { rotate: -3deg; margin-top: 34px; }
+  .footer__inner { padding-top: 56px; }
+  .footer__title { font-size: clamp(2.3rem, 11.4vw, 3.4rem); }
+  .footer__title::after { inset-inline-start: -.1em; top: -.5em; }
+  .footer__saber { width: 92%; }
+  .footer__cta { gap: 14px; }
+  .wa-big {
+    --wa-h: 80px;
+    width: 100%;
+    gap: 12px;
+    padding-inline: 8px 12px;
+  }
+  .wa-big__txt { flex: 1; }
+  .wa-big__l1 { font-size: clamp(1.02rem, 4.6vw, 1.2rem); }
+  .wa-big__l2 { font-size: .95rem; }
+  .wa-big__go { width: 40px; margin-inline-start: 0; }
+  .footer__note { font-size: .92rem; }
+  .footer__grid { margin-top: 64px; }
+  .wa-big__l1 { white-space: nowrap; }
+  .footer__wordmark { margin-top: 44px; }
+  .footer__bar { flex-direction: column; justify-content: center; text-align: center; gap: 12px; }
+}
+
+@media (max-width: 440px) {
+  .wa-big__go { display: none; }
+  .wa-big { padding-inline-end: 22px; }
+}
+
+/* ==========================================================================
+   Floating WhatsApp (.wa-fab), Motion FAB feel
+   ========================================================================== */
+.wa-fab {
+  --fab: 60px;
+  position: fixed;
+  z-index: var(--z-fab);
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  inset-inline-end: max(18px, calc(env(safe-area-inset-left) + 10px)); /* RTL: inline-end = left edge */
+  display: grid;
+  place-items: center;
+  width: var(--fab);
+  height: var(--fab);
+  border-radius: 50%;
+  /* dark ink glyph (same ink as .wa-big): white on this green was 1.5-2.9:1, the glyph is the
+     button's only content and needs >= 3:1. Matches the dark-ink .btn--wa in the nav. */
+  color: #03170B;
+  background: radial-gradient(circle at 32% 26%, #5BEE97 0%, #25D366 52%, #17AF50 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 12px 30px -10px rgba(14, 140, 70, .75), 0 0 calc(30px * var(--glow-a)) rgba(37, 211, 102, calc(.35 * var(--glow-a)));
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform .62s cubic-bezier(.34, 1.56, .64, 1),
+    opacity .22s ease,
+    scale .35s var(--ease-out),
+    visibility 0s;
+  /* Motion spring (stiffness 400, damping 22) sampled into linear() where supported */
+  transition:
+    transform .62s linear(0, 0.0647, 0.2198, 0.4153, 0.6136, 0.7897, 0.9301, 1.0302, 1.0919, 1.1211, 1.1255, 1.1133, 1.0916, 1.0664, 1.0419, 1.0209, 1.0046, 0.9934, 0.9869, 0.9843, 0.9844, 0.9864, 0.9893, 0.9925, 0.9955, 0.998, 0.9999, 1.0011, 1.0018, 1.002, 1.0019, 1.0016, 1),
+    opacity .22s ease,
+    scale .35s var(--ease-out),
+    visibility 0s;
+}
+.wa-fab > .i { position: relative; z-index: 1; width: 30px; height: 30px; }
+.wa-fab__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(37, 211, 102, .75);
+  pointer-events: none;
+  animation: fab-ring 2.6s cubic-bezier(.2, .6, .3, 1) infinite;
+}
+@keyframes fab-ring {
+  0% { transform: scale(1); opacity: .9; }
+  70%, 100% { transform: scale(1.75); opacity: 0; }
+}
+/* managed by delight.js (without JS the button simply stays visible) */
+.wa-fab.is-managed:not(.is-shown) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(0, 18px, 0) scale(.3) rotate(-28deg);
+  transition: transform .35s var(--ease-out), opacity .25s ease, scale .35s var(--ease-out), visibility 0s linear .35s;
+}
+.wa-fab.is-managed:not(.is-shown) .wa-fab__ring { animation-play-state: paused; }
+
+/* the "יש לכם רעיון?" pill grows out of the circle toward the page (to its right in RTL) */
+.wa-fab__label {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: calc(100% + 12px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--pill-bg), var(--pill-bg)) padding-box, var(--grad-cta) border-box;
+  color: var(--pill-text);
+  font-weight: 700;
+  font-size: .98rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: -10px 0 26px -10px rgba(248, 226, 15, .45), 10px 0 26px -10px rgba(217, 22, 227, .5), 0 14px 30px -14px rgba(0, 0, 0, .5);
+  opacity: 0;
+  transform: translate3d(-14px, -50%, 0) scale(.86);
+  transform-origin: left center; /* the side touching the circle in RTL */
+  transition: opacity .2s ease, transform .5s var(--ease-out);
+  pointer-events: none;
+}
+.wa-fab.is-peek .wa-fab__label {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0) scale(1);
+  transition: opacity .25s ease, transform .62s linear(0, 0.0616, 0.2092, 0.3954, 0.5851, 0.7552, 0.8931, 0.9945, 1.0606, 1.0963, 1.1083, 1.1036, 1.0886, 1.0688, 1.0481, 1.0292, 1.0137, 1.002, 0.9943, 0.99, 0.9883, 0.9886, 0.9901, 0.9922, 0.9944, 0.9965, 0.9983, 0.9996, 1.0005, 1.001, 1.0013, 1.0013, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .wa-fab:hover { scale: 1.06; }
+  .wa-fab:hover .wa-fab__label,
+  .wa-fab:focus-visible .wa-fab__label { opacity: 1; transform: translate3d(0, -50%, 0) scale(1); }
+}
+.wa-fab:active { scale: .94; }
+.wa-fab:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 4px; border-radius: 50%; }
+@media (max-width: 720px) {
+  .wa-fab { --fab: 56px; bottom: calc(16px + env(safe-area-inset-bottom)); inset-inline-end: max(16px, calc(env(safe-area-inset-left) + 8px)); }
+  .wa-fab > .i { width: 28px; height: 28px; }
+  .wa-fab__label { font-size: .92rem; padding: 9px 15px; }
+}
+
+/* ==========================================================================
+   Global delight layers (created by js/fx/delight.js)
+   ========================================================================== */
+/* confetti canvas (canvas-confetti, Magic UI "Stars" preset) */
+.fx-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+}
+
+/* Magic Cursor wand trail */
+.fx-wand {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+.fx-wand canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fx-star {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--s, 16px);
+  height: var(--s, 16px);
+  margin: calc(var(--s, 16px) / -2) 0 0 calc(var(--s, 16px) / -2);
+  color: #FCEC68;
+  pointer-events: none;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+.fx-star svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: currentColor;
+  filter: drop-shadow(0 0 calc(2px + 5px * var(--glow-a)) currentColor);
+}
+/* verbatim "Magic Cursor" fall keyframes */
+@keyframes fx-fall-1 {
+  0% { opacity: 0; transform: translate(0) rotateX(45deg) rotateY(30deg) rotate(0) scale(.25); }
+  5% { opacity: 1; transform: translate(10px, -10px) rotateX(45deg) rotateY(30deg) rotate(0) scale(1); }
+  to { opacity: 0; transform: translate(25px, 200px) rotateX(180deg) rotateY(270deg) rotate(90deg) scale(1); }
+}
+@keyframes fx-fall-2 {
+  0% { opacity: 0; transform: translate(0) rotateX(-20deg) rotateY(10deg) scale(.25); }
+  10% { opacity: 1; transform: translate(-10px, -5px) rotateX(-20deg) rotateY(10deg) scale(1); }
+  to { opacity: 0; transform: translate(-10px, 160px) rotateX(-90deg) rotateY(45deg) scale(.25); }
+}
+@keyframes fx-fall-3 {
+  0% { opacity: 0; transform: translate(0) rotateX(0) rotateY(45deg) scale(.5); }
+  15% { opacity: 1; transform: translate(7px, 5px) rotateX(0) rotateY(45deg) scale(1); }
+  to { opacity: 0; transform: translate(20px, 120px) rotateX(-180deg) rotateY(-90deg) scale(.5); }
+}
+
+/* tactile pop on [data-confetti] clicks (uses `scale`, so it composes with any transform) */
+.fx-pop { animation: fx-pop .55s var(--ease-out); }
+@keyframes fx-pop {
+  0% { scale: 1; }
+  28% { scale: .94; }
+  62% { scale: 1.04; }
+  100% { scale: 1; }
+}
+
+/* spell easter egg */
+.fx-flash {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-cursor) - 2);
+  pointer-events: none;
+  background:
+    radial-gradient(60% 55% at 50% 42%, rgba(200, 5, 254, calc(.12 + .2 * var(--glow-a))), transparent 70%),
+    radial-gradient(40% 40% at 30% 30%, rgba(255, 224, 0, calc(.1 + .1 * var(--glow-a))), transparent 70%);
+  opacity: 0;
+  animation: fx-flash 1.6s var(--ease-out) forwards;
+}
+@keyframes fx-flash {
+  0% { opacity: 0; }
+  14% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.fx-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  z-index: calc(var(--z-cursor) - 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px 12px 24px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  background: linear-gradient(#0A0612, #0A0612) padding-box, var(--grad-cta) border-box;
+  color: #FDFDFD;
+  font-weight: 800;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  box-shadow: -14px 0 34px -8px rgba(248, 226, 15, .45), 14px 0 34px -8px rgba(217, 22, 227, .5), 0 24px 50px -20px rgba(0, 0, 0, .6);
+  translate: -50% 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 26px, 0) scale(.86);
+  transition: opacity .25s ease, transform .4s var(--ease-out), visibility 0s linear .4s;
+  pointer-events: none;
+}
+.fx-toast svg { width: 18px; height: 18px; flex: none; overflow: visible; filter: drop-shadow(0 0 6px rgba(255, 224, 0, .8)); }
+.fx-toast.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .2s ease, transform .62s linear(0, 0.0647, 0.2198, 0.4153, 0.6136, 0.7897, 0.9301, 1.0302, 1.0919, 1.1211, 1.1255, 1.1133, 1.0916, 1.0664, 1.0419, 1.0209, 1.0046, 0.9934, 0.9869, 0.9843, 0.9844, 0.9864, 0.9893, 0.9925, 0.9955, 0.998, 0.9999, 1.0011, 1.0018, 1.002, 1.0019, 1.0016, 1), visibility 0s;
+}
+
+/* ---------------------------------------------------------------- reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .footer .footer__track { margin-top: 0 !important; }
+  .footer .footer__track::after { display: none !important; }
+  .footer .footer__stage { position: relative !important; top: auto !important; }
+  .footer__aurora,
+  .footer__band-track,
+  .wa-big::before,
+  .wa-big::after,
+  .wa-fab__ring,
+  .footer__note::before { animation: none; }
+  .wa-big::before { opacity: 0; }
+}
+/* ?rm=1 (html.rm, core.css stops the loops): same end states as the media query */
+html.rm .wa-big::before { opacity: 0; }

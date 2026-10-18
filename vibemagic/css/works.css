@@ -1,0 +1,850 @@
+/* ==========================================================================
+   VibeMagic — works.css
+   #work: Imagine showcase · screenshot wall · apps grid
+
+   21st.dev components ported to vanilla CSS (+ js/works.js):
+     · Container Scroll Animation .. Manu Arora (Aceternity UI)
+         device frame that stands up from rotateX(20deg) scale(1.05) while the head lifts
+     · 3D Marquee .................. Manu Arora (Aceternity UI)
+         isometric board (rotateX 55deg, rotateZ -45deg), columns drifting in turns
+         (markup has 4; works.js adds 2 and clones each once for a seamless loop)
+     · Comet Card .................. Manu Arora (Aceternity UI)
+         spring tilt toward the pointer, pointer glare, translateZ depth
+     · Lamp ........................ Manu Arora (Aceternity UI)
+         light cone + filament over "האפליקציות שלי"
+   Brand axis: gradients run yellow (left) → purple (right), never mirrored for RTL.
+   ========================================================================== */
+
+.works {
+  /* section-scoped tokens (dark defaults, light overrides below) */
+  --wk-ring: linear-gradient(90deg, #FFE000 0%, #FFB276 28%, #FC38FE 62%, #C805FE 100%);
+  --wk-blob-a: rgba(255, 214, 0, .16);
+  --wk-blob-b: rgba(200, 5, 254, .32);
+  --wk-halo-a: rgba(255, 200, 0, .26);
+  --wk-halo-b: rgba(200, 5, 254, .42);
+  --wk-edge: linear-gradient(100deg, rgba(255, 224, 0, .9) 0%, rgba(255, 238, 170, .28) 16%, rgba(255, 255, 255, .09) 36%, rgba(255, 255, 255, .07) 64%, rgba(241, 173, 253, .3) 84%, rgba(200, 5, 254, .95) 100%);
+  --wk-bezel: linear-gradient(165deg, #1E1828 0%, #110D18 45%, #0A0710 100%);
+  --wk-device-shadow:
+    -30px 0 80px -26px rgba(255, 214, 0, .42),
+    30px 0 90px -24px rgba(200, 5, 254, .55),
+    0 9px 20px rgba(0, 0, 0, .29),
+    0 37px 37px rgba(0, 0, 0, .26),
+    0 84px 50px rgba(0, 0, 0, .15),
+    0 149px 60px rgba(0, 0, 0, .04);
+  --wk-shot-shadow: 0 0 0 1px rgba(255, 255, 255, .07), 0 26px 50px -22px rgba(0, 0, 0, .85);
+  --wk-shot-hover: 0 0 0 1px rgba(255, 224, 0, .45), 0 30px 60px -18px rgba(200, 5, 254, .65);
+  --wk-dash: rgba(255, 255, 255, .2);
+  --wk-card-shadow: inset 0 1px 0 rgba(255, 255, 255, .05), 0 22px 50px -26px rgba(0, 0, 0, .85);
+  --wk-card-hover:
+    inset 0 1px 0 rgba(255, 255, 255, .06),
+    -18px 0 54px -22px rgba(255, 214, 0, .4),
+    18px 0 60px -20px rgba(200, 5, 254, .5),
+    0 34px 70px -28px rgba(0, 0, 0, .9);
+  --wk-amb: 24%;
+  overflow-x: clip;     /* guard for the tilted device / board; never a scroll container */
+}
+[data-theme="light"] .works {
+  --wk-ring: linear-gradient(90deg, #F2C200 0%, #FF9E6E 26%, #E650F2 60%, #A300E6 100%);
+  --wk-blob-a: #FEFCA6;
+  --wk-blob-b: #F5C9FC;
+  --wk-halo-a: rgba(254, 240, 120, .75);
+  --wk-halo-b: rgba(232, 150, 249, .62);
+  --wk-edge: linear-gradient(100deg, #F4D33E 0%, #EDE8F2 20%, #D8D2E1 50%, #E9DFF2 80%, #D27FF2 100%);
+  --wk-bezel: linear-gradient(165deg, #26212D 0%, #15111B 50%, #0E0B13 100%);
+  --wk-device-shadow:
+    0 2px 4px rgba(30, 10, 50, .08),
+    0 26px 50px -20px rgba(40, 10, 70, .3),
+    0 70px 130px -40px rgba(160, 40, 220, .42);
+  --wk-shot-shadow: 0 0 0 1px rgba(10, 10, 11, .06), 0 24px 46px -24px rgba(90, 20, 140, .42);
+  --wk-shot-hover: 0 0 0 1px rgba(200, 5, 254, .35), 0 30px 56px -20px rgba(160, 40, 220, .5);
+  --wk-dash: rgba(10, 10, 11, .2);
+  --wk-card-shadow: 0 1px 2px rgba(10, 6, 18, .05), 0 18px 44px -24px rgba(60, 10, 90, .26);
+  --wk-card-hover:
+    0 1px 2px rgba(10, 6, 18, .05),
+    -14px 0 40px -22px rgba(242, 194, 0, .45),
+    14px 0 46px -20px rgba(200, 5, 254, .35),
+    0 30px 64px -26px rgba(80, 10, 120, .4);
+  --wk-amb: 30%;
+}
+
+/* ==========================================================================
+   1. IMAGINE (featured): head + Container Scroll device
+   ========================================================================== */
+.imagine {
+  position: relative;
+  padding-top: clamp(8px, 2vw, 24px);
+}
+
+.imagine__head {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: clamp(16px, 1.8vw, 22px);
+  max-width: 1000px;
+  text-align: center;
+}
+
+.imagine__title {
+  --name-fs: clamp(4.4rem, 15.5vw, 12.6rem);   /* the wordmark size, shared with its sparkle */
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+}
+/* soft yellow / lilac haze behind the wordmark (poster 1 word glows; violet haze in dark) */
+.imagine__title::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 56%;
+  width: min(118%, 780px);
+  height: 74%;
+  translate: -50% -50%;
+  background:
+    radial-gradient(closest-side at 30% 52%, var(--wk-blob-a), transparent),
+    radial-gradient(closest-side at 70% 48%, var(--wk-blob-b), transparent);
+  filter: blur(22px);
+  pointer-events: none;
+}
+
+.imagine__icon {
+  width: clamp(58px, 5.2vw, 74px);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 22.37%;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .12),
+    0 14px 30px -12px rgba(0, 0, 0, .7),
+    0 0 calc(36px * var(--glow-a)) rgba(200, 5, 254, calc(.5 * var(--glow-a)));
+}
+[data-theme="light"] .imagine__icon {
+  box-shadow: 0 0 0 1px rgba(10, 10, 11, .08), 0 18px 34px -14px rgba(80, 10, 120, .5);
+}
+
+/* "imagine": Rubik Light, like the Imagine wordmark and the logo's MAGIC */
+.imagine__name {
+  font-family: var(--font-latin);
+  font-size: var(--name-fs);
+  font-weight: 300;
+  line-height: .84;
+  letter-spacing: -.05em;
+  direction: ltr;
+  padding: .02em .1em .22em .04em;
+  margin-bottom: -.04em;          /* the g's descender keeps clear of the tagline below */
+  background: linear-gradient(90deg, #FFF17C 0%, #FFF6B0 18%, #FFFFFF 42%, #FBF0FE 58%, #F1ADFD 80%, #E08AF7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(-.04em 0 .09em rgba(203, 146, 3, .6)) drop-shadow(.04em 0 .11em rgba(167, 3, 215, .7));
+}
+[data-theme="light"] .imagine__name {
+  background: none;
+  color: var(--text);
+  -webkit-text-fill-color: currentColor;
+  filter: none;
+}
+/* the poster's 4-point sparkle, perched top-right of the wordmark. It hangs off the wordmark's
+   wrapper (same box: the h3 is its first, full-width child) instead of the h3 itself: inside the
+   h3's drop-shadow filter its twinkle could not run on the compositor and repainted the heading,
+   and with it the page's layerization, every frame. It carries the same split glow itself. */
+.imagine__title > div { position: relative; }
+.imagine__title > div::after {
+  content: '';
+  position: absolute;
+  font-size: var(--name-fs);
+  top: .1em;
+  right: -.16em;
+  width: .2em;
+  height: .2em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 108 108'%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23F7F567'/%3E%3Cstop offset='.45' stop-color='%23FED2AF'/%3E%3Cstop offset='.75' stop-color='%23E87DF4'/%3E%3Cstop offset='1' stop-color='%23DD58F3'/%3E%3C/linearGradient%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z' fill='url(%23g)'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(-.04em 0 .09em rgba(203, 146, 3, .6)) drop-shadow(.04em 0 .11em rgba(167, 3, 215, .7));
+  animation: sparkle-tw 3.2s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+/* works.js: nothing twinkles while the Imagine head is off screen */
+.imagine.is-off .imagine__title > div::after { animation-play-state: paused; }
+[data-theme="light"] .imagine__title > div::after {
+  filter: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 108 108'%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23F7F567'/%3E%3Cstop offset='.45' stop-color='%23FED2AF'/%3E%3Cstop offset='.75' stop-color='%23E87DF4'/%3E%3Cstop offset='1' stop-color='%23DD58F3'/%3E%3C/linearGradient%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z' fill='url(%23g)' stroke='%230A0A0B' stroke-width='3.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* tagline flanked by fading rules (poster 3 "— אפליקציות ואתרים —") */
+.imagine__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .9em;
+  font-size: clamp(1rem, 1.45vw, 1.24rem);
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--text-2);
+}
+.imagine__tag::before,
+.imagine__tag::after {
+  content: '';
+  flex: none;
+  width: clamp(1.6em, 3.6vw, 3.4em);
+  height: 1px;
+  background: linear-gradient(90deg, currentColor, transparent);
+  opacity: .75;
+}
+.imagine__tag::after { transform: scaleX(-1); }
+
+.imagine__desc {
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 1.2vw, 1.16rem);
+  line-height: 1.75;
+  color: var(--text-2);
+}
+
+.imagine__meta {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+.imagine__tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+}
+.imagine__press {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 4px 18px;
+  font-size: .92rem;
+}
+.imagine__press a {
+  position: relative;
+  font-weight: 600;
+  color: var(--text);
+  padding-bottom: 2px;
+  background: linear-gradient(90deg, var(--line-strong), var(--line-strong)) 0 100% / 100% 1px no-repeat;
+  transition: color .3s, background-image .3s;
+}
+/* a ~44px tall hit area around the small text links; the underlined box itself stays as it is */
+.imagine__press a::after {
+  content: '';
+  position: absolute;
+  inset: -9px -6px;
+}
+.imagine__press a:hover,
+.imagine__press a:focus-visible {
+  color: var(--accent);
+  background-image: var(--wk-ring);
+}
+
+/* ---- the stage: perspective box + neon halo ---- */
+.imagine__stage {
+  --p: 1;                                   /* 0 = lying back, 1 = flat (scroll progress, set by works.js) */
+  position: relative;
+  isolation: isolate;
+  perspective: 1000px;
+  max-width: calc(1140px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding: clamp(28px, 3.4vw, 52px) var(--gutter) clamp(40px, 4.6vw, 64px);
+}
+.imagine__stage::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 16% 4% 2%;
+  background:
+    radial-gradient(48% 56% at 22% 56%, var(--wk-halo-a), transparent 72%),
+    radial-gradient(50% 62% at 78% 50%, var(--wk-halo-b), transparent 72%);
+  opacity: calc(.3 + .7 * var(--p));
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* the device (Aceternity Card: border 4px #6C6C6C, bg #222, radius 30px, 6-layer shadow → re-skinned) */
+.imagine__device {
+  position: relative;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(7px, 1vw, 14px);
+  border-radius: clamp(20px, 2.4vw, 34px);
+  border: 1.5px solid transparent;
+  background: var(--wk-bezel) padding-box, var(--wk-edge) border-box;
+  box-shadow: var(--wk-device-shadow);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+/* front camera */
+.imagine__device::before {
+  content: '';
+  position: absolute;
+  top: calc(clamp(7px, 1vw, 14px) / 2 - 2.5px);
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  translate: -50% 0;
+  background: #2E2738;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07);
+}
+
+.imagine__screen {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1800 / 890;
+  border-radius: clamp(12px, 1.5vw, 22px);
+  background: #0B0812;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+}
+.imagine__screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* works.js: three Imagine worlds crossfade in the screen (slow settle, like a camera easing in) */
+.imagine__screen.is-slides img {
+  position: absolute;
+  inset: 0;
+}
+.imagine__slide {
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 1.3s var(--ease-in-out), transform 6.5s var(--ease-out);
+}
+.imagine__slide.is-on {
+  opacity: 1;
+  transform: none;
+}
+/* the two added worlds are a touch wider (1800×818 / ×815) than the 1800×890 screen: cover would
+   crop the app UI at both sides ("Edit Mod", cut chat bubbles), so they fit the width instead and
+   the spare height sits at the top, where both shots are night sky and meet the screen's dark */
+@media (min-width: 721px) {
+  .imagine__screen.is-slides img[aria-hidden] { object-fit: contain; object-position: 50% 100%; }
+}
+/* glass sheen that sweeps across the screen as it stands up (gone when flat) */
+.imagine__screen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 250%;
+  background: linear-gradient(104deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, .13) 49%, rgba(255, 255, 255, .04) 52%, rgba(255, 255, 255, 0) 58%);
+  transform: translate3d(calc(-60% + var(--p) * 60%), 0, 0);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.imagine__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   2. WALL: 3D Marquee
+   Original: a 1720px board in a clipped window, scaled .5/.75/1 by breakpoint,
+   grid at top:24rem right:50% rotated rotateX(55deg) rotateZ(-45deg) from its
+   top-left corner. Here the board is centred with translate() and scale(--s).
+   ========================================================================== */
+.wall {
+  --wall-h: 560px;
+  --s: 1;                   /* board scale (original: .5 / .75 / 1 by breakpoint) */
+  /* board top-left corner relative to the band centre, in board px (scaled by --s): puts the
+     board's middle line (u = 860) through the centre at v = 1600, inside the loop-safe range */
+  --bx: -1739px;
+  --by: -300px;
+  --gap: 32px;
+  position: relative;
+  height: var(--wall-h);
+  margin-block: clamp(48px, 7vw, 112px) clamp(36px, 5.5vw, 88px);
+  overflow: hidden;
+  overflow: clip;
+  direction: ltr;           /* geometry of the original (right:50% etc.) is LTR */
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .35) 10%, #000 28%, #000 72%, rgba(0, 0, 0, .35) 90%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .35) 10%, #000 28%, #000 72%, rgba(0, 0, 0, .35) 90%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
+  mask-composite: intersect;
+}
+/* brand vignette: violet in the corners, a breath of gold in the middle */
+.wall::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 60% at 50% 50%, rgba(255, 214, 0, calc(.06 * var(--glow-a))), transparent 70%),
+    radial-gradient(75% 95% at 50% 50%, transparent 55%, rgba(42, 8, 69, calc(.55 * var(--glow-a))) 100%);
+}
+
+.wall__board {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1720px;
+  height: 1720px;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  align-items: start;
+  gap: var(--gap);
+  transform-origin: 0 0;
+  transform: translate(calc(var(--bx) * var(--s)), calc(var(--by) * var(--s))) scale(var(--s)) rotateX(55deg) rotateY(0deg) rotateZ(-45deg);
+}
+
+.wall__col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  animation: wall-yoyo-down 10s ease-in-out infinite alternate;
+  will-change: transform;
+}
+/* original: even columns y → 100 over 10s, odd columns y → -100 over 15s */
+.wall__col:nth-child(even) {
+  animation-name: wall-yoyo-up;
+  animation-duration: 15s;
+}
+@keyframes wall-yoyo-down { to { transform: translate3d(0, 100px, 0); } }
+@keyframes wall-yoyo-up { to { transform: translate3d(0, -100px, 0); } }
+
+/* works.js clones every column once → seamless infinite drift, alternate directions */
+.wall.is-loop .wall__col {
+  animation: wall-loop var(--dur, 220s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+.wall.is-loop .wall__col:nth-child(1) { --dur: 210s; --delay: -40s; }
+.wall.is-loop .wall__col:nth-child(2) { --dur: 250s; --delay: -150s; animation-direction: reverse; }
+.wall.is-loop .wall__col:nth-child(3) { --dur: 230s; --delay: -95s; }
+.wall.is-loop .wall__col:nth-child(4) { --dur: 270s; --delay: -20s; animation-direction: reverse; }
+.wall.is-loop .wall__col:nth-child(5) { --dur: 240s; --delay: -120s; }
+.wall.is-loop .wall__col:nth-child(6) { --dur: 260s; --delay: -60s; animation-direction: reverse; }
+/* one copy = half the column + half a gap */
+@keyframes wall-loop {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, calc(-50% - var(--gap) / 2), 0); }
+}
+.wall.is-paused .wall__col { animation-play-state: paused; }
+.wall.is-static .wall__col { animation: none; }
+
+/* dashed guide line between columns (GridLineVertical) */
+.wall__col::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -40px;
+  bottom: -40px;
+  left: calc(var(--gap) / -2);
+  width: 1px;
+  background: linear-gradient(to bottom, var(--wk-dash) 50%, transparent 0) 0 0 / 1px 10px;
+  pointer-events: none;
+}
+.wall__col:first-child::before { display: none; }
+
+.wall__col img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 415 / 900;
+  object-fit: cover;
+  border-radius: 26px;
+  background: var(--surface-2);
+  box-shadow: var(--wk-shot-shadow);
+  transition: transform .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wall__col img:hover {
+    transform: translate3d(0, -10px, 0);
+    box-shadow: var(--wk-shot-hover);
+  }
+}
+
+/* ==========================================================================
+   3. APPS: Lamp header + Comet Card grid
+   ========================================================================== */
+.apps-head {
+  --lamp: #FFD15C;
+  --lamp-cone: rgba(255, 209, 92, .5);
+  --lamp-cone-2: rgba(255, 209, 92, .12);
+  --lamp-core: #FFF3B8;
+  --lamp-glow: rgba(255, 196, 70, .2);
+  --lamp-halo: rgba(200, 5, 254, .14);
+  --lamp-fil: linear-gradient(90deg, transparent 0%, #FFE27A 14%, #FFFBE6 50%, #FFE27A 86%, transparent 100%);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: clamp(18px, 2vw, 26px);
+  padding-top: clamp(96px, 11vw, 156px);
+  margin-bottom: clamp(36px, 4.6vw, 64px);
+  text-align: center;
+}
+[data-theme="light"] .apps-head {
+  --lamp: #D98BF6;
+  --lamp-cone: rgba(222, 140, 250, .42);
+  --lamp-cone-2: rgba(254, 240, 140, .26);
+  --lamp-core: #FBE36A;
+  --lamp-glow: rgba(254, 240, 140, .5);
+  --lamp-halo: rgba(245, 201, 252, .45);
+  --lamp-fil: linear-gradient(90deg, transparent 0%, #F2C200 16%, #FF9E6E 38%, #E650F2 64%, #A300E6 86%, transparent 100%);
+}
+/* the light cone. Original: two conic wedges ("from 70deg / 290deg at center top") whose outer
+   and bottom edges are hidden by bg-coloured blocks. Here: one conic fan whose apex sits above
+   the filament (so it is as wide as the bar where it starts), brighter at both edges like the
+   two wedges, faded out by a mask instead of bg blocks (the page bg is not a flat colour). */
+.apps-head::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: min(1100px, 150%);
+  height: clamp(260px, 28vw, 400px);
+  translate: -50% 0;
+  background: conic-gradient(from 146deg at 50% -88%, transparent 0deg, var(--lamp-cone) 7deg, var(--lamp-cone-2) 34deg, var(--lamp-cone) 61deg, transparent 68deg, transparent 360deg);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .7) 40%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .7) 40%, transparent 96%);
+  transform-origin: 50% 0;
+  transition: transform .9s var(--ease-in-out) .3s, opacity .9s var(--ease-in-out) .3s;
+  pointer-events: none;
+}
+/* the filament + bright core + violet halo */
+.apps-head::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: min(30rem, 72%);
+  height: 2px;
+  translate: -50% 0;
+  border-radius: 2px;
+  background: var(--lamp-fil);
+  box-shadow:
+    0 0 8px 1px var(--lamp),
+    0 0 30px 4px var(--lamp-cone),
+    0 10px 70px 26px var(--lamp-glow),
+    0 60px 140px 30px var(--lamp-halo);
+  transition: transform .9s var(--ease-in-out) .3s;
+  pointer-events: none;
+}
+html.js .apps-head:not(.is-lit)::before { transform: scaleX(.5); opacity: .45; }
+html.js .apps-head:not(.is-lit)::after { transform: scaleX(.5); }
+
+.apps-head__title { position: relative; }
+
+/* ---- grid ---- */
+.apps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 26px);
+  margin: 0;
+}
+
+.app {
+  --app-c: #C805FE;
+  position: relative;
+  display: flex;
+  perspective: 1200px;
+}
+.app.is-hover { z-index: 2; }
+
+/* per-app ambient colour, sampled from each icon (robust to reordering) */
+.app:has(.app__icon[src*="imagine-worlds"]) { --app-c: #6F5CFF; }
+.app:has(.app__icon[src*="videtor"]) { --app-c: #FF4FA0; }
+.app:has(.app__icon[src*="tictacboom"]) { --app-c: #8E5BFF; }
+.app:has(.app__icon[src*="bereshit"]) { --app-c: #D8A62E; }
+.app:has(.app__icon[src*="dreamspace"]) { --app-c: #C26BFF; }
+.app:has(.app__icon[src*="point"]) { --app-c: #2F8CFF; }
+.app:has(.app__icon[src*="spacedio"]) { --app-c: #9B5CF6; }
+.app:has(.app__icon[src*="vibekids"]) { --app-c: #F8D808; }
+.app:has(.app__icon[src*="fontflow"]) { --app-c: #FF2D2E; }
+
+.app__link {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: clamp(22px, 2.3vw, 32px);
+  border-radius: 28px;
+  border: 1px solid var(--card-border);
+  background:
+    radial-gradient(120% 68% at 86% -6%, color-mix(in srgb, var(--app-c) var(--wk-amb), transparent), transparent 64%),
+    var(--card);
+  box-shadow: var(--wk-card-shadow);
+  transform-style: preserve-3d;
+  transition: box-shadow .5s var(--ease-out), border-color .5s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+/* brand-gradient border ring, shown on hover / focus */
+.app__link::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--wk-ring);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity .5s var(--ease-out);
+  pointer-events: none;
+}
+.app__link:focus-visible { outline-offset: 4px; border-radius: 28px; }
+.app__link:focus-visible::before { opacity: 1; }
+
+/* Comet glare: radial highlight that follows the pointer (--gx/--gy, --h from works.js) */
+.app__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .9) 10%, rgba(255, 255, 255, .75) 20%, rgba(255, 255, 255, 0) 80%);
+  mix-blend-mode: overlay;
+  opacity: calc(var(--h, 0) * .5);
+  pointer-events: none;
+}
+[data-theme="light"] .app__glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 238, 120, .8) 0%, rgba(241, 173, 253, .55) 28%, rgba(241, 173, 253, 0) 62%);
+  mix-blend-mode: multiply;
+  opacity: calc(var(--h, 0) * .45);
+}
+
+.app__icon {
+  position: relative;
+  z-index: 1;
+  width: clamp(64px, 5.2vw, 78px);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 22.37%;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .1),
+    0 14px 28px -12px rgba(0, 0, 0, .75),
+    0 0 calc(30px * var(--glow-a)) calc(-2px * var(--glow-a)) color-mix(in srgb, var(--app-c) calc(60% * var(--glow-a)), transparent);
+  transform: translateZ(44px);
+  transition: transform .55s var(--ease-out), box-shadow .55s var(--ease-out);
+}
+[data-theme="light"] .app__icon {
+  box-shadow:
+    0 0 0 1px rgba(10, 10, 11, .07),
+    0 16px 28px -14px color-mix(in srgb, var(--app-c) 70%, #2A0845);
+}
+
+.app__kind {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .1em .42em;
+  margin-top: clamp(20px, 2vw, 26px);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  color: var(--muted);
+}
+.app__kind::before {
+  content: '';
+  flex: none;
+  width: .5em;
+  height: .5em;
+  border-radius: 50%;
+  background: var(--app-c);
+  box-shadow: 0 0 calc(8px * var(--glow-a)) var(--app-c);
+  margin-inline-end: .2em;
+}
+.app__sep { opacity: .55; }
+
+.app__name {
+  position: relative;
+  z-index: 1;
+  margin-top: 6px;
+  font-size: clamp(1.5rem, 1.9vw, 1.85rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -.01em;
+  color: var(--text);
+  transform: translateZ(24px);
+}
+.app__name.latin {
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+.app__tag {
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--accent);
+}
+
+.app__desc {
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  margin-bottom: 24px;
+  font-size: .95rem;
+  line-height: 1.68;
+  color: var(--muted);
+}
+
+.app__cta {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  margin-top: auto;
+  padding: .6em 1.05em .6em .9em;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+  font-family: var(--font-latin);
+  font-size: .9rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text);
+  transform: translateZ(20px);
+  transition: background-color .35s var(--ease-out), color .35s var(--ease-out), border-color .35s var(--ease-out);
+}
+.app__cta .i { width: 1.05em; height: 1.05em; }
+.app__cta .i:last-child { width: .95em; height: .95em; transition: transform .45s var(--ease-out); }
+
+@media (hover: hover) and (pointer: fine) {
+  .app__link:hover {
+    border-color: transparent;
+    box-shadow: var(--wk-card-hover);
+  }
+  .app__link:hover::before { opacity: 1; }
+  .app__link:hover .app__icon { transform: translateZ(60px) translateY(-4px); }
+  .app__link:hover .app__cta {
+    background: var(--yellow);
+    border-color: transparent;
+    color: #0A0A0B;
+  }
+  .app__link:hover .app__cta .i:last-child { transform: translate(-2px, -2px); }
+}
+.app__link:focus-visible .app__cta {
+  background: var(--yellow);
+  border-color: transparent;
+  color: #0A0A0B;
+}
+
+/* swipe progress for the mobile carousel (injected by works.js) */
+.apps-rail { display: none; }
+
+/* ==========================================================================
+   4. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* two columns: an odd last card spans the row as a wide, horizontal card (no orphan) */
+@media (min-width: 721px) and (max-width: 1080px) {
+  .app:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .app:last-child:nth-child(odd) .app__link {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(20px, 3vw, 32px);
+    align-content: start;
+  }
+  .app:last-child:nth-child(odd) .app__icon { grid-column: 1; grid-row: 1 / span 5; }
+  .app:last-child:nth-child(odd) .app__link > :not(.app__icon) { grid-column: 2; }
+  .app:last-child:nth-child(odd) .app__kind { margin-top: 0; justify-self: start; }
+  .app:last-child:nth-child(odd) .app__desc { max-width: 60ch; margin-bottom: 18px; }
+  .app:last-child:nth-child(odd) .app__cta { justify-self: start; }
+}
+
+@media (max-width: 1024px) {
+  .wall { --s: .7; --wall-h: 500px; }
+}
+
+@media (max-width: 720px) {
+  /* imagine */
+  .imagine__screen { aspect-ratio: 16 / 10; }
+  .imagine__screen img { object-position: 0% 50%; }   /* keep the "Imagine Anything" bar, rainbow centred */
+  .imagine__screen img[aria-hidden] { object-position: 50% 50%; }
+  .imagine__stage { padding-top: 32px; padding-bottom: 36px; }
+  .imagine__ctas {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 380px;
+  }
+  .imagine__ctas .btn { width: 100%; }
+  .imagine__tag { letter-spacing: .06em; gap: .7em; }
+  .imagine__title { --name-fs: clamp(4.4rem, 25vw, 7rem); }
+
+  /* wall */
+  .wall { --wall-h: 380px; --s: .46; }
+  .wall__col img { border-radius: 30px; }
+
+  /* lamp */
+  .apps-head::before { width: 190%; }
+  .apps-head::after { width: 64%; }
+
+  /* apps → horizontal snap carousel (.works scope beats core's ul[role="list"] padding reset) */
+  .works .apps {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(84%, 340px);
+    gap: 14px;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 6px var(--gutter) 22px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .apps::-webkit-scrollbar { display: none; }
+  .app { scroll-snap-align: start; }
+  .app__link { border-radius: 24px; }
+  .app__link:focus-visible { border-radius: 24px; }
+
+  .apps-rail {
+    display: block;
+    position: relative;
+    width: 132px;
+    height: 3px;
+    margin: 4px auto 0;
+    border-radius: 3px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .apps-rail > span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    inset-inline-start: 0;
+    width: 30%;
+    border-radius: inherit;
+    background: var(--wk-ring);
+    will-change: transform;
+  }
+}
+
+/* ==========================================================================
+   5. REDUCED MOTION: final states, no loops
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .wall__col,
+  .wall.is-loop .wall__col { animation: none !important; }
+  .imagine__screen::after { display: none; }
+  .imagine__slide { transition: none; transform: none; }
+  html.js .apps-head:not(.is-lit)::before,
+  html.js .apps-head:not(.is-lit)::after { transform: none; opacity: 1; }
+}
+/* ?rm=1 (html.rm, see core.css): works.js already skips the loops, slides and tilt via VM.reduced */
+html.rm .imagine__screen::after { display: none; }
