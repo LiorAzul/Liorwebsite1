@@ -102,12 +102,12 @@ html.rm .hl::before { clip-path: none; transition: none; }
   --m-vc: clamp(2.2rem, 9.4vw, 5.6rem);
   --m-q: clamp(1.55rem, 6.6vw, 2.9rem);
   --m-icon: clamp(54px, 15vw, 92px);
-  --m-glow: linear-gradient(90deg, #FFF45A 0%, #FFEB6E 34%, #F9C2EC 58%, #E79BF8 78%, #DD7DF6 100%);
+  --m-glow: linear-gradient(90deg, #FFC85A 0%, #FFCC6E 34%, #F9C2EC 58%, #E79BF8 78%, #DD7DF6 100%);
   --m-glow-o: .95;
   --m-glow-r: .1em;
-  --m-halo-y: #FBF98A;
+  --m-halo-y: #FCD789;
   --m-halo-l: #F1ADFD;
-  --m-dash-a: #FFFD2D;
+  --m-dash-a: #FFBB2D;
   --m-dash-b: #EAA1F5;
   --m-dash-ink: #111;
   --m-dash-tip: #D35CF0;
@@ -116,10 +116,10 @@ html.rm .hl::before { clip-path: none; transition: none; }
   isolation: isolate;
 }
 [data-theme="dark"] .manifesto {
-  --m-glow: linear-gradient(90deg, rgba(255, 232, 60, .95) 0%, rgba(255, 222, 110, .8) 26%, rgba(255, 196, 238, .62) 50%, rgba(221, 84, 253, .88) 72%, rgba(176, 40, 255, .92) 100%);
+  --m-glow: linear-gradient(90deg, rgba(255, 187, 60, .95) 0%, rgba(255, 201, 110, .8) 26%, rgba(255, 196, 238, .62) 50%, rgba(221, 84, 253, .88) 72%, rgba(176, 40, 255, .92) 100%);
   --m-glow-o: 1;
   --m-glow-r: .11em;
-  --m-halo-y: rgba(255, 224, 0, .42);
+  --m-halo-y: rgba(255, 166, 0, .42);
   --m-halo-l: rgba(200, 5, 254, .55);
   --m-dash-ink: #FFFFFF;
   --m-dash-tip: #FC38FE;
@@ -147,7 +147,7 @@ html.rm .hl::before { clip-path: none; transition: none; }
   right: -18vw;
   width: min(70vw, 900px);
   height: min(70vw, 900px);
-  background: radial-gradient(closest-side, rgba(254, 252, 166, .95), rgba(249, 227, 252, .55) 55%, transparent);
+  background: radial-gradient(closest-side, rgba(255, 226, 165, .95), rgba(249, 227, 252, .55) 55%, transparent);
 }
 .manifesto::after {
   top: 30%;
@@ -166,8 +166,8 @@ html.rm .hl::before { clip-path: none; transition: none; }
 /* poster corner brackets: neon gold / violet in dark */
 [data-theme="dark"] .manifesto .brackets::before {
   background:
-    linear-gradient(rgba(255, 228, 92, .75) 0 0) top left / 100% 1.5px no-repeat,
-    linear-gradient(rgba(255, 228, 92, .75) 0 0) top left / 1.5px 100% no-repeat;
+    linear-gradient(rgba(255, 197, 92, .75) 0 0) top left / 100% 1.5px no-repeat,
+    linear-gradient(rgba(255, 197, 92, .75) 0 0) top left / 1.5px 100% no-repeat;
 }
 [data-theme="dark"] .manifesto .brackets::after {
   background:
@@ -299,9 +299,9 @@ html.rm .hl::before { clip-path: none; transition: none; }
   transition: background-position 1.05s cubic-bezier(.22, 1, .36, 1) calc(var(--hl-delay, .2s) + .03s);
 }
 [data-theme="dark"] .manifesto__q .hl::before {
-  background: linear-gradient(100deg, #FFF06A, #FFE000 60%, #FFD60A);
+  background: linear-gradient(100deg, #FFCC6A, #FFA600 60%, #FFA70A);
   filter: none;
-  box-shadow: 0 0 14px rgba(255, 224, 0, .55), 0 0 40px rgba(255, 190, 0, .28);
+  box-shadow: 0 0 14px rgba(255, 166, 0, .55), 0 0 40px rgba(255, 159, 0, .28);
 }
 [data-theme="dark"] .manifesto__q .hl--lilac::before {
   background: linear-gradient(100deg, #F3C5FD, #E696F9 45%, #DD6FF8);
@@ -349,7 +349,7 @@ html.rm .hl::before { clip-path: none; transition: none; }
   transform: rotate(15deg);
   width: calc(var(--m-icon) * .86);
 }
-[data-theme="dark"] .manifesto__icon--browser .i { filter: drop-shadow(0 0 6px rgba(255, 224, 0, .7)) drop-shadow(0 0 16px rgba(255, 200, 0, .35)); }
+[data-theme="dark"] .manifesto__icon--browser .i { filter: drop-shadow(0 0 6px rgba(255, 166, 0, .7)) drop-shadow(0 0 16px rgba(255, 161, 0, .35)); }
 [data-theme="dark"] .manifesto__icon--phone .i { filter: drop-shadow(0 0 6px rgba(252, 56, 254, .75)) drop-shadow(0 0 18px rgba(200, 5, 254, .45)); }
 
 /* the phone's three pop dashes, fanning out to the right (its outer side) */
@@ -439,12 +439,12 @@ html.js .manifesto__track.is-on {
   z-index: -1;
   border-radius: 50%;
   background:
-    radial-gradient(closest-side at 32% 50%, rgba(254, 252, 140, .95), transparent),
+    radial-gradient(closest-side at 32% 50%, rgba(255, 217, 139, .95), transparent),
     radial-gradient(closest-side at 70% 52%, rgba(241, 173, 253, .9), transparent);
 }
 [data-theme="dark"] .tx-pop__halo {
   background:
-    radial-gradient(closest-side at 32% 50%, rgba(255, 214, 10, .34), transparent),
+    radial-gradient(closest-side at 32% 50%, rgba(255, 167, 10, .34), transparent),
     radial-gradient(closest-side at 70% 52%, rgba(200, 5, 254, .48), transparent);
 }
 .tx-pop__spark {
@@ -454,7 +454,7 @@ html.js .manifesto__track.is-on {
   overflow: visible;
   stroke: var(--ink);
   stroke-width: calc(5px * (1 - var(--glow-a)));
-  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) #FFE000) drop-shadow(0 0 calc(14px * var(--glow-a)) #C805FE);
+  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) #FFA600) drop-shadow(0 0 calc(14px * var(--glow-a)) #C805FE);
 }
 .tx-pop__spark:nth-child(2) { top: -.16em; left: -.5em; }
 .tx-pop__spark:nth-child(3) { bottom: -.12em; left: -.26em; width: .24em; height: .24em; }
@@ -467,7 +467,7 @@ html.js .manifesto__track.is-on {
   inset: 8% 14%;
   border-radius: 50%;
   border: 2px solid rgba(221, 84, 253, .55);
-  box-shadow: 0 0 calc(18px * var(--glow-a)) rgba(255, 224, 0, .45), inset 0 0 calc(14px * var(--glow-a)) rgba(200, 5, 254, .4);
+  box-shadow: 0 0 calc(18px * var(--glow-a)) rgba(255, 166, 0, .45), inset 0 0 calc(14px * var(--glow-a)) rgba(200, 5, 254, .4);
   opacity: 0;
 }
 .tx-pop.is-lit .tx-pop__halo::after { animation: tx-ring 1.1s var(--ease-out) both; }
@@ -476,7 +476,7 @@ html.js .manifesto__track.is-on {
   100% { opacity: 0; transform: scale(1.55); }
 }
 [data-theme="dark"] .tx-pop.is-lit .grad-text {
-  filter: drop-shadow(0 0 10px rgba(255, 220, 80, .55)) drop-shadow(0 0 28px rgba(215, 41, 255, .8));
+  filter: drop-shadow(0 0 10px rgba(255, 191, 80, .55)) drop-shadow(0 0 28px rgba(215, 41, 255, .8));
 }
 /* one sheen across the word when it lands */
 .tx-pop.is-lit .grad-text {
@@ -486,7 +486,7 @@ html.js .manifesto__track.is-on {
   animation: tx-sheen 1.5s var(--ease-in-out) .1s both;
 }
 [data-theme="light"] .tx-pop.is-lit .grad-text {
-  background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .9) 50%, transparent 62%), linear-gradient(90deg, #E8B100 0%, #F29A1F 26%, #EE5FA8 48%, #C82AE8 70%, #9B00D6 100%);
+  background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .9) 50%, transparent 62%), linear-gradient(90deg, #E89100 0%, #F29A1F 26%, #EE5FA8 48%, #C82AE8 70%, #9B00D6 100%);
 }
 @keyframes tx-sheen {
   from { background-position: 130% 0, 0 0; }

@@ -103,12 +103,12 @@
 
   // palette = [primary, secondary, accent, surface]
   var PALETTES = {
-    app: [{ n: 'Neon Violet', c: ['#C805FE', '#F7ACE2', '#FFE000', '#130A20'] }, { n: 'Lemon Grape', c: ['#7C3AED', '#F9A8D4', '#FACC15', '#FFFDF6'] }],
-    game: [{ n: 'Arcade', c: ['#FC38FE', '#22D3EE', '#FFE000', '#12051F'] }, { n: 'Candy Pop', c: ['#FF4D8D', '#7C3AED', '#FFD23F', '#FFF6FB'] }],
+    app: [{ n: 'Neon Violet', c: ['#C805FE', '#F7ACE2', '#FFA600', '#130A20'] }, { n: 'Lemon Grape', c: ['#7C3AED', '#F9A8D4', '#FCA713', '#FFFCF6'] }],
+    game: [{ n: 'Arcade', c: ['#FC38FE', '#22D3EE', '#FFA600', '#12051F'] }, { n: 'Candy Pop', c: ['#FF4D8D', '#7C3AED', '#FFB73F', '#FFF6FB'] }],
     site: [{ n: 'Golden Hour', c: ['#E8590C', '#F677B6', '#FFC845', '#FFF8EE'] }, { n: 'Lilac Studio', c: ['#9D3BF0', '#FFB276', '#F1ADFD', '#FCF7FF'] }],
     system: [{ n: 'Calm Ops', c: ['#6D5DFC', '#2DD4BF', '#F472B6', '#0E1020'] }, { n: 'Clean Desk', c: ['#4F46E5', '#10B981', '#F59E0B', '#F7F7FB'] }],
-    store: [{ n: 'Boutique', c: ['#D6246E', '#FFC857', '#7C3AED', '#FFF5EE'] }, { n: 'Night Market', c: ['#FFE000', '#FC38FE', '#38BDF8', '#120A1C'] }],
-    ai: [{ n: 'Aurora', c: ['#8B5CF6', '#22D3EE', '#F0ABFC', '#0B0717'] }, { n: 'Soft Mind', c: ['#B021C9', '#FDE047', '#A5B4FC', '#FAF7FF'] }]
+    store: [{ n: 'Boutique', c: ['#D6246E', '#FFC857', '#7C3AED', '#FFF5EE'] }, { n: 'Night Market', c: ['#FFA600', '#FC38FE', '#38BDF8', '#120A1C'] }],
+    ai: [{ n: 'Aurora', c: ['#8B5CF6', '#22D3EE', '#F0ABFC', '#0B0717'] }, { n: 'Soft Mind', c: ['#B021C9', '#FFBD45', '#A5B4FC', '#FAF7FF'] }]
   };
 
   var EXAMPLES = [
@@ -809,7 +809,7 @@
       if (typeof VM.burst === 'function') { VM.burst(x, y); return; }
       if (typeof window.confetti !== 'function') return;
       var light = document.documentElement.getAttribute('data-theme') === 'light';
-      var colors = light ? ['#E8B100', '#F29A1F', '#EE5FA8', '#C82AE8', '#8A00C2'] : ['#FFE000', '#FFF6B0', '#FCEC68', '#F7ACE2', '#FC38FE', '#C805FE'];
+      var colors = light ? ['#E89100', '#F29A1F', '#EE5FA8', '#C82AE8', '#8A00C2'] : ['#FFA600', '#FFE4B0', '#FDC967', '#F7ACE2', '#FC38FE', '#C805FE'];
       var base = { spread: 360, ticks: 60, gravity: 0, decay: 0.94, startVelocity: 28, colors: colors, origin: { x: x / window.innerWidth, y: y / window.innerHeight }, disableForReducedMotion: true };
       var shoot = function () {
         window.confetti(Object.assign({}, base, { particleCount: 36, scalar: 1.2, shapes: ['star'] }));

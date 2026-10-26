@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>הצהרת נגישות · VibeMagic</title>
+  <meta name="description" content="הצהרת הנגישות של אתר VibeMagic: רמת הנגישות, ההתאמות שבוצעו ופרטי רכז הנגישות.">
+  <meta name="theme-color" content="#040207">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem('vm-theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      d.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="css/core.css?v=3">
+  <style>
+    .a11y-page { padding-block: clamp(48px, 8vw, 110px); }
+    .a11y-page .container { max-width: 820px; }
+    .a11y-back { display: inline-flex; align-items: center; gap: .5em; min-height: 44px; color: var(--accent); font-weight: 700; }
+    .a11y-page h1 { margin-block: 18px 10px; }
+    .a11y-page h2 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); font-weight: 800; margin-block: 40px 12px; }
+    .a11y-page p, .a11y-page li { color: var(--text-2); line-height: 1.75; }
+    .a11y-page ul { padding-inline-start: 1.2em; display: grid; gap: .4em; }
+    .a11y-page a:not(.a11y-back) { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .a11y-card { margin-top: 18px; padding: 22px 24px; border-radius: var(--radius); background: var(--card); border: 1px solid var(--card-border); }
+    .a11y-meta { color: var(--muted); font-size: .92rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">דלגו לתוכן</a>
+  <main id="main" class="a11y-page">
+    <div class="container">
+      <a class="a11y-back" href="./">→ חזרה לאתר VibeMagic</a>
+      <h1 class="h2">הצהרת נגישות</h1>
+      <p class="a11y-meta">עודכנה לאחרונה: 26 באוקטובר 2026</p>
+
+      <p>אני מאמין שאתר צריך להיות פתוח לכל אחד ואחת, כולל אנשים עם מוגבלות. לכן השקעתי בהנגשת האתר בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע״ג-2013, ולתקן הישראלי ת״י 5568, המבוסס על הנחיות WCAG 2.1 ברמה AA.</p>
+
+      <h2>מה עשיתי באתר</h2>
+      <ul>
+        <li>מבנה כותרות היררכי ותגיות סמנטיות (ניווט, תוכן ראשי, כותרת תחתונה), כדי שקוראי מסך יבינו את מבנה הדף.</li>
+        <li>אפשר לנווט בכל האתר עם המקלדת בלבד. יש קישור ״דלגו לתוכן״ בתחילת העמוד, והפוקוס תמיד נראה לעין.</li>
+        <li>לכל התמונות המשמעותיות יש טקסט חלופי, ואלמנטים דקורטיביים מוסתרים מקוראי מסך.</li>
+        <li>ניגודיות הצבעים של הטקסט עומדת ברמה AA, במצב בהיר ובמצב כהה.</li>
+        <li>האתר מכבד את הגדרת ״הפחתת תנועה״ של מערכת ההפעלה: אנימציות נעצרות ותוכן מוצג במצב הסופי שלו.</li>
+        <li>לכפתורים ולקישורים יש שמות נגישים ברורים, ואזורי הלחיצה בטלפון הם לפחות 44 פיקסלים.</li>
+        <li>האתר מותאם לכל גודל מסך, ואפשר להגדיל בו טקסט עד 200% בלי לאבד תוכן.</li>
+        <li>באתר מותקן תוסף הנגישות <b>נגישלי</b> (NagishLi). אפשר לפתוח אותו מכפתור הנגישות שבצד המסך, ולהגדיל טקסט, לשנות ניגודיות, להדגיש קישורים, להחליף לגופן קריא ולעצור הבהובים.</li>
+      </ul>
+
+      <h2>מגבלות ידועות</h2>
+      <ul>
+        <li>הסרטונים באתר מוטמעים מיוטיוב, והכתוביות שלהם תלויות ביוטיוב.</li>
+        <li>חלק מהאפקטים הוויזואליים (רקעים מונפשים, ניצוצות) הם קישוט בלבד. הם מוסתרים מקוראי מסך ונעצרים כשמפעילים הפחתת תנועה.</li>
+        <li>קישורים לאתרים חיצוניים (אפ סטור, כתבות, רשתות חברתיות) מובילים לאתרים שאינם בשליטתי, ונגישותם באחריות בעליהם.</li>
+      </ul>
+
+      <h2>נתקלתם בבעיה? דברו איתי</h2>
+      <p>אם משהו באתר לא נגיש לכם, או שיש לכם הצעה לשיפור, אשמח לשמוע ולתקן בהקדם.</p>
+      <div class="a11y-card">
+        <p><b>רכז הנגישות:</b> ליאור ישראל אזולאי</p>
+        <p><b>טלפון / וואטסאפ:</b> <a href="tel:+972523321674"><span class="ltr">052-332-1674</span></a></p>
+        <p><b>אימייל:</b> <a href="mailto:Liorazulay72@gmail.com"><span class="ltr">Liorazulay72@gmail.com</span></a></p>
+      </div>
+      <p class="a11y-meta" style="margin-top:18px">כדי שאוכל לטפל בפנייה, כדאי לפרט מה הבעיה, באיזה עמוד, ובאיזה דפדפן ומכשיר השתמשתם.</p>
+    </div>
+  </main>
+  <script>nagishli_config = { language: "he", color: "purple" };</script>
+  <script src="assets/a11y/nagishli/nagishli_beta.js?v=3.0b" charset="utf-8" defer></script>
+</body>
+</html>

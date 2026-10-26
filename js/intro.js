@@ -109,9 +109,9 @@
       '<svg class="vi-l vi-l--halo" ' + VIEW + '>' +
         '<defs>' +
           // magenta (left of the moving edge) → yellow (right of it); x1/x2 travel left to right
-          '<linearGradient id="vi-gHalo" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#D729FF"/><stop offset="1" stop-color="#FFC800"/></linearGradient>' +
-          '<linearGradient id="vi-gTube" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#FC38FE"/><stop offset="1" stop-color="#FFE000"/></linearGradient>' +
-          '<linearGradient id="vi-gCore" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#FDA7FB"/><stop offset="1" stop-color="#FFFDEC"/></linearGradient>' +
+          '<linearGradient id="vi-gHalo" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#D729FF"/><stop offset="1" stop-color="#FFA100"/></linearGradient>' +
+          '<linearGradient id="vi-gTube" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#FC38FE"/><stop offset="1" stop-color="#FFA600"/></linearGradient>' +
+          '<linearGradient id="vi-gCore" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#FDA7FB"/><stop offset="1" stop-color="#FFF8EC"/></linearGradient>' +
           '<linearGradient id="vi-gHot" gradientUnits="userSpaceOnUse" x1="-400" y1="0" x2="-160" y2="0"><stop offset="0" stop-color="#FFD2FD"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>' +
           // solid wipe: a 2400-unit rect, white with an 18% (~430u) soft right edge
           '<linearGradient id="vi-wipeGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff"/><stop offset=".82" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>' +

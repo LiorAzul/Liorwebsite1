@@ -59,9 +59,9 @@
      Confetti stars (Magic UI "Stars" preset)
      ====================================================================== */
   var PALETTE = {
-    dark: ['#FFE000', '#FCEC68', '#C805FE', '#FC38FE', '#FFF6B0'],
+    dark: ['#FFA600', '#FDC967', '#C805FE', '#FC38FE', '#FFE4B0'],
     // the two palest golds vanish on white: deeper golds for the light theme
-    light: ['#FFC800', '#EBA900', '#C805FE', '#FC38FE', '#E08AF7']
+    light: ['#FFA100', '#EB9100', '#C805FE', '#FC38FE', '#E08AF7']
   };
   function palette() { return PALETTE[isDark() ? 'dark' : 'light']; }
 
@@ -303,13 +303,13 @@
       ctx.lineTo(b.x, b.y);
       // halo pass
       ctx.shadowBlur = dark ? 20 : 10;
-      ctx.shadowColor = dark ? 'rgba(200, 5, 254, 1)' : 'rgba(255, 196, 0, 0.9)';
-      ctx.strokeStyle = dark ? 'rgba(255, 224, 0, 0.9)' : 'rgba(168, 30, 230, 0.55)';
+      ctx.shadowColor = dark ? 'rgba(200, 5, 254, 1)' : 'rgba(255, 160, 0, 0.9)';
+      ctx.strokeStyle = dark ? 'rgba(255, 166, 0, 0.9)' : 'rgba(168, 30, 230, 0.55)';
       ctx.lineWidth = dark ? 4 : 3;
       ctx.stroke();
       // hot core
       ctx.shadowBlur = 0;
-      ctx.strokeStyle = dark ? 'rgba(255, 253, 236, 0.95)' : 'rgba(138, 0, 194, 0.75)';
+      ctx.strokeStyle = dark ? 'rgba(255, 248, 236, 0.95)' : 'rgba(138, 0, 194, 0.75)';
       ctx.lineWidth = dark ? 1.3 : 1.1;
       ctx.stroke();
     }
@@ -317,12 +317,12 @@
     function star(p) {
       if (alive >= CFG.max) return;
       var dark = isDark();
-      var c = pick(dark ? ['#FFE000', '#FCEC68', '#E08AF7', '#FFFFFF', 'grad', 'grad'] : ['#E8B100', '#C805FE', '#B04BE0', 'grad', 'grad']);
+      var c = pick(dark ? ['#FFA600', '#FDC967', '#E08AF7', '#FFFFFF', 'grad', 'grad'] : ['#E89100', '#C805FE', '#B04BE0', 'grad', 'grad']);
       var s = pick(hot ? [26, 20, 14] : [22, 15, 10]);
       var el = document.createElement('span');
       el.className = 'fx-star';
       el.style.cssText = '--s:' + s + 'px;translate:' + p.x.toFixed(1) + 'px ' + p.y.toFixed(1) + 'px;animation-name:fx-fall-' + ((n++ % 3) + 1) + ';' +
-        'color:' + (c === 'grad' ? (dark ? '#FCEC68' : '#D86AF0') : c);
+        'color:' + (c === 'grad' ? (dark ? '#FDC967' : '#D86AF0') : c);
       el.innerHTML = c === 'grad'
         ? '<svg viewBox="0 0 100 100"><use href="#sparkle-shape"/></svg>'
         : '<svg viewBox="0 0 100 100"><path d="' + STAR_PATH + '"/></svg>';
@@ -630,10 +630,10 @@
     head.width = head.height = 48;
     (function () {
       var g = head.getContext('2d'), rg = g.createRadialGradient(24, 24, 0, 24, 24, 24);
-      rg.addColorStop(0, 'rgba(255,253,236,1)');
-      rg.addColorStop(0.18, 'rgba(255,236,120,0.95)');
-      rg.addColorStop(0.45, 'rgba(255,200,0,0.35)');
-      rg.addColorStop(1, 'rgba(255,200,0,0)');
+      rg.addColorStop(0, 'rgba(255,248,236,1)');
+      rg.addColorStop(0.18, 'rgba(255,207,120,0.95)');
+      rg.addColorStop(0.45, 'rgba(255,161,0,0.35)');
+      rg.addColorStop(1, 'rgba(255,161,0,0)');
       g.fillStyle = rg;
       g.fillRect(0, 0, 48, 48);
     })();
@@ -672,7 +672,7 @@
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
         ctx.globalAlpha = still ? 0.75 : 0.5 + Math.abs(Math.sin(t * 0.001 / s.tw + s.ph)) * 0.5;
-        ctx.fillStyle = s.gold ? '#FCEC68' : '#FFFFFF';
+        ctx.fillStyle = s.gold ? '#FDC967' : '#FFFFFF';
         if (s.r < 0.9) ctx.fillRect(s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
         else { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832); ctx.fill(); }
       }
@@ -690,7 +690,7 @@
         var g = ctx.createLinearGradient(tx, ty, sh.x, sh.y);
         g.addColorStop(0, 'rgba(200,5,254,0)');
         g.addColorStop(0.55, 'rgba(232,125,244,0.55)');
-        g.addColorStop(1, 'rgba(255,232,110,1)');
+        g.addColorStop(1, 'rgba(255,203,110,1)');
         ctx.strokeStyle = g;
         ctx.lineWidth = 1.6;
         ctx.lineCap = 'round';

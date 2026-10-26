@@ -152,9 +152,11 @@
       else if (dir === 1 && (vel > 1 || downAcc > window.innerHeight * 0.9)) hidden = true;
       else if (dir === -1 && upAcc > 10) hidden = false;
 
-      nav.classList.toggle('is-floating', !atTop);
-      nav.classList.toggle('is-compact', !atTop && compactLatch && !pinned);
-      nav.classList.toggle('is-hidden', hidden);
+      // owner's call (2026-10): the bar is always the compact floating pill, at the top and
+      // while scrolling, and it never slides away
+      hidden = false;
+      nav.classList.add('is-floating', 'is-compact');
+      nav.classList.remove('is-hidden');
 
       // progress (0 → 1), only written when it actually moved
       var p = Math.min(1, Math.max(0, y / maxScroll));
@@ -426,6 +428,11 @@
     }
 
     on(burger, 'click', function () { if (menuOpen) close(); else open(); });
+    // any other "open the menu" button on the page (e.g. the hero's תפריט button)
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('[data-menu-open]');
+      if (t && !menuOpen) { e.preventDefault(); open(); }
+    });
 
     // an in-page link whose target exists: core's document-level anchor handler scrolls there and
     // moves focus to the section, so the menu must not pull focus back to the burger first

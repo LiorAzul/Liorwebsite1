@@ -44,10 +44,10 @@
 /* ---------- Tokens ---------- */
 :root {
   /* brand (theme-independent) */
-  --yellow: #FFE000;
-  --yellow-300: #FCEC68;
-  --yellow-100: #FFF6B0;
-  --gold: #F8D808;
+  --yellow: #FFA600;
+  --yellow-300: #FDC967;
+  --yellow-100: #FFE4B0;
+  --gold: #FAA506;
   --amber: #CB9203;
   --peach: #FFB276;
   --pink: #F677B6;
@@ -61,14 +61,14 @@
   --wa: #25D366;
 
   /* gradients (yellow LEFT → purple RIGHT, never mirrored for RTL) */
-  --grad-brand: linear-gradient(90deg, #FFE000 0%, #FFD48E 30%, #F7ACE2 50%, #DD54FD 72%, #C805FE 100%);
-  --grad-swoosh: linear-gradient(90deg, #FFFC12 0%, #FFE950 17%, #FEDD72 22%, #FFD48E 27%, #FCC2BB 36%, #F7ACE2 45%, #EA80F8 54%, #DD54FD 68%, #D52CFF 78%, #C905FD 92%, #C805FE 100%);
-  --grad-headline: linear-gradient(90deg, #FFEE55 0%, #FBE123 30%, #FBCE2E 38%, #F8A792 44%, #EC56FD 52%, #DB43FF 68%, #D729FF 100%);
-  --grad-pastel: linear-gradient(90deg, #FFE45C 0%, #FFF17C 20%, #FFF6B0 32%, #FEDBD2 46%, #FCBAEE 52%, #DC80F7 60%, #D577F4 100%);
-  --grad-cta: linear-gradient(90deg, #F8E20F 0%, #FDE527 35%, #FFE76A 45%, #FFB276 50%, #ED87B0 53%, #E21EE2 62%, #D916E3 80%, #DF24F8 100%);
-  --grad-saber: linear-gradient(90deg, transparent 0%, #F9D950 10%, #FFFFAC 20%, #FFFFB6 35%, #FFEDD2 44%, #FFDCFF 49%, #FFA0FF 58%, #FFC6FF 83%, #B557E6 88%, transparent 95%);
-  --grad-hairline: linear-gradient(90deg, transparent 0%, #7C7742 10%, #F0E88B 30%, #F5F4A5 55%, #E5B9D8 70%, #D08AD8 80%, #6B3D81 90%, transparent 100%);
-  --grad-sparkle: linear-gradient(45deg, #F7F567 0%, #FED2AF 45%, #E87DF4 75%, #DD58F3 100%);
+  --grad-brand: linear-gradient(90deg, #FFA600 0%, #FFD48E 30%, #F7ACE2 50%, #DD54FD 72%, #C805FE 100%);
+  --grad-swoosh: linear-gradient(90deg, #FFB212 0%, #FFC250 17%, #FFCA71 22%, #FFD48E 27%, #FCC2BB 36%, #F7ACE2 45%, #EA80F8 54%, #DD54FD 68%, #D52CFF 78%, #C905FD 92%, #C805FE 100%);
+  --grad-headline: linear-gradient(90deg, #FFC555 0%, #FDB121 30%, #FDB02C 38%, #F8A792 44%, #EC56FD 52%, #DB43FF 68%, #D729FF 100%);
+  --grad-pastel: linear-gradient(90deg, #FFC55C 0%, #FFD27C 20%, #FFE4B0 32%, #FEDBD2 46%, #FCBAEE 52%, #DC80F7 60%, #D577F4 100%);
+  --grad-cta: linear-gradient(90deg, #FAA90D 0%, #FFB425 35%, #FFCA6A 45%, #FFB276 50%, #ED87B0 53%, #E21EE2 62%, #D916E3 80%, #DF24F8 100%);
+  --grad-saber: linear-gradient(90deg, transparent 0%, #FBBC4E 10%, #FFE4AC 20%, #FFE8B6 35%, #FFEDD2 44%, #FFDCFF 49%, #FFA0FF 58%, #FFC6FF 83%, #B557E6 88%, transparent 95%);
+  --grad-hairline: linear-gradient(90deg, transparent 0%, #7D6841 10%, #F1CE8A 30%, #F6DBA4 55%, #E5B9D8 70%, #D08AD8 80%, #6B3D81 90%, transparent 100%);
+  --grad-sparkle: linear-gradient(45deg, #F8C966 0%, #FED2AF 45%, #E87DF4 75%, #DD58F3 100%);
 
   /* type */
   --font-he: 'Heebo', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
@@ -124,12 +124,12 @@
   --plus: #0C0C0C;
   --accent: #8A00C2;          /* small purple text, 7.3:1 on white */
   --accent-strong: #C805FE;   /* large purple only */
-  --accent-gold: #8A6A00;     /* gold text on light, 5:1 */
+  --accent-gold: #8A5700;     /* gold text on light, 5:1 */
   /* gradient TEXT on white: the gold end must stay >= 3:1 for large text */
-  --grad-text-light: linear-gradient(90deg, #B88600 0%, #D07A10 26%, #DB4F96 48%, #C82AE8 70%, #9B00D6 100%);
-  --hl-yellow: #FBF98A;
+  --grad-text-light: linear-gradient(90deg, #B87200 0%, #D07A10 26%, #DB4F96 48%, #C82AE8 70%, #9B00D6 100%);
+  --hl-yellow: #FCD789;
   --hl-lilac: #E696F9;
-  --blob-1: #FEFCA6;
+  --blob-1: #FFE2A5;
   --blob-2: #F5C9FC;
   --blob-3: #FEE6AC;
   --blob-opacity: .9;
@@ -160,8 +160,8 @@
   --plus: rgba(255, 255, 255, .45);
   --accent: #E08AF7;
   --accent-strong: #D729FF;
-  --accent-gold: #FCEC68;
-  --hl-yellow: rgba(255, 224, 0, .28);
+  --accent-gold: #FDC967;
+  --hl-yellow: rgba(255, 166, 0, .28);
   --hl-lilac: rgba(200, 5, 254, .38);
   --blob-1: #2A0845;
   --blob-2: #4C047C;
@@ -445,7 +445,7 @@ b, strong { font-weight: 800; }
   transition: transform .9s var(--ease-out) var(--hl-delay, .2s);
 }
 .hl--lilac::before { background: var(--hl-lilac); border-radius: .42em; }
-[data-theme="dark"] .hl::before { box-shadow: 0 0 22px rgba(255, 224, 0, .25); }
+[data-theme="dark"] .hl::before { box-shadow: 0 0 22px rgba(255, 166, 0, .25); }
 [data-theme="dark"] .hl--lilac::before { box-shadow: 0 0 22px rgba(200, 5, 254, .35); }
 /* hidden until revealed when JS is on */
 html.js [data-reveal] .hl,
@@ -473,7 +473,7 @@ html.js .swoosh[data-reveal].in { clip-path: inset(0 0 0 0); }
   height: 1em;
   overflow: visible;
   animation: sparkle-tw 3.2s var(--ease-in-out) infinite;
-  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) #FFE000) drop-shadow(0 0 calc(14px * var(--glow-a)) #C805FE);
+  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) #FFA600) drop-shadow(0 0 calc(14px * var(--glow-a)) #C805FE);
 }
 .sparkle path { stroke: var(--ink); stroke-width: calc(4px * (1 - var(--glow-a))); }
 @keyframes sparkle-tw {
@@ -540,8 +540,8 @@ html.js .saber[data-reveal].in { transform: scaleX(1); }
   height: .6em;
   border-radius: 50%;
   translate: 0 -.05em;
-  background: var(--dot, #F8DA05);
-  box-shadow: 0 0 calc(8px * var(--glow-a)) var(--dot, #F8DA05), 0 0 calc(18px * var(--glow-a)) var(--dot, #F8DA05);
+  background: var(--dot, #FAA403);
+  box-shadow: 0 0 calc(8px * var(--glow-a)) var(--dot, #FAA403), 0 0 calc(18px * var(--glow-a)) var(--dot, #FAA403);
 }
 .neon-list li:nth-child(even) { --dot: #F524FD; }
 
@@ -601,9 +601,9 @@ html.js .saber[data-reveal].in { transform: scaleX(1); }
 .btn--yellow {
   background: var(--yellow);
   color: #0A0A0B;
-  box-shadow: 0 0 0 0 rgba(255, 224, 0, 0), 0 10px 30px -10px rgba(203, 146, 3, .6);
+  box-shadow: 0 0 0 0 rgba(255, 166, 0, 0), 0 10px 30px -10px rgba(203, 146, 3, .6);
 }
-.btn--yellow:hover { box-shadow: 0 0 0 6px rgba(255, 224, 0, .18), 0 14px 40px -10px rgba(203, 146, 3, .75); }
+.btn--yellow:hover { box-shadow: 0 0 0 6px rgba(255, 166, 0, .18), 0 14px 40px -10px rgba(203, 146, 3, .75); }
 
 .btn--ghost {
   border: 1px solid var(--line-strong);
@@ -636,12 +636,12 @@ html.js .saber[data-reveal].in { transform: scaleX(1); }
   background:
     linear-gradient(var(--pill-bg), var(--pill-bg)) padding-box,
     var(--grad-cta) border-box;
-  box-shadow: -14px 0 34px -6px rgba(248, 226, 15, .35), 14px 0 34px -6px rgba(217, 22, 227, .4), var(--shadow-l);
+  box-shadow: -14px 0 34px -6px rgba(250, 169, 13, .35), 14px 0 34px -6px rgba(217, 22, 227, .4), var(--shadow-l);
   text-align: start;
   transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
-.cta-pill:hover { box-shadow: -18px 0 46px -4px rgba(248, 226, 15, .5), 18px 0 46px -4px rgba(217, 22, 227, .55), var(--shadow-l); }
+.cta-pill:hover { box-shadow: -18px 0 46px -4px rgba(250, 169, 13, .5), 18px 0 46px -4px rgba(217, 22, 227, .55), var(--shadow-l); }
 .cta-pill__l1 { grid-area: l1; font-weight: 500; font-size: clamp(.95rem, 1.4vw, 1.15rem); opacity: .92; }
 .cta-pill__l2 {
   grid-area: l2;
@@ -685,7 +685,7 @@ html.js .saber[data-reveal].in { transform: scaleX(1); }
   position: absolute;
   aspect-ratio: 1;
   width: var(--beam-size, 90px);
-  background: linear-gradient(to left, #FFE000, #FFF6B0 40%, #FC38FE 70%, transparent);
+  background: linear-gradient(to left, #FFA600, #FFE4B0 40%, #FC38FE 70%, transparent);
   offset-path: rect(0 auto auto 0 round var(--beam-radius, 999px));
   offset-anchor: 90% 50%;
   animation: beam-run var(--beam-dur, 6s) linear infinite;

@@ -47,12 +47,12 @@
     // poster 1: white paper with very soft yellow / lilac / peach blobs
     light: [
       ['#FFFFFF', 1.35],
-      ['#FEFCA6', 1.0],
+      ['#FFE2A5', 1.0],
       ['#F5C9FC', 1.0],
       ['#FEE6AC', 0.9],
       ['#FFFFFF', 0.9],
       ['#F9E3FC', 0.85],
-      ['#FFFDC4', 0.8],
+      ['#FFECC4', 0.8],
       ['#F1B8FB', 0.55]
     ]
   };

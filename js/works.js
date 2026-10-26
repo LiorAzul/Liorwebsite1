@@ -425,3 +425,26 @@
   safe('apps', initApps);
   safe('lamp', initLamp);
 })();
+
+/* Imagine product video (YouTube Short): click-to-load facade, youtube-nocookie */
+(function () {
+  'use strict';
+  var btn = document.querySelector('[data-imagine-yt]');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var id = btn.getAttribute('data-imagine-yt') || '';
+    if (!/^[\w-]{6,20}$/.test(id)) return;
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0&playsinline=1';
+    f.title = 'Introducing imagine (YouTube)';
+    f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    // an iframe must not live inside a <button>: swap the facade for a plain wrapper
+    var wrap = document.createElement('div');
+    wrap.className = 'imagine__video is-playing';
+    wrap.appendChild(f);
+    btn.replaceWith(wrap);
+    try { f.focus({ preventScroll: true }); } catch (e) { /* noop */ }
+  });
+})();

@@ -26,12 +26,12 @@
   --f-inset: clamp(8px, 1.1vw, 16px);
   --f-radius: clamp(26px, 3.4vw, 52px);
   --f-bg: #030106;
-  --f-rim: conic-gradient(from -45deg, #FFE45C 0deg, #FFCB9F 15deg, #E841F2 28deg, #4C047C 55deg, #590D84 95deg, #A225CC 110deg, #6000AB 125deg, #E44AF7 150deg, #F547F8 165deg, #FEE862 185deg, #BB9D15 205deg, #9B7114 220deg, #FFEA6B 235deg, #F532FF 255deg, #8907A5 275deg, #F45EF5 290deg, #D8B335 315deg, #ECE31E 335deg, #FFE45C 360deg);
+  --f-rim: conic-gradient(from -45deg, #FFC55C 0deg, #FFCB9F 15deg, #E841F2 28deg, #4C047C 55deg, #590D84 95deg, #A225CC 110deg, #6000AB 125deg, #E44AF7 150deg, #F547F8 165deg, #FFC761 185deg, #BD8013 205deg, #9B7114 220deg, #FFCB6B 235deg, #F532FF 255deg, #8907A5 275deg, #F45EF5 290deg, #DA9C33 315deg, #EEA81C 335deg, #FFC55C 360deg);
   --f-rim-w: 1.5px;
   --f-rim-o: 1;
-  --f-shadow: -26px 0 70px -44px rgba(248, 226, 15, .55), 26px 0 70px -44px rgba(217, 22, 227, .6), 0 -24px 80px -56px rgba(200, 5, 254, .7);
+  --f-shadow: -26px 0 70px -44px rgba(250, 169, 13, .55), 26px 0 70px -44px rgba(217, 22, 227, .6), 0 -24px 80px -56px rgba(200, 5, 254, .7);
   --f-inner: inset 0 0 0 1px rgba(255, 255, 255, .03), inset 0 50px 90px -60px rgba(200, 5, 254, .45);
-  --f-aur-a: rgba(255, 190, 0, .17);
+  --f-aur-a: rgba(255, 159, 0, .17);
   --f-aur-b: rgba(200, 5, 254, .3);
   --f-corner-a: rgba(203, 146, 3, .16);
   --f-corner-b: rgba(109, 4, 160, .32);
@@ -42,14 +42,14 @@
 }
 [data-theme="light"] .footer {
   --f-bg: #FFFFFF;
-  --f-rim: linear-gradient(90deg, #FFE45C 0%, #FFD48E 28%, #F7ACE2 52%, #DD54FD 76%, #C805FE 100%);
+  --f-rim: linear-gradient(90deg, #FFC55C 0%, #FFD48E 28%, #F7ACE2 52%, #DD54FD 76%, #C805FE 100%);
   --f-rim-w: 1.5px;
   --f-rim-o: .75;
   --f-shadow: 0 2px 6px rgba(10, 6, 18, .04), 0 40px 90px -40px rgba(80, 10, 120, .22);
   --f-inner: inset 0 0 0 1px rgba(10, 10, 11, .03);
-  --f-aur-a: rgba(254, 252, 166, .95);
+  --f-aur-a: rgba(255, 226, 165, .95);
   --f-aur-b: rgba(245, 201, 252, .95);
-  --f-corner-a: rgba(254, 246, 150, .9);
+  --f-corner-a: rgba(255, 219, 149, .9);
   --f-corner-b: rgba(243, 197, 253, .85);
   --f-lines: rgba(10, 10, 11, .045);
   --f-band-bg: rgba(255, 255, 255, .78);
@@ -243,7 +243,7 @@
   height: .85em;
   flex: none;
   overflow: visible;
-  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) rgba(255, 224, 0, .8));
+  filter: drop-shadow(0 0 calc(6px * var(--glow-a)) rgba(255, 166, 0, .8));
 }
 .footer__band-group svg:nth-of-type(even) { filter: drop-shadow(0 0 calc(6px * var(--glow-a)) rgba(200, 5, 254, .9)); }
 /* RTL: the duplicated track slides to the right (same direction as the hero marquee) */
@@ -287,7 +287,7 @@
   background: var(--grad-sparkle);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
-  filter: drop-shadow(0 0 calc(8px * var(--glow-a)) #FFE000) drop-shadow(0 0 calc(18px * var(--glow-a)) #C805FE);
+  filter: drop-shadow(0 0 calc(8px * var(--glow-a)) #FFA600) drop-shadow(0 0 calc(18px * var(--glow-a)) #C805FE);
   animation: sparkle-tw 3.2s var(--ease-in-out) infinite;
   pointer-events: none;
 }
@@ -308,7 +308,7 @@
   height: 46px;
   translate: -50% -50%;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 253, 236, .95), rgba(255, 190, 255, .45) 45%, transparent);
+  background: radial-gradient(closest-side, rgba(255, 248, 236, .95), rgba(255, 190, 255, .45) 45%, transparent);
   opacity: 0;
   pointer-events: none;
 }
@@ -396,7 +396,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
 }
 .wa-big > :not(.beam) { position: relative; z-index: 1; }
 .wa-big .beam { z-index: 2; --beam-size: 120px; --beam-dur: 5.5s; }
-.wa-big .beam::after { background: linear-gradient(to left, #FFFFFF, #FFF6B0 35%, #FFE000 65%, transparent); }
+.wa-big .beam::after { background: linear-gradient(to left, #FFFFFF, #FFE4B0 35%, #FFA600 65%, transparent); }
 
 .wa-big__icon {
   display: grid;
@@ -510,8 +510,8 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--dot, #F8DA05);
-  box-shadow: 0 0 calc(8px * var(--glow-a)) var(--dot, #F8DA05);
+  background: var(--dot, #FAA403);
+  box-shadow: 0 0 calc(8px * var(--glow-a)) var(--dot, #FAA403);
 }
 .footer__col:nth-child(2) .footer__hd { --dot: #F524FD; }
 .footer__col a {
@@ -521,7 +521,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   padding: 5px 2px;
   font-weight: 600;
   color: var(--text-2);
-  background: linear-gradient(90deg, #FFE000, #F7ACE2 50%, #C805FE) no-repeat 50% 100% / 0 1.5px;
+  background: linear-gradient(90deg, #FFA600, #F7ACE2 50%, #C805FE) no-repeat 50% 100% / 0 1.5px;
   transition: color .3s ease, background-size .45s var(--ease-out);
 }
 .footer__col a .i {
@@ -542,7 +542,9 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
 
 /* ---------------------------------------------------------------- giant wordmark */
 .footer__wordmark {
-  width: 100%;
+  /* owner's call (2026-10): the wordmark at 30% of its old full-width size */
+  width: max(30%, 190px);
+  margin-inline: auto;
   margin-top: clamp(56px, 8vw, 118px);
   /* clip only at the floor: the logo rises out of it */
   clip-path: inset(-40% -8% -12% -8%);
@@ -583,7 +585,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   color: var(--muted);
 }
 .footer__made { display: inline-flex; align-items: center; gap: 7px; }
-.footer__made svg { width: 14px; height: 14px; overflow: visible; filter: drop-shadow(0 0 calc(5px * var(--glow-a)) #FFE000); }
+.footer__made svg { width: 14px; height: 14px; overflow: visible; filter: drop-shadow(0 0 calc(5px * var(--glow-a)) #FFA600); }
 .footer__top {
   display: inline-flex;
   align-items: center;
@@ -719,7 +721,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   font-size: .98rem;
   line-height: 1.2;
   white-space: nowrap;
-  box-shadow: -10px 0 26px -10px rgba(248, 226, 15, .45), 10px 0 26px -10px rgba(217, 22, 227, .5), 0 14px 30px -14px rgba(0, 0, 0, .5);
+  box-shadow: -10px 0 26px -10px rgba(250, 169, 13, .45), 10px 0 26px -10px rgba(217, 22, 227, .5), 0 14px 30px -14px rgba(0, 0, 0, .5);
   opacity: 0;
   transform: translate3d(-14px, -50%, 0) scale(.86);
   transform-origin: left center; /* the side touching the circle in RTL */
@@ -774,7 +776,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   width: var(--s, 16px);
   height: var(--s, 16px);
   margin: calc(var(--s, 16px) / -2) 0 0 calc(var(--s, 16px) / -2);
-  color: #FCEC68;
+  color: #FDC967;
   pointer-events: none;
   animation-duration: 1.5s;
   animation-fill-mode: forwards;
@@ -824,7 +826,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   pointer-events: none;
   background:
     radial-gradient(60% 55% at 50% 42%, rgba(200, 5, 254, calc(.12 + .2 * var(--glow-a))), transparent 70%),
-    radial-gradient(40% 40% at 30% 30%, rgba(255, 224, 0, calc(.1 + .1 * var(--glow-a))), transparent 70%);
+    radial-gradient(40% 40% at 30% 30%, rgba(255, 166, 0, calc(.1 + .1 * var(--glow-a))), transparent 70%);
   opacity: 0;
   animation: fx-flash 1.6s var(--ease-out) forwards;
 }
@@ -849,7 +851,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   font-weight: 800;
   font-size: 1.05rem;
   white-space: nowrap;
-  box-shadow: -14px 0 34px -8px rgba(248, 226, 15, .45), 14px 0 34px -8px rgba(217, 22, 227, .5), 0 24px 50px -20px rgba(0, 0, 0, .6);
+  box-shadow: -14px 0 34px -8px rgba(250, 169, 13, .45), 14px 0 34px -8px rgba(217, 22, 227, .5), 0 24px 50px -20px rgba(0, 0, 0, .6);
   translate: -50% 0;
   opacity: 0;
   visibility: hidden;
@@ -857,7 +859,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   transition: opacity .25s ease, transform .4s var(--ease-out), visibility 0s linear .4s;
   pointer-events: none;
 }
-.fx-toast svg { width: 18px; height: 18px; flex: none; overflow: visible; filter: drop-shadow(0 0 6px rgba(255, 224, 0, .8)); }
+.fx-toast svg { width: 18px; height: 18px; flex: none; overflow: visible; filter: drop-shadow(0 0 6px rgba(255, 166, 0, .8)); }
 .fx-toast.is-on {
   opacity: 1;
   visibility: visible;
@@ -880,3 +882,7 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
 }
 /* ?rm=1 (html.rm, core.css stops the loops): same end states as the media query */
 html.rm .wa-big::before { opacity: 0; }
+
+/* accessibility statement link (IS 5568 requires it to be reachable from every page) */
+.footer__a11y { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }
+.footer__a11y:hover, .footer__a11y:focus-visible { color: var(--text); }

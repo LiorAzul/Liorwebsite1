@@ -45,9 +45,9 @@
   opacity: 0;
   /* soft by construction (eased stops) instead of a blur filter: zero per-frame filter cost */
   background:
-    radial-gradient(24% 60% at 31% 80%, rgba(110, 98, 64, .5), rgba(110, 98, 64, .22) 45%, rgba(110, 98, 64, 0) 100%),
+    radial-gradient(24% 60% at 31% 80%, rgba(110, 93, 64, .5), rgba(110, 93, 64, .22) 45%, rgba(110, 93, 64, 0) 100%),
     radial-gradient(30% 52% at 63% 86%, rgba(121, 109, 74, .36), rgba(121, 109, 74, .14) 50%, rgba(121, 109, 74, 0) 100%),
-    linear-gradient(to bottom, rgba(121, 109, 74, 0) 0%, rgba(121, 109, 74, .05) 18%, rgba(121, 109, 74, .16) 36%, rgba(121, 109, 74, .33) 54%, rgba(121, 109, 74, .48) 70%, rgba(150, 122, 40, .5) 84%, rgba(169, 129, 11, .3) 94%, rgba(169, 129, 11, 0) 100%);
+    linear-gradient(to bottom, rgba(121, 109, 74, 0) 0%, rgba(121, 109, 74, .05) 18%, rgba(121, 109, 74, .16) 36%, rgba(121, 109, 74, .33) 54%, rgba(121, 109, 74, .48) 70%, rgba(151, 109, 39, .5) 84%, rgba(171, 110, 9, .3) 94%, rgba(171, 110, 9, 0) 100%);
   will-change: opacity;
 }
 
@@ -81,12 +81,12 @@
 #vm-intro .vi-beam__line {
   inset: 0;
   border-radius: 99px;
-  background: linear-gradient(90deg, #FFF7A6, #FFFDE6 50%, #FFF7A6);   /* white-hot core */
+  background: linear-gradient(90deg, #FFE1A6, #FFF7E6 50%, #FFE1A6);   /* white-hot core */
   box-shadow:
-    0 0 calc(var(--W) * .004) calc(var(--W) * .003) #FFF75E,
-    0 0 calc(var(--W) * .012) calc(var(--W) * .006) #FFE000,
-    0 0 calc(var(--W) * .026) calc(var(--W) * .011) rgba(255, 224, 0, .85),
-    0 0 calc(var(--W) * .07) calc(var(--W) * .028) rgba(255, 200, 0, .5),
+    0 0 calc(var(--W) * .004) calc(var(--W) * .003) #FFC95E,
+    0 0 calc(var(--W) * .012) calc(var(--W) * .006) #FFA600,
+    0 0 calc(var(--W) * .026) calc(var(--W) * .011) rgba(255, 166, 0, .85),
+    0 0 calc(var(--W) * .07) calc(var(--W) * .028) rgba(255, 161, 0, .5),
     0 0 calc(var(--W) * .17) calc(var(--W) * .06) rgba(255, 170, 0, .24);
 }
 /* bloom boost: a second glow faded in with opacity instead of animating box-shadow */
@@ -95,9 +95,9 @@
   opacity: 0;
   border-radius: 99px;
   box-shadow:
-    0 0 calc(var(--W) * .012) calc(var(--W) * .005) rgba(255, 253, 220, .95),
-    0 0 calc(var(--W) * .045) calc(var(--W) * .016) rgba(255, 236, 90, .6),
-    0 0 calc(var(--W) * .12) calc(var(--W) * .04) rgba(255, 196, 0, .3);
+    0 0 calc(var(--W) * .012) calc(var(--W) * .005) rgba(255, 243, 220, .95),
+    0 0 calc(var(--W) * .045) calc(var(--W) * .016) rgba(255, 198, 90, .6),
+    0 0 calc(var(--W) * .12) calc(var(--W) * .04) rgba(255, 160, 0, .3);
 }
 /* orange seam + magenta under-glow */
 #vm-intro .vi-beam__under {
@@ -116,7 +116,7 @@
   width: calc(var(--W) * .46);
   height: calc(var(--W) * .22);
   opacity: 0;
-  background: radial-gradient(closest-side, rgba(255, 255, 248, .95), rgba(255, 246, 170, .6) 38%, rgba(255, 214, 60, .18) 66%, rgba(255, 214, 60, 0));
+  background: radial-gradient(closest-side, rgba(255, 253, 248, .95), rgba(255, 226, 170, .6) 38%, rgba(255, 183, 60, .18) 66%, rgba(255, 183, 60, 0));
   will-change: transform, opacity;
 }
 
@@ -166,7 +166,7 @@
 [data-theme="dark"] #vm-intro .vi-solid {
   color: #FDFDFD;
   filter:
-    drop-shadow(calc(var(--lw) * -.01) 0 calc(var(--lw) * .022) rgba(248, 216, 8, .5))
+    drop-shadow(calc(var(--lw) * -.01) 0 calc(var(--lw) * .022) rgba(250, 165, 6, .5))
     drop-shadow(calc(var(--lw) * .01) 0 calc(var(--lw) * .024) rgba(167, 3, 215, .62));
 }
 [data-theme="light"] #vm-intro .vi-solid { color: #0A0A0B; }

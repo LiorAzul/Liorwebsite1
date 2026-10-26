@@ -12,7 +12,7 @@
        fade-in toward a target alpha.
    VibeMagic additions: glowing sprite rendering (cheap drawImage instead of
    arc fills), ~4% of the specks are tiny 4-point sparkles (the poster motif),
-   theme-aware colours (gold / lilac / white glow on dark; deeper gold #C9A100
+   theme-aware colours (gold / lilac / white glow on dark; deeper gold #C98000
    and purple #B04BE0 at lower alpha on white), one shared rAF ticker that
    only runs visible canvases, DPR cap plus a backing-store budget (a field
    taller than the screen paints only the band around the viewport), reduced
@@ -35,8 +35,8 @@
 
   // colour slots: gold, lilac, white (dark) / deep gold, purple, violet (light)
   var COLORS = {
-    dark: ['#FFE000', '#E08AF7', '#FFFFFF', '#FCEC68'],
-    light: ['#C9A100', '#B04BE0', '#9A34D4', '#B88F00']
+    dark: ['#FFA600', '#E08AF7', '#FFFFFF', '#FDC967'],
+    light: ['#C98000', '#B04BE0', '#9A34D4', '#B87400']
   };
   var SLOT_WEIGHTS = [0.34, 0.3, 0.24, 0.12];
   var THEME_ALPHA = { dark: 1, light: 0.72 };
@@ -90,19 +90,19 @@
       var pad = dark ? 22 : 12, k = (S - pad * 2) / 100;
       var lg = x.createLinearGradient(pad, S - pad, S - pad, pad);
       if (dark) {
-        lg.addColorStop(0, '#F7F567');
+        lg.addColorStop(0, '#F8C966');
         lg.addColorStop(0.45, variant ? '#FFFFFF' : '#FED2AF');
         lg.addColorStop(0.75, '#E87DF4');
         lg.addColorStop(1, '#DD58F3');
       } else {
-        lg.addColorStop(0, '#D4A800');
+        lg.addColorStop(0, '#D48600');
         lg.addColorStop(0.5, variant ? '#C66BE6' : '#E08A3C');
         lg.addColorStop(1, '#9B1FD6');
       }
       x.translate(pad, pad);
       x.scale(k, k);
       if (dark) {
-        x.shadowColor = variant ? 'rgba(255,224,0,.9)' : 'rgba(200,5,254,.9)';
+        x.shadowColor = variant ? 'rgba(255,166,0,.9)' : 'rgba(200,5,254,.9)';
         x.shadowBlur = 14 / k;
       }
       x.fillStyle = lg;

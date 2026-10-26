@@ -14,9 +14,9 @@
 .hero {
   --hero-title: clamp(2.95rem, 12vw, 8.9rem);
   --hero-grad: var(--grad-headline);
-  --hero-comet: #FFFBEA;
-  --hero-comet-glow: rgba(255, 224, 0, .85);
-  --hero-ring-glow: rgba(250, 249, 42, .55);
+  --hero-comet: #FFF7EA;
+  --hero-comet-glow: rgba(255, 166, 0, .85);
+  --hero-ring-glow: rgba(252, 184, 40, .55);
   --hero-fb:
     radial-gradient(55% 48% at 12% 18%, rgba(109, 4, 160, .55), transparent 70%),
     radial-gradient(48% 44% at 88% 22%, rgba(200, 5, 254, .32), transparent 70%),
@@ -27,9 +27,9 @@
   --hero-grad: var(--grad-text-light); /* gradient TEXT on white: gold end >= 3:1 (core.css token) */
   --hero-comet: #B21FE6;
   --hero-comet-glow: rgba(200, 5, 254, .35);
-  --hero-ring-glow: rgba(250, 230, 42, .5);
+  --hero-ring-glow: rgba(252, 179, 40, .5);
   --hero-fb:
-    radial-gradient(52% 46% at 12% 16%, rgba(254, 252, 166, .95), transparent 70%),
+    radial-gradient(52% 46% at 12% 16%, rgba(255, 226, 165, .95), transparent 70%),
     radial-gradient(48% 44% at 90% 20%, rgba(245, 201, 252, .9), transparent 70%),
     radial-gradient(42% 38% at 82% 88%, rgba(254, 230, 172, .85), transparent 70%),
     radial-gradient(50% 44% at 14% 86%, rgba(249, 227, 252, .85), transparent 70%);
@@ -393,7 +393,7 @@ html.js .hero:not(.hero--in) .hero__swoosh { clip-path: inset(0 0 0 100%); }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent, #FFE000 45%, #C805FE 70%, transparent);
+  background: linear-gradient(to bottom, transparent, #FFA600 45%, #C805FE 70%, transparent);
   translate: 0 -100%;
   animation: hero-scroll 2.4s var(--ease-in-out) infinite;
 }
@@ -580,12 +580,12 @@ html.js .hero:not(.hero--ready) .hero__orbit-ring { animation: hero-failsafe-rin
   flex: none;
   width: .5em;
   height: .5em;
-  background: linear-gradient(45deg, #F7F567 0%, #FED2AF 45%, #E87DF4 75%, #DD58F3 100%);
+  background: linear-gradient(45deg, #F8C966 0%, #FED2AF 45%, #E87DF4 75%, #DD58F3 100%);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 33 67 47 100 50C67 53 53 67 50 100C47 67 33 53 0 50C33 47 47 33 50 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 [data-theme="light"] .marquee__group li::after {
-  background: linear-gradient(45deg, #E8B100 0%, #F29A1F 35%, #EE5FA8 60%, #9B00D6 100%);
+  background: linear-gradient(45deg, #E89100 0%, #F29A1F 35%, #EE5FA8 60%, #9B00D6 100%);
 }
 
 @media (hover: hover) and (pointer: fine) {
