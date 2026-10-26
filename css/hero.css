@@ -613,3 +613,17 @@ html.js .hero:not(.hero--ready) .hero__orbit-ring { animation: hero-failsafe-rin
   .hero__scroll-line::after,
   .hero__orbit-comet { animation: none; }
 }
+
+/* the hero's single action (2026-10): "תפריט" opens the menu, styled as the primary pill */
+.hero__menu {
+  --btn-pad-y: 1em;
+  --btn-pad-x: 2.2em;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  color: var(--pill-text);
+  border: 2px solid transparent;
+  background: linear-gradient(var(--pill-bg), var(--pill-bg)) padding-box, var(--grad-cta) border-box;
+  box-shadow: -12px 0 30px -8px rgba(255, 166, 0, .35), 12px 0 30px -8px rgba(217, 22, 227, .4), var(--shadow);
+}
+.hero__menu:hover { box-shadow: -16px 0 40px -6px rgba(255, 166, 0, .5), 16px 0 40px -6px rgba(217, 22, 227, .55), var(--shadow); }
+.hero__menu .i { width: 1.3em; height: 1.3em; }
+@media (max-width: 720px) { .hero__ctas .hero__menu { width: min(100%, 380px); } }

@@ -547,7 +547,8 @@ html.js .footer__saber.in::after { animation: saber-flare 1.4s var(--ease-out) b
   margin-inline: auto;
   margin-top: clamp(56px, 8vw, 118px);
   /* clip only at the floor: the logo rises out of it */
-  clip-path: inset(-40% -8% -12% -8%);
+  /* generous on the sides/top so the blurred glow twin is never cut into a box (wordmark is 30% wide now) */
+  clip-path: inset(-90% -70% -45% -70%);
 }
 .footer__wm-move { position: relative; transform-origin: 50% 100%; }
 .footer__wordmark.is-scrub .footer__wm-move { will-change: transform, opacity; }
